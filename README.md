@@ -13,8 +13,6 @@ PNG as standard screenshot format ```defaults write com.apple.screencapture type
 
 ### Generate SSH-key
 ```
-ssh-keygen -t rsa -b 4096
+ssh-keygen -t rsa -b 4096 -C "Kommentar på nyckel" && ssh-add ~/.ssh/id_rsa && pbcopy < ~/.ssh/id_rsa.pub
 ```
-```
-ssh-add ~/.ssh/id_rsa
-```
+
