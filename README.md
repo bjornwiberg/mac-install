@@ -6,6 +6,7 @@
 * Dropbox https://www.dropbox.com/downloading
 * Shortcat https://shortcatapp.com/
 * Spectacle https://www.spectacleapp.com/
+* Sublime Text https://www.sublimetext.com/
 
 ### Settings
 PNG as standard screenshot format ```defaults write com.apple.screencapture type png;killall SystemUIServer```
