@@ -10,6 +10,7 @@
 
 ### Settings
 PNG as standard screenshot format ```defaults write com.apple.screencapture type png;killall SystemUIServer```
+Set Git email ```git config --global user.email "your_email@example.com"```
 
 ### Generate SSH-key
 ```
