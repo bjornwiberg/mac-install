@@ -24,3 +24,7 @@ ssh-keygen -t rsa -b 4096 -C "Kommentar på nyckel" && ssh-add ~/.ssh/id_rsa && 
 - Sublime Text https://www.sublimetext.com/
 Add shortcut to Sublime ```sudo mkdir -p /usr/local/bin && sudo ln -sv "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/subl```
 - Sublime Package Control https://packagecontrol.io/installation
+- Sublime Packages
+ - Emmet
+ - GitGutter-Edge
+ - GitSavvy
