@@ -13,6 +13,7 @@
 PNG as standard screenshot format ```defaults write com.apple.screencapture type png;killall SystemUIServer```
 
 Set Git email ```git config --global user.email "your_email@example.com"```
+
 Add shortcut to Sublime ```sudo mkdir -p /usr/local/bin && sudo ln -sv "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/subl```
 
 ### Generate SSH-key
