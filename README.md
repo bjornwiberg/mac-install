@@ -10,3 +10,11 @@
 
 ### Settings
 PNG as standard screenshot format ```defaults write com.apple.screencapture type png;killall SystemUIServer```
+
+### Generate SSH-key
+```
+ssh-keygen -t rsa -b 4096
+```
+```
+ssh-add ~/.ssh/id_rsa
+```
