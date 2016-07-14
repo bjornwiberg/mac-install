@@ -16,4 +16,5 @@ lookup () {
                 host $answer
         else
                 echo $answer
+        fi
 }
