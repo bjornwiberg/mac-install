@@ -13,6 +13,23 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
 - Dropbox https://www.dropbox.com/downloading
 - Shortcat https://shortcatapp.com/
 - Spectacle https://www.spectacleapp.com/
+- Node.Js https://nodejs.org/en/
+- Gulp
+```
+sudo npm install -g gulp
+```
+- CSS Lint
+```
+sudo npm install -g csslint
+```
+- SCSS Lint
+```
+sudo gem install scss_lint
+```
+- SASS Lint
+```
+sudo npm install -g sass-lint
+```
 
 ### Settings
 PNG as standard screenshot format:
@@ -45,7 +62,17 @@ Add shortcut to Sublime
 sudo mkdir -p /usr/local/bin && sudo ln -sv "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/subl
 ```
 - Sublime Package Control https://packagecontrol.io/installation
-- Sublime Packages
- - Emmet
- - GitGutter-Edge
- - GitSavvy
+- Sublime Packages (Advanced Install Package)
+ -  Emmet,
+    Emmet Css Snippets,
+    GitGutter-Edge,
+    GitSavvy,
+    InsertDate,
+    Markdown Preview,
+    Material Theme,
+    SideBarEnhancements,
+    Smarty,
+    SublimeLinter-contrib-sass-lint,
+    SublimeLinter-contrib-scss-lint,
+    SublimeLinter-csslint,
+    SublimeLinter-php,
