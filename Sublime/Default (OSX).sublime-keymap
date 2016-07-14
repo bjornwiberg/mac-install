@@ -1,0 +1,10 @@
+[
+    {
+        "keys": ["super+k", "super+f"], 
+        "command": "reveal_in_side_bar"
+    },
+    {
+        "keys": ["super+shift+r"], 
+        "command": "reindent"
+    }
+]
