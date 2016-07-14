@@ -72,6 +72,7 @@ sudo mkdir -p /usr/local/bin && sudo ln -sv "/Applications/Sublime Text.app/Cont
     Material Theme,
     SideBarEnhancements,
     Smarty,
+    SublimeLinter,
     SublimeLinter-contrib-sass-lint,
     SublimeLinter-contrib-scss-lint,
     SublimeLinter-csslint,
