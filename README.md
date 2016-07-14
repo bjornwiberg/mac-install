@@ -70,6 +70,8 @@ sudo mkdir -p /usr/local/bin && sudo ln -sv "/Applications/Sublime Text.app/Cont
     InsertDate,
     Markdown Preview,
     Material Theme,
+    Sass,
+    SCSS,
     SideBarEnhancements,
     Smarty,
     SublimeLinter,
