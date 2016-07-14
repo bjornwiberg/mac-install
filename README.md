@@ -22,10 +22,6 @@ sudo npm install -g gulp
 ```
 sudo npm install -g csslint
 ```
-- SCSS Lint
-```
-sudo gem install scss_lint
-```
 - SASS Lint
 ```
 sudo npm install -g sass-lint
@@ -70,12 +66,10 @@ sudo mkdir -p /usr/local/bin && sudo ln -sv "/Applications/Sublime Text.app/Cont
     InsertDate,
     Markdown Preview,
     Material Theme,
-    Sass,
     SCSS,
     SideBarEnhancements,
     Smarty,
     SublimeLinter,
     SublimeLinter-contrib-sass-lint,
-    SublimeLinter-contrib-scss-lint,
     SublimeLinter-csslint,
     SublimeLinter-php,
