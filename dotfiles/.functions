@@ -1,20 +1,20 @@
 lookup () {
-        if [ $1 ] ; then
-                nameserver=$(whois $1 | grep '\(nserver\|[^\s]*Name Server\|Hostname\)' | sed -e 's/nserver//g' -e 's/Name Server//g' -e 's/Hostname//g' -e 's/ //g' -e 's/://g' | awk 'NR==1')
-        fi
-        if [ -z "$nameserver" ] ; then
-                echo "No nameserver found on $1, not registered?";
-                return;
-        else
-                answer=$(dig @$nameserver +short a $1)
-        fi
-        if [ -z "$answer" ] ; then
-                echo \"No zone file found on $nameserver for $1\";
-                return;
-        fi
-        if [ "$2" = "host" ] ; then
-                host $answer
-        else
-                echo $answer
-        fi
+    if [ $1 ] ; then
+        nameserver=$(whois $1 | grep '\(nserver\|[^\s]*Name Server\|Hostname\)' | sed -e 's/nserver//g' -e 's/Name Server//g' -e 's/Hostname//g' -e 's/ //g' -e 's/://g' | awk 'NR==1')
+    fi
+    if [ -z "$nameserver" ] ; then
+        echo "No nameserver found on $1, not registered?";
+        return;
+    else
+        answer=$(dig @$nameserver +short a $1)
+    fi
+    if [ -z "$answer" ] ; then
+        echo \"No zone file found on $nameserver for $1\";
+        return;
+    fi
+    if [ "$2" = "host" ] ; then
+        host $answer
+    else
+        echo $answer
+    fi
 }
