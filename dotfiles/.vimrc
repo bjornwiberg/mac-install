@@ -25,7 +25,7 @@ filetype plugin indent on    " required
 let g:airline_theme='wombat'
 set laststatus=2
 
-" Dont wrap lines
+" Custom
 set nowrap
 
 " No beep when using mapped commands
