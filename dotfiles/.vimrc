@@ -25,13 +25,11 @@ let g:airline_theme='wombat'
 set laststatus=2
 
 " Custom
-<<<<<<< HEAD
+set nu " Add line numbers
 noremap h <NOP>
 noremap j <NOP>
 noremap k <NOP>
 noremap l <NOP>
-=======
->>>>>>> d0db2a9b1326f84d883b9ccc09a34bdc65e0a79d
 noremap <Up> <NOP>
 noremap <Down> <NOP>
 noremap <Left> <NOP>
