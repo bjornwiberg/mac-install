@@ -25,6 +25,14 @@ let g:airline_theme='wombat'
 set laststatus=2
 
 " Custom
+noremap h <NOP>
+noremap j <NOP>
+noremap k <NOP>
+noremap l <NOP>
+noremap <Up> <NOP>
+noremap <Down> <NOP>
+noremap <Left> <NOP>
+noremap <Right> <NOP>
 syntax on
 set nowrap
 
@@ -72,3 +80,7 @@ nnoremap <C-W> 	   :tabclose<CR>
 nnoremap H         gT " Go to prev tab
 nnoremap L         gt " Go to next tab
 
+noremap <Up> <NOP>
+noremap <Down> <NOP>
+noremap <Left> <NOP>
+noremap <Right> <NOP>
