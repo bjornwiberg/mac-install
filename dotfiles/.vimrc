@@ -25,6 +25,10 @@ let g:airline_theme='wombat'
 set laststatus=2
 
 " Custom
+noremap <Up> <NOP>
+noremap <Down> <NOP>
+noremap <Left> <NOP>
+noremap <Right> <NOP>
 syntax on
 set nowrap
 
