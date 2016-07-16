@@ -26,6 +26,13 @@ sudo npm install -g csslint
 ```
 sudo npm install -g sass-lint
 ```
+- Vundle
+```
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+vim +PluginInstall +qall
+
+```
+
 
 ### Fonts
 - Nerd Font Patched
