@@ -18,7 +18,6 @@ call vundle#end()            " required
 " Theme
 set t_Co=256
 colorscheme spacegray
-syntax on
 filetype plugin indent on    " required
 
 " Air line
@@ -26,6 +25,7 @@ let g:airline_theme='wombat'
 set laststatus=2
 
 " Custom
+syntax on
 set nowrap
 
 " No beep when using mapped commands
