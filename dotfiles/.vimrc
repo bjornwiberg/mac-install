@@ -26,10 +26,6 @@ set laststatus=2
 
 " Custom
 set nu " Add line numbers
-noremap h <NOP>
-noremap j <NOP>
-noremap k <NOP>
-noremap l <NOP>
 noremap <Up> <NOP>
 noremap <Down> <NOP>
 noremap <Left> <NOP>
