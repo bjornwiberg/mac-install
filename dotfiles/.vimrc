@@ -30,6 +30,8 @@ noremap <Up> <NOP>
 noremap <Down> <NOP>
 noremap <Left> <NOP>
 noremap <Right> <NOP>
+inoremap <esc> <nop>
+inoremap jk <esc>
 syntax on
 set nowrap
 
