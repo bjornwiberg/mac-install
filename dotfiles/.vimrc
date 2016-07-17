@@ -45,9 +45,9 @@ endif
 set encoding=utf8
 set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Nerd\ Font\ Complete\ 12
 let g:airline_powerline_fonts = 1
-let g:WebDevIconsNerdTreeAfterGlyphPadding = ''
 
 " NerdTree
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ''
 map <C-n> :NERDTreeToggle<CR>
 autocmd VimEnter * NERDTree
 autocmd VimEnter * wincmd p
