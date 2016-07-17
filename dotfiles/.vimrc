@@ -54,10 +54,6 @@ autocmd VimEnter * wincmd p
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
-let g:NERDTreeFileExtensionHighlightFullName = 1
-let g:NERDTreeDisableFileExtensionHighlight = 1
-let g:NERDTreeFileExtensionHighlightFullName = 1
-
 " Multiple cursors
 let g:multi_cursor_start_key='<F5>'
 let g:multi_cursor_next_key='<C-n>'
