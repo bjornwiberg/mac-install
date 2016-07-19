@@ -58,6 +58,11 @@ Set Git push.default to simple
 git config --global push.default simple
 ```
 
+Set vim as default git commit editor
+```
+git config --global core.editor /usr/bin/vim
+```
+
 ### Generate SSH-key
 ```
 ssh-keygen -t rsa -b 4096 -C "Kommentar på nyckel" && ssh-add ~/.ssh/id_rsa && pbcopy < ~/.ssh/id_rsa.pub
