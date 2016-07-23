@@ -21,6 +21,8 @@ call vundle#end()            " required
 set t_Co=256
 colorscheme spacegray
 filetype plugin indent on    " required
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:DevIconsEnableFoldersOpenClose = 1
 
 " Air line
 let g:airline_theme='wombat'
@@ -35,7 +37,19 @@ noremap <Right> <NOP>
 inoremap <esc> <nop>
 inoremap jk <esc>
 syntax on
+
+"Indentation
 set nowrap
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
+
+autocmd Filetype html setlocal ts=2 sw=2 expandtab
+autocmd Filetype css setlocal ts=2 sw=2 expandtab
+autocmd Filetype scss setlocal ts=2 sw=2 expandtab
+autocmd Filetype sass setlocal ts=2 sw=2 expandtab
+autocmd Filetype javascript setlocal ts=4 sw=4 sts=0 expandtab
+autocmd Filetype php setlocal ts=4 sw=4 sts=0 expandtab
 
 " No beep when using mapped commands
 set noerrorbells visualbell t_vb=
