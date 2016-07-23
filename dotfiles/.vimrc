@@ -16,6 +16,7 @@ Plugin 'tpope/vim-surround'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'ajh17/Spacegray.vim'
 Plugin 'blueyed/smarty.vim'
+Plugin 'airblade/vim-gitgutter'
 call vundle#end()            " required
 
 " Theme
