@@ -15,11 +15,13 @@ Plugin 'mattn/emmet-vim'
 Plugin 'tpope/vim-surround'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'ajh17/Spacegray.vim'
+Plugin 'blueyed/smarty.vim'
 call vundle#end()            " required
 
 " Theme
 set t_Co=256
 colorscheme spacegray
+set cc=80
 filetype plugin indent on    " required
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 let g:DevIconsEnableFoldersOpenClose = 1
