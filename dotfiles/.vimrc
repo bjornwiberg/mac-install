@@ -7,9 +7,7 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'scrooloose/nerdtree'
 Plugin 'ryanoasis/vim-devicons'
-Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'mattn/emmet-vim'
 Plugin 'tpope/vim-surround'
@@ -24,8 +22,6 @@ set t_Co=256
 colorscheme spacegray
 set cc=80
 filetype plugin indent on    " required
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-let g:DevIconsEnableFoldersOpenClose = 1
 
 " Air line
 let g:airline_theme='wombat'
@@ -64,14 +60,6 @@ endif
 set encoding=utf8
 set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Nerd\ Font\ Complete\ 12
 let g:airline_powerline_fonts = 1
-
-" NerdTree
-let g:WebDevIconsNerdTreeAfterGlyphPadding = ''
-map <C-n> :NERDTreeToggle<CR>
-autocmd VimEnter * NERDTree
-autocmd VimEnter * wincmd p
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 " Multiple cursors
 let g:multi_cursor_start_key='<F5>'
