@@ -4,9 +4,11 @@ cd && git clone --max-depth=1 https://github.com/bjornwiberg/mac-install.git
 ```
 ### Symlink dotfiles
 ```
-
-
-ln -s mac-install/dotfiles/.vimrc && ln -s mac-install/dotfiles/.zshrc && ln -s mac-install/dotfiles/.shortcuts && ln -s mac-install/dotfiles/.functions
+touch ~/.aliases
+ln -s mac-install/dotfiles/.vimrc
+ln -s mac-install/dotfiles/.zshrc
+ln -s mac-install/dotfiles/.shortcuts
+ln -s mac-install/dotfiles/.functions
 ```
 
 
