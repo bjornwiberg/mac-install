@@ -3,4 +3,5 @@ ZSH_THEME="mortalscumbag"
 plugins=(git)
 source $ZSH/oh-my-zsh.sh
 . ~/.aliases
-. ~/.functions
+. .shortcuts
+. .functions
