@@ -16,7 +16,8 @@ Plugin 'ajh17/Spacegray.vim'
 Plugin 'blueyed/smarty.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'jremmen/vim-ripgrep'
-call vundle#end()            " required
+call vundle#end()
+" required
 
 " Theme
 set t_Co=256
