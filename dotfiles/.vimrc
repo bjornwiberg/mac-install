@@ -39,6 +39,10 @@ inoremap <esc> <nop>
 inoremap jk <esc>
 syntax on
 nnoremap ,cd :cd %:p:h<CR>:pwd<CR>
+set undofile
+set undoreload=10000
+set undodir=~/.vim/undo//
+set directory=~/.vim/swap//
 
 "Indentation
 set nowrap
