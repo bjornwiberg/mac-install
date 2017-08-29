@@ -45,6 +45,10 @@ sudo npm install -g csslint
 ```
 sudo npm install -g sass-lint
 ```
+- Spacegrey color scheme
+```
+cd ~/.vim/bundle && git clone git://github.com/ajh17/Spacegray.vim.git
+```
 - Vundle
 ```
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
