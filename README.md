@@ -9,6 +9,11 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
 ```
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
+
+- Rip grep
+```
+brew install ripgrep
+```
 - 1 Password https://1password.com/
 - Dropbox https://www.dropbox.com/downloading
 - Shortcat https://shortcatapp.com/

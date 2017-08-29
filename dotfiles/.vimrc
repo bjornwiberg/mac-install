@@ -15,6 +15,7 @@ Plugin 'terryma/vim-multiple-cursors'
 Plugin 'ajh17/Spacegray.vim'
 Plugin 'blueyed/smarty.vim'
 Plugin 'airblade/vim-gitgutter'
+Plugin 'jremmen/vim-ripgrep'
 call vundle#end()            " required
 
 " Theme
@@ -65,7 +66,13 @@ let g:airline_powerline_fonts = 1
 let g:multi_cursor_start_key='<F5>'
 let g:multi_cursor_next_key='<C-n>'
 let g:multi_cursor_prev_key='<C-p>'
+" use ripgrep for insane speed
 let g:multi_cursor_skip_key='<C-k>'
+if executable('rg')
+	set grepprg=rg\ --color=never
+	let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
+	let g:ctrlp_use_caching = 0
+endif
 
 " Splits
 nmap <silent> <c-k> :wincmd k<CR>                                                                                                                       
