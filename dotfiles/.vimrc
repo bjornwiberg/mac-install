@@ -55,11 +55,6 @@ set tabstop=2
 set softtabstop=2
 set shiftwidth=2
 
-autocmd Filetype html setlocal ts=2 sw=2 expandtab
-autocmd Filetype css setlocal ts=2 sw=2 expandtab
-autocmd Filetype scss setlocal ts=2 sw=2 expandtab
-autocmd Filetype sass setlocal ts=2 sw=2 expandtab
-autocmd Filetype javascript setlocal ts=4 sw=4 sts=0 expandtab
 autocmd Filetype php setlocal ts=4 sw=4 sts=0 expandtab
 
 " No beep when using mapped commands
