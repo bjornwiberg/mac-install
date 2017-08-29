@@ -21,7 +21,7 @@ call vundle#end()    " required
 " Theme
 set t_Co=256
 colorscheme spacegray
-set cc=80
+set cc=72
 filetype plugin indent on    " required
 
 " Air line
