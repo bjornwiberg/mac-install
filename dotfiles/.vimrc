@@ -38,6 +38,7 @@ noremap <Right> <NOP>
 inoremap <esc> <nop>
 inoremap jk <esc>
 syntax on
+nnoremap ,cd :cd %:p:h<CR>:pwd<CR>
 
 "Indentation
 set nowrap
