@@ -44,6 +44,11 @@ set undoreload=10000
 set undodir=~/.vim/undo//
 set directory=~/.vim/swap//
 
+augroup autosourcing
+	autocmd!
+	autocmd BufWritePost .vimrc source %
+augroup END
+
 "Indentation
 set nowrap
 set tabstop=2
