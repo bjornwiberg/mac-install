@@ -65,7 +65,7 @@ endif
 
 "Fonts
 set encoding=utf8
-set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Nerd\ Font\ Complete\ 12
+set guifont=DroidSansMono\ Nerd\ Font\ Mono:h14
 let g:airline_powerline_fonts = 1
 
 " Multiple cursors
