@@ -69,11 +69,13 @@ set guifont=DroidSansMono\ Nerd\ Font\ Mono:h14
 let g:airline_powerline_fonts = 1
 
 " Multiple cursors
-let g:multi_cursor_start_key='<F5>'
+let g:multi_cursor_use_default_mapping=0
 let g:multi_cursor_next_key='<C-n>'
-let g:multi_cursor_prev_key='<C-p>'
+let g:multi_cursor_prev_key='<C-b>'
+let g:multi_cursor_skip_key='<C-x>'
+let g:multi_cursor_quit_key='<Esc>'
+
 " use ripgrep for insane speed
-let g:multi_cursor_skip_key='<C-k>'
 if executable('rg')
 	set grepprg=rg\ --color=never
 	let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
