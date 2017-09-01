@@ -1,6 +1,6 @@
 ## Glone repo
 ```
-cd && git clone --depth=1 https://github.com/bjornwiberg/mac-install.git
+cd && git clone --depth=1 git@github.com:bjornwiberg/mac-install.git
 ```
 ### Symlink dotfiles
 ```
