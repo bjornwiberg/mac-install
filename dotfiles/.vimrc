@@ -48,6 +48,9 @@ augroup autosourcing
 	autocmd BufWritePost .vimrc source %
 augroup END
 
+set incsearch
+set ignorecase
+
 "Indentation
 set nowrap
 set tabstop=2
