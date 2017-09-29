@@ -66,6 +66,9 @@ if has('autocmd')
 	  autocmd GUIEnter * set visualbell t_vb=
 endif
 
+set list
+set listchars=tab:▸\ ,eol:¬
+
 "Fonts
 set encoding=utf8
 set guifont=DroidSansMono\ Nerd\ Font\ Mono:h14
