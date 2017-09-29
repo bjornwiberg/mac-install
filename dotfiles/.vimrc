@@ -69,6 +69,8 @@ endif
 set list
 set listchars=tab:▸\ ,eol:¬
 
+set cursorline
+
 "Fonts
 set encoding=utf8
 set guifont=DroidSansMono\ Nerd\ Font\ Mono:h14
