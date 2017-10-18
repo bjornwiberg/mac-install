@@ -18,3 +18,75 @@ lookup () {
         echo $answer
     fi
 }
+
+gclone () {
+    if [ $1 ] ; then
+        if [ $3 ] ; then
+            git clone --depth=1 --single-branch --branch=$2 git@github.com:c4webbutveckling/$1.git $3
+        else
+            git clone --depth=1 --single-branch --branch=$2 git@github.com::c4webbutveckling/$1.git $2
+        fi
+    else
+        echo "use $0 <repository> <branch> [folder]"
+    fi
+    if [ "$4" = "true" ]; then
+        npm install && gulp
+        if [ $5 ] ; then
+            gulp watch --proxy=$5
+        else
+            parentdir=${PWD%/*} | grep -o '[^/]*$'
+            gulp watch --proxy=$parentdir
+        fi
+    fi
+}
+
+newsite () {
+    if [ $1 ] ; then
+        addvhost $1
+        addhost $1
+        cd ~/scotch
+        vagrant provision
+        sites
+        cd $1/public
+    else
+        echo "use $0 <devaddress>"
+        fi
+}
+
+addvhost () {
+    if [ $1 ] ; then
+        sudo sh -c "echo $1 >> ~/scotch/Domains"
+    else
+        echo "use $0 <devaddress>"
+    fi
+}
+
+addhost () {
+    if [ $1 ] ; then
+        sudo sh -c "echo 192.168.1.250    $1 >> /etc/hosts"
+    else
+        echo "use $0 <devaddress>"
+    fi
+}
+
+lookup () {
+        if [ $1 ] ; then
+                nameserver=$(whois $1 | grep '\(nserver\|[^\s]*Name Server\|Hostname\)' | sed -e 's/nserver//g' -e 's/Name Server//g' -e 's/Hostname//g' -e 's/ //g' -e 's/://g' | awk 'NR==1')
+        fi
+        if [ -z "$nameserver" ] ; then
+                echo "No nameserver found on $1, not registered?";
+                return;
+        else
+                answer=$(dig @$nameserver +short a $1)
+        fi
+        if [ -z "$answer" ] ; then
+                echo \"No zone file found on $nameserver for $1\";
+                return;
+        fi
+        if [ "$2" = "host" ] ; then
+                host $answer
+        else
+                echo $answer
+        fi
+}
+

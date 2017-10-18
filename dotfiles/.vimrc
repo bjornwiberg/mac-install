@@ -18,6 +18,12 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'jremmen/vim-ripgrep'
 call vundle#end()    " required
 
+" Leader
+let mapleader = ","
+
+" Emmet
+let g:user_emmet_leader_key='<leader>'
+
 " Theme
 set t_Co=256
 colorscheme spacegray
