@@ -22,6 +22,7 @@ cask "shortcat"
 cask "spectacle"
 cask "dropbox"
 cask "visual-studio-code"
+cask "docker"
 cask "mas"
 mas 'Slack', id: 803453959
 mas 'The Unarchiver', id: 425424353
