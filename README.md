@@ -60,7 +60,6 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
 ```
 
 ### Vim things
-```
 - Spacegrey color scheme
 ```
 cd ~/.vim/bundle && git clone git://github.com/ajh17/Spacegray.vim.git
