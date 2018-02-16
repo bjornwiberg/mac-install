@@ -1,0 +1,52 @@
+{
+    "workbench.colorCustomizations": {
+        "editor.lineHighlightBackground": "#090909",
+        "tab.activeBorder": "#fff",
+        "statusBar.background": "#8FBCBB,#434C5E",
+        "statusBar.noFolderBackground": "#8FBCBB,#434C5E",
+        "statusBar.debuggingBackground": "#8FBCBB,#434C5E",
+        "editorRuler.foreground": "#0f0"
+    },
+    "vim.insertModeKeyBindings": [
+        {
+            "before": ["j","j"],
+            "after": ["<Esc>"]
+        }
+    ],
+    "vim.statusBarColorControl": true,
+    "vim.statusBarColors": {
+        "normal": ["#8FBCBB", "#434C5E"],
+        "insert": "#BF616A",
+        "visual": "#B48EAD",
+        "visualline": "#B48EAD",
+        "visualblock": "#A3BE8C",
+        "replace": "#D08770"
+    },
+    "vim.useSystemClipboard": true,
+    "vim.otherModesKeyBindingsNonRecursive": [
+        {
+            "before": [
+                ":"
+            ],
+            "after": [],
+            "commands": [
+                {
+                    "command": "workbench.action.showCommands",
+                    "args": []
+                }
+            ]
+        },
+        {
+            "before":["<C-n>"],
+            "after":[],
+            "commands": [
+                {
+                    "command": ":nohl",
+                    "args": []
+                }
+            ]
+        
+        },
+    ],
+    "vim.hlsearch": true,
+}

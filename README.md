@@ -54,6 +54,14 @@ ln -s mac-install/dotfiles/.shortcuts
 ln -s mac-install/dotfiles/.functions
 ```
 
+### Symlink settings for vscode
+```
+mkdir -p "~/Library/Application Support/Code/User"
+cd ~/Library/Application\ Support/Code/User
+rm settings.json
+ln -s ~/mac-install/vscode/settings.json
+```
+
 ### Oh My Zsh
 ```
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
