@@ -45,8 +45,11 @@
                     "args": []
                 }
             ]
-        
+
         },
     ],
     "vim.hlsearch": true,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
 }
