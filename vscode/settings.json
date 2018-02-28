@@ -25,18 +25,6 @@
     "vim.useSystemClipboard": true,
     "vim.otherModesKeyBindingsNonRecursive": [
         {
-            "before": [
-                ":"
-            ],
-            "after": [],
-            "commands": [
-                {
-                    "command": "workbench.action.showCommands",
-                    "args": []
-                }
-            ]
-        },
-        {
             "before":["<C-n>"],
             "after":[],
             "commands": [
