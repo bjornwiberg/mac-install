@@ -56,7 +56,7 @@ ln -s mac-install/dotfiles/.functions
 
 ### Symlink settings for vscode
 ```
-mkdir -p "~/Library/Application Support/Code/User"
+mkdir -p ~/Library/Application\ Support/Code/User
 cd ~/Library/Application\ Support/Code/User
 rm settings.json
 ln -s ~/mac-install/vscode/settings.json
