@@ -107,7 +107,6 @@ nnoremap ,h :vsplit<enter>
 " Tabs
 nnoremap <C-t>     :tabnew<CR>
 inoremap <C-t>     <Esc>:tabnew<CR>
-nnoremap <C-W> 	   :tabclose<CR>
 nnoremap H         gT " Go to prev tab
 nnoremap L         gt " Go to next tab
 
