@@ -3,6 +3,11 @@
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
+## Install Xcode
+```
+xcode-select --install
+```
+
 ### Git
 ```
 brew install git
@@ -83,3 +88,10 @@ vim +PluginInstall +qall
 cd ~/Library/Fonts && curl -fLo "Droid Sans Mono Nerd Font Complete Mono.otf" https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete%20Mono.otf\?raw\=true
 ```
 
+### Known Issues
+If you encounter ```Error: An unexpected error occurred during the `brew link` step```
+
+Then run in terminal
+```
+sudo chown -R $(whoami) $(brew --prefix)/*
+```
