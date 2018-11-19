@@ -7,8 +7,10 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
+Plugin 'scrooloose/nerdtree'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'ryanoasis/vim-devicons'
+Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plugin 'mattn/emmet-vim'
 Plugin 'tpope/vim-surround'
 Plugin 'terryma/vim-multiple-cursors'
@@ -31,6 +33,8 @@ set t_Co=256
 colorscheme spacegray
 set cc=72
 filetype plugin indent on    " required
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:DevIconsEnableFoldersOpenClose = 1
 
 " Air line
 let g:airline_theme='wombat'
@@ -67,6 +71,14 @@ set shiftwidth=2
 set expandtab
 
 autocmd Filetype php setlocal ts=4 sw=4 sts=0 expandtab
+
+" NerdTree
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ''
+map <C-b> :NERDTreeToggle<CR>
+autocmd VimEnter * NERDTree
+autocmd VimEnter * wincmd p
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 " No beep when using mapped commands
 set noerrorbells visualbell t_vb=
