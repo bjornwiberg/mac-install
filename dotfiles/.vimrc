@@ -16,6 +16,7 @@ Plugin 'ajh17/Spacegray.vim'
 Plugin 'blueyed/smarty.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'jremmen/vim-ripgrep'
+Plugin 'w0rp/ale'
 call vundle#end()    " required
 
 " Leader
@@ -95,6 +96,10 @@ if executable('rg')
 	let g:ctrlp_user_command = 'rg %s --files --color=never --glob "!node_modules"'
 	let g:ctrlp_use_caching = 0
 endif
+
+" ALE Config
+let g:ale_sign_column_always = 1
+let g:airline#extensions#ale#enabled = 1
 
 " Splits
 nmap <silent> <c-k> :wincmd k<CR>
