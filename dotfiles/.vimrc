@@ -17,6 +17,7 @@ Plugin 'blueyed/smarty.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'jremmen/vim-ripgrep'
 Plugin 'w0rp/ale'
+Plugin 'tomtom/tcomment_vim'
 call vundle#end()    " required
 
 " Leader
