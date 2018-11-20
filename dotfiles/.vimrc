@@ -17,6 +17,7 @@ Plugin 'terryma/vim-multiple-cursors'
 Plugin 'ajh17/Spacegray.vim'
 Plugin 'blueyed/smarty.vim'
 Plugin 'airblade/vim-gitgutter'
+Plugin 'jreybert/vimagit'
 Plugin 'jremmen/vim-ripgrep'
 Plugin 'w0rp/ale'
 Plugin 'tomtom/tcomment_vim'
@@ -133,6 +134,9 @@ augroup END
 " gitgutter config (enable check on save)
 autocmd BufWritePost * GitGutter
 let g:gitgutter_highlight_lines = 1
+
+" magit config
+let g:magit_refresh_gitgutter=1
 
 " Vim Markdown Preview
 let vim_markdown_preview_hotkey='<C-m>'
