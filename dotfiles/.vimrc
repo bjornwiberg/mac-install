@@ -104,10 +104,12 @@ let g:multi_cursor_prev_key='<C-b>'
 let g:multi_cursor_skip_key='<C-x>'
 let g:multi_cursor_quit_key='<Esc>'
 
+" ctrlp config
+let g:ctrlp_show_hidden = 1
 " use ripgrep for insane speed
 if executable('rg')
 	set grepprg=rg\ --color=never
-	let g:ctrlp_user_command = 'rg %s --files --color=never --glob "!node_modules"'
+	let g:ctrlp_user_command = 'rg %s --files --color=never --hidden'
 	let g:ctrlp_use_caching = 0
 endif
 
