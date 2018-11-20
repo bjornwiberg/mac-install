@@ -20,6 +20,7 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'jremmen/vim-ripgrep'
 Plugin 'w0rp/ale'
 Plugin 'tomtom/tcomment_vim'
+Plugin 'JamshedVesuna/vim-markdown-preview'
 call vundle#end()    " required
 
 " Leader
@@ -113,6 +114,11 @@ endif
 " ALE Config
 let g:ale_sign_column_always = 1
 let g:airline#extensions#ale#enabled = 1
+
+" Vim Markdown Preview
+let vim_markdown_preview_hotkey='<C-m>'
+let vim_markdown_preview_temp_file=1
+let vim_markdown_preview_browser='Google Chrome'
 
 " Splits
 nmap <silent> <c-k> :wincmd k<CR>
