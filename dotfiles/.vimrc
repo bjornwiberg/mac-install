@@ -130,6 +130,10 @@ augroup FiletypeGroup
     au BufNewFile,BufRead *.jsx set filetype=javascript.jsx
 augroup END
 
+" gitgutter config (enable check on save)
+autocmd BufWritePost * GitGutter
+let g:gitgutter_highlight_lines = 1
+
 " Vim Markdown Preview
 let vim_markdown_preview_hotkey='<C-m>'
 let vim_markdown_preview_temp_file=1
