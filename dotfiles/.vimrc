@@ -133,7 +133,6 @@ augroup END
 
 " gitgutter config (enable check on save)
 autocmd BufWritePost * GitGutter
-let g:gitgutter_highlight_lines = 1
 
 " magit config
 let g:magit_refresh_gitgutter=1
