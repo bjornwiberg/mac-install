@@ -1,6 +1,5 @@
 tap "caskroom/cask"
 tap "homebrew/core"
-brew "git"
 brew "cask"
 brew "desk"
 brew "markdown
