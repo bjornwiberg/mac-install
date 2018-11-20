@@ -116,6 +116,19 @@ endif
 " ALE Config
 let g:ale_sign_column_always = 1
 let g:airline#extensions#ale#enabled = 1
+let g:ale_fix_on_save = 1
+let g:ale_linters = {
+\   'javascript': ['eslint'],
+\}
+let g:ale_fixers = {
+\   'javascript': ['prettier', 'eslint'],
+\}
+
+" Treat JSX as Javascript files
+augroup FiletypeGroup
+    autocmd!
+    au BufNewFile,BufRead *.jsx set filetype=javascript.jsx
+augroup END
 
 " Vim Markdown Preview
 let vim_markdown_preview_hotkey='<C-m>'
