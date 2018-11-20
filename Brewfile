@@ -3,6 +3,7 @@ tap "homebrew/core"
 brew "git"
 brew "cask"
 brew "desk"
+brew "markdown
 brew "node"
 brew "ssh-copy-id"
 brew "yarn"
