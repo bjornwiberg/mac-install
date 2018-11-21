@@ -56,6 +56,7 @@ set undofile
 set undoreload=10000
 set undodir=~/.vim/undo//
 set directory=~/.vim/swap//
+nnoremap <C-g> :Rg<Cr>
 
 augroup autosourcing
 	autocmd!
