@@ -9,7 +9,6 @@ Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'scrooloose/nerdtree'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'ryanoasis/vim-devicons'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plugin 'mattn/emmet-vim'
 Plugin 'tpope/vim-surround'
@@ -22,6 +21,7 @@ Plugin 'jremmen/vim-ripgrep'
 Plugin 'w0rp/ale'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'JamshedVesuna/vim-markdown-preview'
+Plugin 'ryanoasis/vim-devicons'
 call vundle#end()    " required
 
 " Leader
