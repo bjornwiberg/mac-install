@@ -121,9 +121,13 @@ let g:airline#extensions#ale#enabled = 1
 let g:ale_fix_on_save = 1
 let g:ale_linters = {
 \   'javascript': ['eslint'],
+\   'css': ['styleline'],
+\   'scss': ['styleline'],
 \}
 let g:ale_fixers = {
-\   'javascript': ['eslint'],
+\   'javascript': ['prettier', 'eslint'],
+\   'css': ['stylelint'],
+\   'scss': ['stylelint'],
 \}
 
 " Treat JSX as Javascript files
