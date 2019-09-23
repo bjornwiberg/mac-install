@@ -2,27 +2,19 @@
     "workbench.colorCustomizations": {
         "editor.lineHighlightBackground": "#090909",
         "tab.activeBorder": "#fff",
-        "statusBar.background": "#8FBCBB,#434C5E",
-        "statusBar.noFolderBackground": "#8FBCBB,#434C5E",
-        "statusBar.debuggingBackground": "#8FBCBB,#434C5E",
-        "editorRuler.foreground": "#0f0"
+        "editorRuler.foreground": "#f00",
+        "statusBar.foreground": "#434C5E",
+        "statusBar.background": "#8FBCBB",
+        "statusBar.noFolderBackground": "#8FBCBB",
+        "statusBar.debuggingBackground": "#8FBCBB"
     },
     "vim.insertModeKeyBindings": [
         {
-            "before": ["j","j"],
+            "before": ["j","k"],
             "after": ["<Esc>"]
         }
     ],
-    "vim.statusBarColorControl": true,
-    "vim.statusBarColors": {
-        "normal": ["#8FBCBB", "#434C5E"],
-        "insert": "#BF616A",
-        "visual": "#B48EAD",
-        "visualline": "#B48EAD",
-        "visualblock": "#A3BE8C",
-        "replace": "#D08770"
-    },
-    "vim.useSystemClipboard": true,
+    "vim.statusBarColorControl": false,
     "vim.otherModesKeyBindingsNonRecursive": [
         {
             "before":["<C-n>"],
@@ -40,5 +32,34 @@
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
-    "editor.rulers": [72]
+    "editor.rulers": [
+        72
+    ],
+    "vim.disableExtension": true,
+    "gitlens.advanced.messages": {
+        "suppressShowKeyBindingsNotice": true
+    },
+    "editor.minimap.enabled": false,
+    "gitlens.historyExplorer.enabled": true,
+    "window.zoomLevel": 1,
+    "javascript.updateImportsOnFileMove.enabled": "never",
+    "emmet.includeLanguages": {
+        "javascript": "javascriptreact"
+    },
+    "terminal.integrated.copyOnSelection": true,
+    "editor.highlightActiveIndentGuide": false,
+    "editor.tabCompletion": "on",
+    "workbench.colorTheme": "Solarized Dark",
+    "css.validate": false,
+    "less.validate": false,
+    "scss.validate": false,
+    "gitlens.views.fileHistory.enabled": true,
+    "gitlens.views.lineHistory.enabled": true,
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "liveshare.featureSet": "insiders",
+    "prettier.eslintIntegration": true,
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    }
 }
