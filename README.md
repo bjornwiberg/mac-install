@@ -72,16 +72,6 @@ ln -s ~/mac-install/vscode/settings.json
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 ```
 
-### Vim things
-- Spacegrey color scheme
-```
-cd ~/.vim/bundle && git clone git://github.com/ajh17/Spacegray.vim.git
-```
-- Vundle
-```
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-vim +PluginInstall +qall
-
 ```
 - Nerd Font Patched
 ```
