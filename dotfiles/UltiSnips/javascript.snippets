@@ -1,0 +1,81 @@
+snippet cl "console.log(...)"
+console.log($1);
+endsnippet
+
+snippet crpc "Create React.PureComponent"
+import PropTypes from 'prop-types';
+import React from 'react';
+
+export default class $1 extends React.PureComponent {
+  static propTypes = {}
+
+  state = {}
+
+  componentDidMount = () => {}
+
+  render = () => {
+    return;
+  }
+}
+endsnippet
+
+snippet crfc "Create React functional component"
+import PropTypes from 'prop-types';
+import React from 'react';
+
+export const $1 = () => {
+  return;
+}
+
+$1.propTypes = {};
+endsnippet
+
+snippet jde "Jest describe statement"
+describe('$1', () => {
+  $0
+});
+endsnippet
+
+snippet jit "Jest it statement"
+it('should $1', () => {
+  $0
+});
+endsnippet
+
+snippet jsha "Jest shallow"
+  const wrapper = shallow(
+    <${2:Component} {...props} />,
+  );
+endsnippet
+
+snippet jmnt "Jest mount"
+  const wrapper = mount(
+    <${2:Component} {...props} />,
+  );
+endsnippet
+
+snippet jex "Jest expect"
+expect(${1:wrapper.instance().$2})
+  .toBeCalledWith($0);
+endsnippet
+
+snippet jspy "Jest spyOn"
+jest.spyOn(${1:wrapper.instance()}, '${2:methodName}');
+endsnippet
+
+snippet wss "wrapper.setState"
+wrapper.setState({
+  $0
+});
+endsnippet
+
+snippet pnt "Process Next tick"
+process.nextTick(() => {
+  $0
+  done();
+});
+endsnippet
+
+snippet wi "wrapper.instance()"
+wrapper.instance().$0
+endsnippet
