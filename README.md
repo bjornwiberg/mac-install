@@ -57,6 +57,7 @@ rm ~/.zshrc
 ln -s mac-install/dotfiles/.zshrc
 ln -s mac-install/dotfiles/.shortcuts
 ln -s mac-install/dotfiles/.functions
+ln -s mac-install/dotfiles/.tmux.conf.
 ```
 
 ### Symlink settings for vscode
