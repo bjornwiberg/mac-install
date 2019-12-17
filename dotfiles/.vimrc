@@ -4,125 +4,66 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-call plug#begin('~/.vim/bundle')
-Plug 'VundleVim/Vundle.vim'
+" Specify a directory for plugins
+call plug#begin('~/.vim/plugged')
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'scrooloose/nerdtree'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'mattn/emmet-vim'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'tpope/vim-surround'
-" Plug 'terryma/vim-multiple-cursors'
-Plug 'easymotion/vim-easymotion'
-Plug 'mg979/vim-visual-multi'
-Plug 'cocopon/iceberg.vim'
-Plug 'lifepillar/vim-solarized8'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'ryanoasis/vim-devicons'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
-Plug 'jremmen/vim-ripgrep'
-Plug 'w0rp/ale'
+Plug 'ctrlpvim/ctrlp.vim' " fuzzy find files
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'morhetz/gruvbox'
+Plug 'tpope/vim-surround'
+Plug 'mg979/vim-visual-multi'
 Plug 'tomtom/tcomment_vim'
 Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tpope/vim-fugitive'
-Plug 'gorodinskiy/vim-coloresque'
 Plug 'pangloss/vim-javascript'
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'mxw/vim-jsx'
 Plug 'jistr/vim-nerdtree-tabs'
-Plug 'ervandew/supertab'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --ts-completer' }
-Plug 'SirVer/ultisnips'
-Plug 'christoomey/vim-tmux-navigator'
 Plug 'edkolev/tmuxline.vim'
 Plug 'dhruvasagar/vim-zoom'
 Plug 'jparise/vim-graphql'
+Plug 'SirVer/ultisnips'
+
+" Initialize plugin system
 call plug#end()
-
-" let g:UltiSnipsSnippetsDir = $HOME . "/mac-install/dotfiles/UltiSnips"
-let g:UltiSnipsSnippetDirectories = [$HOME . "/mac-install/dotfiles/UltiSnips"]
-let g:UltiSnipsEditSplit="vertical"
-
-" make YCM compatible with UltiSnips (using supertab)
-" let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-" let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-" let g:SuperTabDefaultCompletionType = '<C-n>'
-set completeopt-=preview
-
-" better key bindings for UltiSnipsExpandTrigger
-let g:UltiSnipsExpandTrigger="<C-q>"
-let g:UltiSnipsJumpForwardTrigger="<C-q>"
-let g:UltiSnipsJumpBackwardTrigger="<C-b>"
-
-" let g:UltiSnipsExpandTrigger="<Tab>"
-" let g:UltiSnipsJumpForwardTrigger="<Tab>"
-" let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
-"
-" Js syntax highlight
-let g:javascript_plugin_jsdoc = 1
-let g:jsx_ext_required = 0
 
 " Leader
 let mapleader = ","
-"
-" Emmet
-let g:user_emmet_leader_key='<C-S>'
 
-" Theme
-syntax on
-colorscheme solarized8_flat
-set cc=72,92
-" set synmaxcol=0
-filetype plugin indent on    " required
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-" let g:DevIconsEnableFoldersOpenClose = 1
+" UltiSnips
+let g:UltiSnipsSnippetDirectories = [$HOME . "/mac-install/dotfiles/UltiSnips"]
+let g:UltiSnipsEditSplit="horizontal"
 
-"Make background transparent
-hi Normal guibg=NONE ctermbg=NONE
-hi EndOfBuffer  guibg=NONE ctermbg=NONE
-
-" Set colors of color column and cursor line/column
-hi! ColorColumn cterm=NONE ctermbg=88
-" hi! CursorColumn cterm=NONE ctermbg=22 guibg=#262626
-" hi! CursorLine cterm=none ctermbg=52 guibg=#262626
-"
-" highlight SignColumn ctermbg=NONE
-highlight GitGutterAdd    ctermfg=2
-highlight GitGutterChange ctermfg=3
-highlight GitGutterDelete ctermfg=1
-
-" air line
-let g:airline_theme='iceberg'
-let g:airline#extensions#tabline#enabled = 1
-" set laststatus=2
-
-" custom
-set nu " add line numbers
-set relativenumber " use relative line numbers
-" disable relative line numbers when leaving buffer
-augroup numbertoggle
-  autocmd!
-  autocmd BufEnter,FocusGained,InsertLeave * if &ft!="nerdtree"|set relativenumber|endif
-  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
-augroup END
+" Dont use arrow keys in normal mode
 noremap <up> <nop>
 noremap <down> <nop>
 noremap <left> <nop>
 noremap <right> <nop>
-" noremap jk <esc>
-" inoremap <esc> <nop>
-inoremap jk <esc>
-" nnoremap ,cd :cd %:p:h<cr>:pwd<cr>
+inoremap jk <ESC>
+
+" Set undo and swap
 set undofile
 set undoreload=250
 set undodir=~/.vim/undo//
 set directory=~/.vim/swap//
-nnoremap <c-g> :Rg<cr>
+
 " Search in files with selection
 vnoremap // y:Rg <C-r>=escape(@",'/\')<CR><CR>
+
 " copy selected text to clipboard
 vnoremap yc :%w !pbcopy<CR><CR>
+
+" reload .vimrc on save
 augroup autosourcing
   autocmd!
   autocmd BufWritePost .vimrc source %
@@ -137,50 +78,67 @@ inoremap ˚ <Esc>:m .-2<CR>==gi
 vnoremap ∆ :m '>+1<CR>gv=gv
 vnoremap ˚ :m '<-2<CR>gv=gv
 
+" Js syntax highlight
+let g:javascript_plugin_jsdoc = 1
+let g:jsx_ext_required = 0
+
 " Search
 set incsearch
 set ignorecase
 nnoremap <silent> <Space>  :set hlsearch! hlsearch?<Bar>:echo<CR>
 
-"Indentation
-set nowrap
+" NerdTree
+map <C-a> :NERDTreeTabsToggle<CR>
+let g:NERDTreeGitStatusWithFlags = 1
+"let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+"let g:NERDTreeGitStatusNodeColorization = 1
+"let g:NERDTreeColorMapCustom = {
+    "\ "Staged"    : "#0ee375",
+    "\ "Modified"  : "#d9bf91",
+    "\ "Renamed"   : "#51C9FC",
+    "\ "Untracked" : "#FCE77C",
+    "\ "Unmerged"  : "#FC51E6",
+    "\ "Dirty"     : "#FFBD61",
+    "\ "Clean"     : "#87939A",
+    "\ "Ignored"   : "#808080"
+    "\ }
+
+
+let g:NERDTreeIgnore = ['^node_modules$']
+
+" Leader
+let mapleader = ","
+
+" ctrlp
+let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+
+" j/k will move virtual lines (lines that wrap)
+noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
+noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
+
+" Vim Markdown Preview
+let vim_markdown_preview_hotkey='<C-m>'
+let vim_markdown_preview_temp_file=1
+let vim_markdown_preview_browser='Google Chrome'
+
+set nu " add line numbers
+set relativenumber
+" disable relative line numbers when leaving buffer
+augroup numbertoggle
+  autocmd!
+  autocmd BufEnter,FocusGained,InsertLeave * if &ft!="nerdtree"|set relativenumber|endif
+  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+augroup END
+
+
+set smarttab
+set cindent
 set tabstop=2
-set softtabstop=2
 set shiftwidth=2
+" always uses spaces instead of tab characters
 set expandtab
 
-" NerdTree
-let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
-map <C-a> :NERDTreeTabsToggle<CR>
-autocmd VimEnter * NERDTree
-autocmd VimEnter * wincmd p
-autocmd StdinReadPre * let s:std_in=1
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-" Check if NERDTree is open or active
-function! IsNERDTreeOpen()
-  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
-endfunction
-
-" " Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
-" " file, and we're not in vimdiff
-" function! SyncTree()
-"   if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
-"     NERDTreeFind
-"     wincmd p
-"   endif
-" endfunction
-"
-" " Highlight currently open buffer in NERDTree
-" autocmd BufEnter * call SyncTree()
-
-" No beep when using mapped commands
-set noerrorbells visualbell t_vb=
-if has('autocmd')
-    autocmd GUIEnter * set visualbell t_vb=
-endif
-
-set encoding=utf8
+" Whitespace
 set list
 set listchars=tab:▸\ ,eol:¬
 highlight ExtraWhitespace ctermbg=red guibg=red
@@ -190,75 +148,46 @@ autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
 
+" Theme
+colorscheme gruvbox
+set cc=72,92
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+" Make background transparent
+hi Normal guibg=NONE ctermbg=NONE
+hi EndOfBuffer  guibg=NONE ctermbg=NONE
+
+" Set colors of color column and cursor line/column
+hi! ColorColumn cterm=NONE ctermbg=88
 set cursorline
 set cursorcolumn
 
-"Fonts
+" Fonts
 set guifont=DroidSansMono\ Nerd\ Font\ Mono:h14
-" let g:airline_pedkolev/tmuxline.vimowerline_fonts = 1
 
-" " Multiple cursors
-" let sdag:multi_cursor_use_default_mapping=0
-" let sdag:multi_cursor_next_key='<C-n>'
-" let sdag:multi_cursor_prev_key='<C-b>'
-" let sdag:multi_cursor_skip_key='<C-x>'
-" let sdag:multi_cursor_quit_key='<Esc>'
+" air line
+" let g:airline_theme='iceberg'
+let g:airline#extensions#tabline#enabled = 1
 
-" Visual multi
-function! VM_Start()
-  nmap <buffer> <C-C> <Esc>
-  imap <buffer> <C-C> <Esc>
-endfunction
+" coc config
+let g:coc_global_extensions = [
+  \ 'coc-ultisnips',
+  \ 'coc-pairs',
+  \ 'coc-tsserver',
+  \ 'coc-eslint',
+  \ 'coc-prettier',
+  \ 'coc-json',
+  \ 'coc-css',
+  \ ]
+" from readme
+" if hidden is not set, TextEdit might fail.
+set hidden " Some servers have issues with backup files, see #649 set nobackup set nowritebackup " Better display for messages set cmdheight=2 " You will have bad experience for diagnostic messages when it's default 4000.
+set updatetime=300
+"
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
 
-function! VM_Exit()
-  nunmap <buffer> <C-C>
-  iunmap <buffer> <C-C>
-endfunction
-
-" ctrlp config
-let g:ctrlp_show_hidden = 1
-" use ripgrep for insane speed
-if executable('rg')
-  set grepprg=rg\ --color=never
-  let g:ctrlp_user_command = 'rg %s --files --color=never --hidden'
-  let g:ctrlp_use_caching = 0
-endif
-
-" ALE Config
-let g:ale_sign_warning = '⚠'
-" let g:ale_sign_error = '✗'
-let g:ale_sign_error = '>>'
-let g:ale_sign_column_always = 1
-" let g:ale_change_sign_column_color = 1
-let g:airline#extensions#ale#enabled = 1
-let g:ale_fix_on_save = 1
-let g:ale_linters = {
-\   'javascript': ['eslint'],
-\   'css': ['styleline'],
-\   'scss': ['styleline'],
-\}
-let g:ale_fixers = {
-\   'javascript': ['eslint'],
-\   'css': ['stylelint'],
-\   'scss': ['stylelint'],
-\}
-
-" Treat JSX as Javascript files
-augroup FiletypeGroup
-    autocmd!
-    au BufNewFile,BufRead *.jsx set filetype=javascript.jsx
-augroup END
-
-" gitgutter config (enable check on save)
-autocmd BufWritePost * GitGutter
-
-" magit config
-let g:magit_refresh_gitgutter=1
-
-" Vim Markdown Preview
-let vim_markdown_preview_hotkey='<C-m>'
-let vim_markdown_preview_temp_file=1
-let vim_markdown_preview_browser='Google Chrome'
+" always show signcolumns
+set signcolumn=yes
 
 " Splits
 nmap <silent> <c-k> :wincmd k<CR>
@@ -268,35 +197,6 @@ nmap <silent> <c-l> :wincmd l<CR>
 nnoremap ,h :split<enter>
 nnoremap ,v :vsplit<enter>
 set splitbelow
-
-" Tabs
-nnoremap <C-t>     :tabnew<CR>
-inoremap <C-t>     <Esc>:tabnew<CR>
-nnoremap H         gT " Go to prev tab
-nnoremap L         gt " Go to next tab
-
-" Auto toggle paste/nopaste
-function! WrapForTmux(s)
-  if !exists('$TMUX')
-    return a:s
-  endif
-
-  let tmux_start = "\<Esc>Ptmux;"
-  let tmux_end = "\<Esc>\\"
-
-  return tmux_start . substitute(a:s, "\<Esc>", "\<Esc>\<Esc>", 'g') . tmux_end
-endfunction
-
-let &t_SI .= WrapForTmux("\<Esc>[?2004h")
-let &t_EI .= WrapForTmux("\<Esc>[?2004l")
-
-function! XTermPasteBegin()
-  set pastetoggle=<Esc>[201~
-  set paste
-  return ""
-endfunction
-
-inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
 " Search for selected text, forwards or backwards.
 vnoremap <silent> * :<C-U>
@@ -310,20 +210,80 @@ vnoremap <silent> # :<C-U>
   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
 
-" EasyMotion
-let g:EasyMotion_do_mapping = 0 " Disable default mappings
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-" Jump to anywhere you want with minimal keystrokes, with just one key binding.
-" `s{char}{label}`
-nmap f <Plug>(easymotion-overwin-f)
-" or
-" `s{char}{char}{label}`
-" Need one more keystroke, but on average, it may be more comfortable.
-nmap f <Plug>(easymotion-overwin-f2)
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
-" Turn on case-insensitive feature
-let g:EasyMotion_smartcase = 1
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
 
-" JK motions: Line motions
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" Or use `complete_info` if your vim support it, like:
+" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" use `:OR` for organize import of current buffer
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add status line support, for integration with other plugin, checkout `:h coc-status`
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
