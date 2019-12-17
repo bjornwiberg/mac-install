@@ -5,7 +5,7 @@ brew "cmake"
 brew "desk"
 brew "markdown
 brew "node"
-brew "vim --with-override-system-vi"
+brew "nvim"
 brew "zsh-autosuggestions"
 cask "alfred"
 cask "firefox-developer-edition"
