@@ -31,6 +31,7 @@ Plug 'edkolev/tmuxline.vim'
 Plug 'dhruvasagar/vim-zoom'
 Plug 'jparise/vim-graphql'
 Plug 'SirVer/ultisnips'
+Plug 'jremmen/vim-ripgrep'
 
 " Initialize plugin system
 call plug#end()
