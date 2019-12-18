@@ -25,7 +25,7 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'tpope/vim-fugitive'
 Plug 'pangloss/vim-javascript'
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
-Plug 'mxw/vim-jsx'
+Plug 'maxmellon/vim-jsx-pretty'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'edkolev/tmuxline.vim'
 Plug 'dhruvasagar/vim-zoom'
@@ -76,10 +76,6 @@ inoremap ∆ <Esc>:m .+1<CR>==gi
 inoremap ˚ <Esc>:m .-2<CR>==gi
 vnoremap ∆ :m '>+1<CR>gv=gv
 vnoremap ˚ :m '<-2<CR>gv=gv
-
-" Js syntax highlight
-let g:javascript_plugin_jsdoc = 1
-let g:jsx_ext_required = 0
 
 " Search
 set incsearch
