@@ -1,4 +1,5 @@
 {
+  "eslint.autoFixOnSave": true,
   "suggest.noselect": false,
   "coc.preferences.hoverTarget": "float",
   "coc.preferences.formatOnSaveFiletypes": [
