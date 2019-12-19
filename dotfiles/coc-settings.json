@@ -2,6 +2,7 @@
   "eslint.autoFixOnSave": true,
   "suggest.noselect": false,
   "coc.preferences.hoverTarget": "float",
+  "suggest.maxCompleteItemCount": 20,
   "coc.preferences.formatOnSaveFiletypes": [
     "javascript",
     "javascriptreact",
