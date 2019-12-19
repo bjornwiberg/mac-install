@@ -171,14 +171,15 @@ let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_
 
 " coc config
 let g:coc_global_extensions = [
-  \ 'coc-ultisnips',
-  \ 'coc-pairs',
-  \ 'coc-tsserver',
-  \ 'coc-eslint',
-  \ 'coc-prettier',
-  \ 'coc-json',
   \ 'coc-css',
   \ 'coc-emmet',
+  \ 'coc-eslint',
+  \ 'coc-html',
+  \ 'coc-json',
+  \ 'coc-pairs',
+  \ 'coc-prettier',
+  \ 'coc-tsserver',
+  \ 'coc-ultisnips',
   \ ]
 " from readme
 " if hidden is not set, TextEdit might fail.
