@@ -3,8 +3,11 @@
   "coc.preferences.hoverTarget": "float",
   "coc.preferences.formatOnSaveFiletypes": [
     "javascript",
+    "javascriptreact",
     "typescript",
+    "typescript.tsx",
     "typescriptreact",
+    "graphql",
     "json",
     "javascriptreact",
     "typescript.tsx",
