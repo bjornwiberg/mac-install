@@ -59,6 +59,10 @@ expect(${1:wrapper.instance().$2})
   .toBeCalledWith($0);
 endsnippet
 
+snippet jexd "Jest expect toBeInTheDocument"
+expect(${1:getByText('$2')}).toBeInTheDocument($0);
+endsnippet
+
 snippet jspy "Jest spyOn"
 jest.spyOn(${1:wrapper.instance()}, '${2:methodName}');
 endsnippet

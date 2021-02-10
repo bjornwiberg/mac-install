@@ -14,7 +14,6 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
-Plug 'ctrlpvim/ctrlp.vim' " fuzzy find files
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-surround'
@@ -31,10 +30,43 @@ Plug 'edkolev/tmuxline.vim'
 Plug 'dhruvasagar/vim-zoom'
 Plug 'jparise/vim-graphql'
 Plug 'SirVer/ultisnips'
-Plug 'jremmen/vim-ripgrep'
+Plug 'APZelos/blamer.nvim'
+Plug 'jreybert/vimagit'
+Plug 'eliba2/vim-node-inspect'
+Plug 'benmills/vimux'
+Plug 'tyewang/vimux-jest-test'
+Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 " Initialize plugin system
 call plug#end()
+
+"" FZF
+"" Include hidden files and respect .gitignore when searching for file
+let $FZF_DEFAULT_COMMAND='rg --files -g "!.git/" --hidden'
+"" Include hidden files and search only file content when searching in workspace
+command! -bang -nargs=* Rg call fzf#vim#grep('rg --color=always --column -g "!.git/" --hidden -n --no-heading -S -- '.shellescape(<q-args>), 1, fzf#vim#with_preview({ 'options': '-d : -n 4..' }), <bang>0)
+"" ALT+f to search in workspace
+nnoremap ƒ :Rg<cr>
+"" CTRL+p to search for file
+nnoremap <C-P> :Files<cr>
+
+" termguicolors
+set termguicolors
+let g:Hexokinase_highlighters = ['sign_column']
+" set Vim-specific sequences for RGB colors
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+
+" Node inspect mappings
+nnoremap <silent><F4> :NodeInspectStart<cr>
+nnoremap <silent><F5> :NodeInspectRun<cr>
+nnoremap <silent><F6> :NodeInspectConnect("127.0.0.1:9229")<cr>
+nnoremap <silent><F7> :NodeInspectStepInto<cr>
+nnoremap <silent><F8> :NodeInspectStepOver<cr>
+nnoremap <silent><F9> :NodeInspectToggleBreakpoint<cr>
+nnoremap <silent><F10> :NodeInspectStop<cr>
 
 " Leader
 let mapleader = ","
@@ -59,6 +91,9 @@ endfunction
 
 au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
+
+" Set prisma extension to graphql
+au BufNewFile,BufRead *.prisma setfiletype graphql
 
 " Dont use arrow keys in normal mode
 noremap <up> <nop>
@@ -103,17 +138,18 @@ nnoremap <silent> <Space>  :set hlsearch! hlsearch?<Bar>:echo<CR>
 map <C-a> :NERDTreeTabsToggle<CR>
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeIgnore = ['^\.DS_Store$', '^tags$', '\.git$[[dir]]', '\.idea$[[dir]]', '\.sass-cache$']
+let g:NERDTreeWinPos = "right"
+nmap <silent> <c-f> :NERDTreeFind<CR>
+let g:NERDTreeWinSize=45
 
 " Leader
 let mapleader = ","
-
-" ctrlp
-let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
 
 " Vim Markdown Preview
 let vim_markdown_preview_hotkey='<C-m>'
 let vim_markdown_preview_temp_file=1
 let vim_markdown_preview_browser='Google Chrome'
+let vim_markdown_preview_github=1
 
 set nu " add line numbers
 set relativenumber
@@ -129,6 +165,7 @@ set smarttab
 set cindent
 set tabstop=2
 set shiftwidth=2
+set nowrap
 " always uses spaces instead of tab characters
 set expandtab
 
@@ -168,7 +205,6 @@ let airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
 let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
 let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
 
-
 " coc config
 let g:coc_global_extensions = [
   \ 'coc-css',
@@ -180,6 +216,8 @@ let g:coc_global_extensions = [
   \ 'coc-prettier',
   \ 'coc-tsserver',
   \ 'coc-ultisnips',
+  \ 'coc-yaml',
+  \ 'coc-rome',
   \ ]
 " from readme
 " if hidden is not set, TextEdit might fail.
@@ -188,6 +226,9 @@ set updatetime=300
 "
 " don't give |ins-completion-menu| messages.
 set shortmess+=c
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
 
 " always show signcolumns
 set signcolumn=yes
@@ -223,7 +264,7 @@ inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
   let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+  returf !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 " Use <c-space> to trigger completion.
@@ -269,3 +310,9 @@ augroup end
 
 " use `:OR` for organize import of current buffer
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" blamer
+let g:blamer_enabled = 1
+let g:blamer_template ='<author>, <author-time> • <summary>'
+let g:blamer_show_in_visual_modes = 0
+let g:blamer_prefix = ' > '

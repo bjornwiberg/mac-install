@@ -10,22 +10,28 @@
     },
     "vim.insertModeKeyBindings": [
         {
-            "before": ["j","k"],
-            "after": ["<Esc>"]
+            "before": [
+                "j",
+                "k"
+            ],
+            "after": [
+                "<Esc>"
+            ]
         }
     ],
     "vim.statusBarColorControl": false,
     "vim.otherModesKeyBindingsNonRecursive": [
         {
-            "before":["<C-n>"],
-            "after":[],
+            "before": [
+                "<C-n>"
+            ],
+            "after": [],
             "commands": [
                 {
                     "command": ":nohl",
                     "args": []
                 }
             ]
-
         },
     ],
     "vim.hlsearch": true,
@@ -33,7 +39,8 @@
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
     "editor.rulers": [
-        72
+        72,
+        92
     ],
     "vim.disableExtension": true,
     "gitlens.advanced.messages": {
@@ -41,7 +48,7 @@
     },
     "editor.minimap.enabled": false,
     "gitlens.historyExplorer.enabled": true,
-    "window.zoomLevel": 1,
+    "window.zoomLevel": 0,
     "javascript.updateImportsOnFileMove.enabled": "never",
     "emmet.includeLanguages": {
         "javascript": "javascriptreact"
@@ -58,8 +65,20 @@
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "liveshare.featureSet": "insiders",
-    "prettier.eslintIntegration": true,
+    // Set the default
+    "editor.formatOnSave": false,
+    // Enable per-language
+    "[javascript]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
     "[javascriptreact]": {
         "editor.defaultFormatter": "vscode.typescript-language-features"
-    }
+    },
+    "editor.tabSize": 2,
+    "editor.fontSize": 12,
+    "workbench.activityBar.visible": true,
+    "breadcrumbs.enabled": true,
+    "workbench.sideBar.location": "right",
+    "editor.renderLineHighlight": "gutter"
 }

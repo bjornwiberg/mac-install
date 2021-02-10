@@ -90,3 +90,4 @@ lookup () {
         fi
 }
 
+compctl -g '~/.teamocil/*(:t:r)' teamocil
