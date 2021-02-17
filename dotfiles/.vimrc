@@ -19,7 +19,6 @@ Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-surround'
 Plug 'mg979/vim-visual-multi'
 Plug 'tomtom/tcomment_vim'
-Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tpope/vim-fugitive'
 Plug 'pangloss/vim-javascript'
@@ -38,6 +37,7 @@ Plug 'tyewang/vimux-jest-test'
 Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
 " Initialize plugin system
 call plug#end()
@@ -145,11 +145,8 @@ let g:NERDTreeWinSize=45
 " Leader
 let mapleader = ","
 
-" Vim Markdown Preview
-let vim_markdown_preview_hotkey='<C-m>'
-let vim_markdown_preview_temp_file=1
-let vim_markdown_preview_browser='Google Chrome'
-let vim_markdown_preview_github=1
+" Markdown Preview
+nmap <C-m> <Plug>MarkdownPreviewToggle
 
 set nu " add line numbers
 set relativenumber
