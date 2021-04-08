@@ -42,6 +42,9 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 " Initialize plugin system
 call plug#end()
 
+set foldmethod=syntax
+set nofoldenable
+
 "" FZF
 "" Include hidden files and respect .gitignore when searching for file
 let $FZF_DEFAULT_COMMAND='rg --files -g "!.git/" --hidden'
