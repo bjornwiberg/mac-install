@@ -21,5 +21,8 @@
     "css",
     "less",
     "scss"
-  ]
+  ],
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  }
 }
