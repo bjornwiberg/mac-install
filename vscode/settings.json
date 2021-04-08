@@ -66,7 +66,7 @@
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "liveshare.featureSet": "insiders",
     // Set the default
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": true,
     // Enable per-language
     "[javascript]": {
         "editor.formatOnSave": true,
@@ -80,5 +80,9 @@
     "workbench.activityBar.visible": true,
     "breadcrumbs.enabled": true,
     "workbench.sideBar.location": "right",
-    "editor.renderLineHighlight": "gutter"
+    "editor.renderLineHighlight": "gutter",
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "json.maxItemsComputed": 50000
 }
