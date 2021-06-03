@@ -89,6 +89,11 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
 ```
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ```
+#### Install tmux plugins
+```
+tmux
+```
+**Press prefix + I to fetch the plugins and source them.**
 
 ### Nerd Font Patched
 ```
