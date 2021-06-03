@@ -61,9 +61,11 @@ ln -s mac-install/dotfiles/.tmux.conf
 ```
 
 ### Symlink settings for COC
+```
 mkdir -p ~/.config/nvim
 cd ~/.config/nvim
 ln -s ~/mac-install/dotfiles/coc-settings.json
+```
 
 ### Install pynvim for python3 support in nvim
 python3 -m pip install --user --upgrade pynvim
