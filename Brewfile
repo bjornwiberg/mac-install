@@ -3,7 +3,7 @@ tap "homebrew/core"
 brew "cask"
 brew "cmake"
 brew "desk"
-brew "markdown
+brew "markdown"
 brew "node"
 brew "nvim"
 brew "nvm"
