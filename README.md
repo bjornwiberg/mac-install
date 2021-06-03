@@ -3,11 +3,6 @@
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
-## Install Xcode
-```
-xcode-select --install
-```
-
 ### Git
 ```
 brew install git
