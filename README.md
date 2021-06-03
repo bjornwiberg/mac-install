@@ -68,9 +68,9 @@ ln -s ~/mac-install/dotfiles/coc-settings.json
 ```
 
 ### Install pynvim for python3 support in nvim
+```
 python3 -m pip install --user --upgrade pynvim
-
-check https://neovim.io/doc/user/provider.html for more info
+```
 
 ### Symlink settings for vscode
 ```
