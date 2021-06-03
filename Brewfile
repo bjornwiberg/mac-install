@@ -1,4 +1,4 @@
-tap "caskroom/cask"
+tap "homebrew/cask"
 tap "homebrew/core"
 brew "cask"
 brew "cmake"
