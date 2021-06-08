@@ -3,11 +3,6 @@
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
-## Install Xcode
-```
-xcode-select --install
-```
-
 ### Git
 ```
 brew install git
@@ -68,9 +63,9 @@ ln -s ~/mac-install/dotfiles/coc-settings.json
 ```
 
 ### Install pynvim for python3 support in nvim
+```
 python3 -m pip install --user --upgrade pynvim
-
-check https://neovim.io/doc/user/provider.html for more info
+```
 
 ### Symlink settings for vscode
 ```
@@ -89,6 +84,11 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
 ```
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ```
+#### Install tmux plugins
+```
+tmux
+```
+**Press prefix + I to fetch the plugins and source them.**
 
 ### Nerd Font Patched
 ```
