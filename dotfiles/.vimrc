@@ -21,23 +21,19 @@ Plug 'mg979/vim-visual-multi'
 Plug 'tomtom/tcomment_vim'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tpope/vim-fugitive'
-Plug 'pangloss/vim-javascript'
-Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
-Plug 'maxmellon/vim-jsx-pretty'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'edkolev/tmuxline.vim'
 Plug 'dhruvasagar/vim-zoom'
-Plug 'jparise/vim-graphql'
 Plug 'SirVer/ultisnips'
 Plug 'APZelos/blamer.nvim'
 Plug 'jreybert/vimagit'
 Plug 'eliba2/vim-node-inspect'
-Plug 'benmills/vimux'
-Plug 'tyewang/vimux-jest-test'
 Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+Plug 'sheerun/vim-polyglot'
+Plug 'OmniSharp/omnisharp-vim'
 
 " Initialize plugin system
 call plug#end()
