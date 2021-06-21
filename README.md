@@ -90,6 +90,13 @@ tmux
 ```
 **Press prefix + I to fetch the plugins and source them.**
 
+### Teamocil
+https://github.com/remi/teamocil
+```
+gem install teamocil
+cd && ln -s mac-install/dotfiles/.teamocil
+```
+
 ### Nerd Font Patched
 ```
 cd ~/Library/Fonts && curl -fLo "Droid Sans Mono Nerd Font Complete Mono.otf" https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete%20Mono.otf\?raw\=true

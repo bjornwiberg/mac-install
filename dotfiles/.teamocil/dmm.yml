@@ -1,0 +1,16 @@
+windows:
+  - name: dmm
+    root: ~/Sites/DigitalMeny
+    layout: 3fe1,170x132,0,0[170x96,0,0,0,170x17,0,97,1,170x17,0,115{85x17,0,115,2,84x17,86,115,3}]
+    panes:
+      - commands:
+          - nvim
+        focus: true
+      - commands:
+      - commands:
+          - cd Client
+          - yarn start
+      - commands:
+          - cd Service
+          - dotnet run
+
