@@ -24,5 +24,8 @@
   ],
   "emmet.includeLanguages": {
     "javascript": "javascriptreact"
-  }
+  },
+  "sumneko-lua.enableNvimLuaDev": true,
+  "diagnostic.virtualText": true,
+  "diagnostic.virtualTextCurrentLineOnly": false
 }

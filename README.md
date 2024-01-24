@@ -55,11 +55,11 @@ ln -s mac-install/dotfiles/.functions
 ln -s mac-install/dotfiles/.tmux.conf
 ```
 
-### Symlink settings for COC
+### Symlink settings for nvim
 ```
-mkdir -p ~/.config/nvim
-cd ~/.config/nvim
-ln -s ~/mac-install/dotfiles/coc-settings.json
+mkdir -p ~/.config
+cd ~/.config
+ln -s ~/mac-install/dotfiles/nvim
 ```
 
 ### Install pynvim for python3 support in nvim
@@ -99,5 +99,5 @@ cd && ln -s mac-install/dotfiles/.teamocil
 
 ### Nerd Font Patched
 ```
-cd ~/Library/Fonts && curl -fLo "Droid Sans Mono Nerd Font Complete Mono.otf" https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete%20Mono.otf\?raw\=true
+cd ~/Library/Fonts && curl -fLo "Fira Code Regular Nerd Font Complete Mono.ttf" https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/FiraCode/Regular/complete/Fira%20Code%20Regular%20Nerd%20Font%20Complete%20Mono.ttf\?raw\=true
 ```
