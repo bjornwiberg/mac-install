@@ -1,4 +1,9 @@
 export ZSH=~/.oh-my-zsh
+
+# HIST_IGNORE_SPACE don't store commands prefixed with a space
+# HIST_NO_STORE don't store history (fc -l) command
+# HIST_NO_FUNCTIONS don't store function definitions
+setopt HIST_IGNORE_SPACE
 ZSH_THEME="mortalscumbag"
 plugins=(git)
 source $ZSH/oh-my-zsh.sh
