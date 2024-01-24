@@ -6,90 +6,133 @@ endif
 
 " Specify a directory for plugins
 call plug#begin('~/.vim/plugged')
-Plug 'vim-airline/vim-airline'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'scrooloose/nerdtree'
-Plug 'editorconfig/editorconfig-vim'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'airblade/vim-gitgutter'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'morhetz/gruvbox'
-Plug 'tpope/vim-surround'
-Plug 'mg979/vim-visual-multi'
-Plug 'tomtom/tcomment_vim'
-Plug 'ryanoasis/vim-devicons'
-Plug 'tpope/vim-fugitive'
-Plug 'jistr/vim-nerdtree-tabs'
-Plug 'edkolev/tmuxline.vim'
-Plug 'dhruvasagar/vim-zoom'
-Plug 'SirVer/ultisnips'
+" Plug 'SirVer/ultisnips'
 Plug 'APZelos/blamer.nvim'
-Plug 'jreybert/vimagit'
-Plug 'eliba2/vim-node-inspect'
+" Plug 'eliba2/vim-node-inspect'
 Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
-Plug 'sheerun/vim-polyglot'
-Plug 'OmniSharp/omnisharp-vim'
+Plug 'yardnsm/vim-import-cost', { 'do': 'npm install --production' }
 
 " Initialize plugin system
 call plug#end()
 
-set foldmethod=syntax
-set nofoldenable
+function! MakeSession()
+  let b:sessiondir = $HOME . "/.vim/sessions" . getcwd()
+  if (filewritable(b:sessiondir) != 2)
+    exe 'silent !mkdir -p ' b:sessiondir
+    redraw!
+  endif
+  let b:filename = b:sessiondir . '/session.vim'
+  exe "mksession! " . b:filename
+endfunction
 
-"" FZF
-"" Include hidden files and respect .gitignore when searching for file
+function! LoadSession()
+  let b:sessiondir = $HOME . "/.vim/sessions" . getcwd()
+  let b:sessionfile = b:sessiondir . "/session.vim"
+  if (filereadable(b:sessionfile))
+    exe 'source ' b:sessionfile
+  else
+    echo "No session loaded."
+  endif
+endfunction
+
+" Gitgutter
+nmap <leader>d :GitGutterNextHunk<CR>
+nmap <leader>s :GitGutterPrevHunk<CR>
+nmap <leader>a :GitGutterPreviewHunk<CR>
+
+" Adding automatons for when entering or leaving Vim
+" au VimEnter * nested :call LoadSession()
+" au VimLeave * :call MakeSession()
+
+" Dim inactive windows using 'colorcolumn' setting
+" This tends to slow down redrawing, but is very useful.
+" Based on https://groups.google.com/d/msg/vim_use/IJU-Vk-QLJE/xz4hjPjCRBUJ
+" XXX: this will only work with lines containing text (i.e. not '~')
+" from 
+if exists('+colorcolumn')
+  function! s:DimInactiveWindows()
+    for i in range(1, tabpagewinnr(tabpagenr(), '$'))
+      let l:range = ""
+      if i != winnr()
+        if &wrap
+         " HACK: when wrapping lines is enabled, we use the maximum number
+         " of columns getting highlighted. This might get calculated by
+         " looking for the longest visible line and using a multiple of
+         " winwidth().
+         let l:width=256 " max
+        else
+         let l:width=winwidth(i)
+        endif
+        let l:range = join(range(1, l:width), ',')
+      endif
+      call setwinvar(i, '&colorcolumn', l:range)
+    endfor
+  endfunction
+  augroup DimInactiveWindows
+    au!
+    au WinEnter * call s:DimInactiveWindows()
+    au WinEnter * set cursorline
+    au WinLeave * set nocursorline
+  augroup END
+endif
+
+"
+" set foldmethod=syntax
+" set nofoldenable
+"
+" FZF
+" Include hidden files and respect .gitignore when searching for file
 let $FZF_DEFAULT_COMMAND='rg --files -g "!.git/" --hidden'
-"" Include hidden files and search only file content when searching in workspace
-command! -bang -nargs=* Rg call fzf#vim#grep('rg --color=always --column -g "!.git/" --hidden -n --no-heading -S -- '.shellescape(<q-args>), 1, fzf#vim#with_preview({ 'options': '-d : -n 4..' }), <bang>0)
-"" ALT+f to search in workspace
+" Include hidden files and search only file content when searching in workspace
+" command! -bang -nargs=* Rg call fzf#vim#grep('rg --color=always --column -g "!.git/" --hidden -n --no-heading -S -- '.shellescape(<q-args>), 1, fzf#vim#with_preview({ 'options': '-d : -n 4..' }), <bang>0)
+" ALT+f to search in workspace
 nnoremap ƒ :Rg<cr>
-"" CTRL+p to search for file
+" CTRL+p to search for file
 nnoremap <C-P> :Files<cr>
 
-" termguicolors
-set termguicolors
-let g:Hexokinase_highlighters = ['sign_column']
-" set Vim-specific sequences for RGB colors
-let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-
-" Node inspect mappings
-nnoremap <silent><F4> :NodeInspectStart<cr>
-nnoremap <silent><F5> :NodeInspectRun<cr>
-nnoremap <silent><F6> :NodeInspectConnect("127.0.0.1:9229")<cr>
-nnoremap <silent><F7> :NodeInspectStepInto<cr>
-nnoremap <silent><F8> :NodeInspectStepOver<cr>
-nnoremap <silent><F9> :NodeInspectToggleBreakpoint<cr>
-nnoremap <silent><F10> :NodeInspectStop<cr>
+" " Node inspect mappings
+" nnoremap <silent><F4> :NodeInspectStart<cr>
+" nnoremap <silent><F5> :NodeInspectRun<cr>
+" nnoremap <silent><F6> :NodeInspectConnect("127.0.0.1:9229")<cr>
+" nnoremap <silent><F7> :NodeInspectStepInto<cr>
+" nnoremap <silent><F8> :NodeInspectStepOver<cr>
+" nnoremap <silent><F9> :NodeInspectToggleBreakpoint<cr>
+" nnoremap <silent><F10> :NodeInspectStop<cr>
 
 " Leader
 let mapleader = ","
 
-" UltiSnips
-let g:UltiSnipsSnippetDirectories = [$HOME . "/mac-install/dotfiles/UltiSnips"]
-let g:UltiSnipsEditSplit="horizontal"
-function! g:UltiSnips_Complete()
-    call UltiSnips#ExpandSnippet()
-    if g:ulti_expand_res == 0
-        if pumvisible()
-            return "\<C-n>"
-        else
-            call UltiSnips#JumpForwards()
-            if g:ulti_jump_forwards_res == 0
-              return "\<TAB>"
-            endif
-        endif
-    endif
-    return ""
-endfunction
+let g:coc_snippet_next = '<tab>'
+imap <C-l> <Plug>(coc-snippets-expand)
 
-au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
+" snippets.ultisnips.directories: [
+"   $HOME . "/mac-install/dotfiles/UltiSnips"
+" ],
+
+" " UltiSnips
+" let g:UltiSnipsSnippetDirectories = [$HOME . "/mac-install/dotfiles/UltiSnips"]
+" let g:UltiSnipsEditSplit="horizontal"
+" function! g:UltiSnips_Complete()
+"     call UltiSnips#ExpandSnippet()
+"     if g:ulti_expand_res == 0
+"         if pumvisible()
+"             return "\<C-n>"
+"         else
+"             call UltiSnips#JumpForwards()
+"             if g:ulti_jump_forwards_res == 0
+"               return "\<TAB>"
+"             endif
+"         endif
+"     endif
+"     return ""
+" endfunction
+"
+" au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+" let g:UltiSnipsJumpForwardTrigger="<tab>"
 
 " Set prisma extension to graphql
 au BufNewFile,BufRead *.prisma setfiletype graphql
@@ -99,7 +142,6 @@ noremap <up> <nop>
 noremap <down> <nop>
 noremap <left> <nop>
 noremap <right> <nop>
-inoremap jk <ESC>
 
 " Set undo and swap
 set undofile
@@ -133,14 +175,6 @@ set incsearch
 set ignorecase
 nnoremap <silent> <Space>  :set hlsearch! hlsearch?<Bar>:echo<CR>
 
-" NerdTree
-map <C-a> :NERDTreeTabsToggle<CR>
-let g:NERDTreeShowHidden = 1
-let g:NERDTreeIgnore = ['^\.DS_Store$', '^tags$', '\.git$[[dir]]', '\.idea$[[dir]]', '\.sass-cache$']
-let g:NERDTreeWinPos = "right"
-nmap <silent> <c-f> :NERDTreeFind<CR>
-let g:NERDTreeWinSize=45
-
 " Leader
 let mapleader = ","
 
@@ -152,7 +186,7 @@ set relativenumber
 " disable relative line numbers when leaving buffer
 augroup numbertoggle
   autocmd!
-  autocmd BufEnter,FocusGained,InsertLeave * if &ft!="nerdtree"|set relativenumber|endif
+  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
   autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
 augroup END
 
@@ -167,7 +201,7 @@ set expandtab
 
 " Whitespace
 set list
-set listchars=tab:▸\ ,eol:¬
+set listchars=tab:▸\ ,eol:↴
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
@@ -176,30 +210,13 @@ autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
 
 " Theme
-colorscheme gruvbox
 set cc=72,92
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-" Make background transparent
-hi Normal guibg=NONE ctermbg=NONE
-hi EndOfBuffer  guibg=NONE ctermbg=NONE
 
 " Set colors of color column and cursor line/column
 hi! ColorColumn cterm=NONE ctermbg=88
 set cursorline
 set cursorcolumn
-
-" air line
-let g:airline_theme='gruvbox'
-let g:airline_powerline_fonts = 1
-let g:airline_extensions = ['branch', 'hunks', 'coc', 'tabline']
-let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
-let g:airline#extensions#tabline#buffer_nr_show = 1
-let g:airline#extensions#default#layout = [['a', 'b', 'c'], ['x', 'z', 'warning', 'error']]
-let airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
-let airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
-" Configure error/warning section to use coc.nvim
-let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
-let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
 
 " coc config
 let g:coc_global_extensions = [
@@ -211,9 +228,10 @@ let g:coc_global_extensions = [
   \ 'coc-pairs',
   \ 'coc-prettier',
   \ 'coc-tsserver',
-  \ 'coc-ultisnips',
   \ 'coc-yaml',
   \ 'coc-rome',
+  \ 'coc-snippets',
+  \ 'coc-tabnine',
   \ ]
 " from readme
 " if hidden is not set, TextEdit might fail.
@@ -230,10 +248,6 @@ nmap <leader>rn <Plug>(coc-rename)
 set signcolumn=yes
 
 " Splits
-nmap <silent> <c-k> :wincmd k<CR>
-nmap <silent> <c-j> :wincmd j<CR>
-nmap <silent> <c-h> :wincmd h<CR>
-nmap <silent> <c-l> :wincmd l<CR>
 nnoremap ,h :split<enter>
 nnoremap ,v :vsplit<enter>
 set splitbelow
@@ -249,7 +263,7 @@ vnoremap <silent> # :<C-U>
   \gvy?<C-R><C-R>=substitute(
   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
-
+"
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
@@ -268,13 +282,20 @@ inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
 " Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " Or use `complete_info` if your vim support it, like:
-" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
+" show diagnostics with []
+nmap <silent> [] :CocDiagnostics<CR>
+
+" Remap keys for applying codeAction to the current line.
+nmap <leader>do  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
 
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
@@ -282,16 +303,19 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
+" Show documentation on hover
+function! ShowDocIfNoDiagnostic(timer_id)
+  if (coc#float#has_float() == 0 && CocHasProvider('hover') == 1)
+    silent call CocActionAsync('doHover')
   endif
 endfunction
+
+function! s:show_hover_doc()
+  call timer_start(500, 'ShowDocIfNoDiagnostic')
+endfunction
+
+autocmd CursorHoldI * :call <SID>show_hover_doc()
+autocmd CursorHold * :call <SID>show_hover_doc()
 
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
@@ -312,3 +336,14 @@ let g:blamer_enabled = 1
 let g:blamer_template ='<author>, <author-time> • <summary>'
 let g:blamer_show_in_visual_modes = 0
 let g:blamer_prefix = ' > '
+
+" Automatic import cost
+augroup import_cost_auto_run
+  autocmd!
+  autocmd InsertLeave *.js,*.jsx,*.ts,*.tsx ImportCost
+  autocmd BufEnter *.js,*.jsx,*.ts,*.tsx ImportCost
+  autocmd CursorHold *.js,*.jsx,*.ts,*.tsx ImportCost
+augroup end
+
+let g:rainbow_active = 1
+
