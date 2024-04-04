@@ -99,5 +99,5 @@ cd && ln -s mac-install/dotfiles/.teamocil
 
 ### Nerd Font Patched
 ```
-cd ~/Library/Fonts && curl -fLo "Fira Code Regular Nerd Font Complete Mono.ttf" https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/FiraCode/Regular/complete/Fira%20Code%20Regular%20Nerd%20Font%20Complete%20Mono.ttf\?raw\=true
+cd ~/Library/Fonts && curl -fLo "FiraCodeNerdFontMono-Regular.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/FiraCode/Regular/FiraCodeNerdFontMono-Regular.ttf
 ```
