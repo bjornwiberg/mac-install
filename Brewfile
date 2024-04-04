@@ -1,5 +1,3 @@
-tap "homebrew/cask"
-tap "homebrew/core"
 brew "cask"
 brew "cmake"
 brew "node"
