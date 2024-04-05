@@ -1,0 +1,15 @@
+windows:
+  - name: hantera-desktop
+    root: ~/Sites/hantera_frontend
+    layout: 7f40,425x103,0,0[425x82,0,0{282x82,0,0,1,142x82,283,0,5},425x20,0,83{205x20,0,83,3,219x20,206,83,4}]
+    panes:
+      - commands:
+          - nvim
+        focus: true
+      - commands:
+        - npm run dev
+      - commands:
+        - echo
+      - commands:
+          - echo
+

@@ -1,0 +1,15 @@
+windows:
+  - name: webmenu-matilda
+    root: ~/Sites/webmenu-matilda
+    layout: e206,254x74,0,0[254x50,0,0,1,254x11,0,51,2,254x11,0,63{119x11,0,63,3,134x11,120,63,4}]
+    panes:
+      - commands:
+          - nvim
+        focus: true
+      - commands:
+          - echo
+      - commands:
+          - PORT=3030 yarn dev
+      - commands:
+          - echo
+

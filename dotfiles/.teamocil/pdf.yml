@@ -1,0 +1,12 @@
+windows:
+  - name: pdf
+    root: ~/Sites/matilda-menu-pdf
+    layout: even-vertical
+    panes:
+      - commands:
+          - nvim
+      - commands:
+          - PORT=9000 yarn start
+        focus: true
+
+
