@@ -49,8 +49,8 @@ local function save_profiles(threshold)
 end
 
 time([[Luarocks path setup]], true)
-local package_path_str = "/Users/bjornwiberg/.cache/nvim/packer_hererocks/2.1.0-beta3/share/lua/5.1/?.lua;/Users/bjornwiberg/.cache/nvim/packer_hererocks/2.1.0-beta3/share/lua/5.1/?/init.lua;/Users/bjornwiberg/.cache/nvim/packer_hererocks/2.1.0-beta3/lib/luarocks/rocks-5.1/?.lua;/Users/bjornwiberg/.cache/nvim/packer_hererocks/2.1.0-beta3/lib/luarocks/rocks-5.1/?/init.lua"
-local install_cpath_pattern = "/Users/bjornwiberg/.cache/nvim/packer_hererocks/2.1.0-beta3/lib/lua/5.1/?.so"
+local package_path_str = "/Users/bjornwiberg/.cache/nvim/packer_hererocks/2.1.1710088188/share/lua/5.1/?.lua;/Users/bjornwiberg/.cache/nvim/packer_hererocks/2.1.1710088188/share/lua/5.1/?/init.lua;/Users/bjornwiberg/.cache/nvim/packer_hererocks/2.1.1710088188/lib/luarocks/rocks-5.1/?.lua;/Users/bjornwiberg/.cache/nvim/packer_hererocks/2.1.1710088188/lib/luarocks/rocks-5.1/?/init.lua"
+local install_cpath_pattern = "/Users/bjornwiberg/.cache/nvim/packer_hererocks/2.1.1710088188/lib/lua/5.1/?.so"
 if not string.find(package.path, package_path_str, 1, true) then
   package.path = package.path .. ';' .. package_path_str
 end
@@ -106,7 +106,7 @@ _G.packer_plugins = {
     url = "https://github.com/nvim-lualine/lualine.nvim"
   },
   ["neo-tree.nvim"] = {
-    config = { "\27LJ\2\nú\2\0\0\6\0\15\0\0256\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\b\0005\3\6\0005\4\3\0005\5\4\0=\5\5\4=\4\a\3=\3\t\2B\0\2\0016\0\n\0009\0\v\0'\2\f\0B\0\2\0016\0\n\0009\0\v\0'\2\r\0B\0\2\0016\0\n\0009\0\v\0'\2\14\0B\0\2\1K\0\1\0009nnoremap <Leader>b :Neotree buffers float toggle<cr><nnoremap <Leader>g :Neotree git_status float toggle<cr>-nnoremap <C-a> :Neotree right toggle<cr>\bcmd\bvim\15filesystem\1\0\0\19filtered_items\1\0\1\24follow_current_file\2\15never_show\1\2\0\0\14.DS_Store\1\0\1\fvisible\2\nsetup\rneo-tree\frequire\0" },
+    config = { "\27LJ\2\n¢\3\0\0\6\0\15\0\0256\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\b\0005\3\6\0005\4\3\0005\5\4\0=\5\5\4=\4\a\3=\3\t\2B\0\2\0016\0\n\0009\0\v\0'\2\f\0B\0\2\0016\0\n\0009\0\v\0'\2\r\0B\0\2\0016\0\n\0009\0\v\0'\2\14\0B\0\2\1K\0\1\0009nnoremap <Leader>b :Neotree buffers float toggle<cr><nnoremap <Leader>g :Neotree git_status float toggle<cr>-nnoremap <C-a> :Neotree right toggle<cr>\bcmd\bvim\15filesystem\1\0\1\15filesystem\0\19filtered_items\1\0\1\19filtered_items\0\15never_show\1\2\0\0\14.DS_Store\1\0\3\24follow_current_file\2\15never_show\0\fvisible\2\nsetup\rneo-tree\frequire\0" },
     loaded = true,
     path = "/Users/bjornwiberg/.local/share/nvim/site/pack/packer/start/neo-tree.nvim",
     url = "https://github.com/nvim-neo-tree/neo-tree.nvim"
@@ -136,11 +136,6 @@ _G.packer_plugins = {
     path = "/Users/bjornwiberg/.local/share/nvim/site/pack/packer/start/nvim-web-devicons",
     url = "https://github.com/kyazdani42/nvim-web-devicons"
   },
-  ["omnisharp-vim"] = {
-    loaded = true,
-    path = "/Users/bjornwiberg/.local/share/nvim/site/pack/packer/start/omnisharp-vim",
-    url = "https://github.com/OmniSharp/omnisharp-vim"
-  },
   ["plenary.nvim"] = {
     loaded = true,
     path = "/Users/bjornwiberg/.local/share/nvim/site/pack/packer/start/plenary.nvim",
@@ -165,11 +160,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/bjornwiberg/.local/share/nvim/site/pack/packer/start/vim-devicons",
     url = "https://github.com/ryanoasis/vim-devicons"
-  },
-  ["vim-diminactive"] = {
-    loaded = true,
-    path = "/Users/bjornwiberg/.local/share/nvim/site/pack/packer/start/vim-diminactive",
-    url = "https://github.com/blueyed/vim-diminactive"
   },
   ["vim-gitgutter"] = {
     loaded = true,
@@ -201,11 +191,6 @@ _G.packer_plugins = {
     path = "/Users/bjornwiberg/.local/share/nvim/site/pack/packer/start/vim-zoom",
     url = "https://github.com/dhruvasagar/vim-zoom"
   },
-  vimade = {
-    loaded = true,
-    path = "/Users/bjornwiberg/.local/share/nvim/site/pack/packer/start/vimade",
-    url = "https://github.com/TaDaa/vimade"
-  },
   vimagit = {
     loaded = true,
     path = "/Users/bjornwiberg/.local/share/nvim/site/pack/packer/start/vimagit",
@@ -225,14 +210,14 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
+-- Config for: neo-tree.nvim
+time([[Config for neo-tree.nvim]], true)
+try_loadstring("\27LJ\2\n¢\3\0\0\6\0\15\0\0256\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\b\0005\3\6\0005\4\3\0005\5\4\0=\5\5\4=\4\a\3=\3\t\2B\0\2\0016\0\n\0009\0\v\0'\2\f\0B\0\2\0016\0\n\0009\0\v\0'\2\r\0B\0\2\0016\0\n\0009\0\v\0'\2\14\0B\0\2\1K\0\1\0009nnoremap <Leader>b :Neotree buffers float toggle<cr><nnoremap <Leader>g :Neotree git_status float toggle<cr>-nnoremap <C-a> :Neotree right toggle<cr>\bcmd\bvim\15filesystem\1\0\1\15filesystem\0\19filtered_items\1\0\1\19filtered_items\0\15never_show\1\2\0\0\14.DS_Store\1\0\3\24follow_current_file\2\15never_show\0\fvisible\2\nsetup\rneo-tree\frequire\0", "config", "neo-tree.nvim")
+time([[Config for neo-tree.nvim]], false)
 -- Config for: Comment.nvim
 time([[Config for Comment.nvim]], true)
 try_loadstring("\27LJ\2\n5\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\fComment\frequire\0", "config", "Comment.nvim")
 time([[Config for Comment.nvim]], false)
--- Config for: neo-tree.nvim
-time([[Config for neo-tree.nvim]], true)
-try_loadstring("\27LJ\2\nú\2\0\0\6\0\15\0\0256\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\b\0005\3\6\0005\4\3\0005\5\4\0=\5\5\4=\4\a\3=\3\t\2B\0\2\0016\0\n\0009\0\v\0'\2\f\0B\0\2\0016\0\n\0009\0\v\0'\2\r\0B\0\2\0016\0\n\0009\0\v\0'\2\14\0B\0\2\1K\0\1\0009nnoremap <Leader>b :Neotree buffers float toggle<cr><nnoremap <Leader>g :Neotree git_status float toggle<cr>-nnoremap <C-a> :Neotree right toggle<cr>\bcmd\bvim\15filesystem\1\0\0\19filtered_items\1\0\1\24follow_current_file\2\15never_show\1\2\0\0\14.DS_Store\1\0\1\fvisible\2\nsetup\rneo-tree\frequire\0", "config", "neo-tree.nvim")
-time([[Config for neo-tree.nvim]], false)
 -- Config for: which-key.nvim
 time([[Config for which-key.nvim]], true)
 try_loadstring("\27LJ\2\n;\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\14which-key\frequire\0", "config", "which-key.nvim")

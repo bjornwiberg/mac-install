@@ -8,12 +8,23 @@ if fn.empty(fn.glob(install_path)) > 0 then
   packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
 end
 
+-- Create Python 3 venv and install pynvim if it is not already installed.
+if vim.fn.empty(vim.fn.glob(vim.fn.stdpath('data') .. '/venv')) == 1 then
+    vim.fn.system({
+        'python3', '-m', 'venv',
+        vim.fn.stdpath('data') .. '/venv'
+    })
+    vim.fn.system({
+        vim.fn.stdpath('data') .. '/venv/bin/python3',
+        '-m', 'pip', 'install', 'pynvim'
+    })
+end
+vim.g.python3_host_prog = vim.fn.stdpath('data') .. '/venv/bin/python3'
+
 return require('packer').startup(function(use)
   vim.opt.termguicolors = true
 
   -- My plugins here
-  -- fade inactive windows
-  use 'TaDaa/vimade'
   -- theme
   use 'folke/tokyonight.nvim'
   use 'ellisonleao/gruvbox.nvim'
@@ -25,37 +36,44 @@ return require('packer').startup(function(use)
 
   -- color indent
   use "lukas-reineke/indent-blankline.nvim"
-  cmd [[highlight IndentBlanklineIndent1 guifg=#E06C75 gui=nocombine]]
-  cmd [[highlight IndentBlanklineIndent2 guifg=#E5C07B gui=nocombine]]
-  cmd [[highlight IndentBlanklineIndent3 guifg=#98C379 gui=nocombine]]
-  cmd [[highlight IndentBlanklineIndent4 guifg=#56B6C2 gui=nocombine]]
-  cmd [[highlight IndentBlanklineIndent5 guifg=#61AFEF gui=nocombine]]
-  cmd [[highlight IndentBlanklineIndent6 guifg=#C678DD gui=nocombine]]
-  require("indent_blankline").setup {
-      char_highlight_list = {
-          "IndentBlanklineIndent1",
-          "IndentBlanklineIndent2",
-          "IndentBlanklineIndent3",
-          "IndentBlanklineIndent4",
-          "IndentBlanklineIndent5",
-          "IndentBlanklineIndent6",
-      },
-  }
+  require("ibl").setup()
+
+  local highlight = {
+    "RainbowRed",
+    "RainbowYellow",
+    "RainbowBlue",
+    "RainbowOrange",
+    "RainbowGreen",
+    "RainbowViolet",
+    "RainbowCyan",
+}
+
+local hooks = require "ibl.hooks"
+-- create the highlight groups in the highlight setup hook, so they are reset
+-- every time the colorscheme changes
+hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+    vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
+    vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
+    vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
+    vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
+    vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
+    vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
+    vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
+end)
+
+require("ibl").setup { indent = { highlight = highlight } }
+
 
   -- tab bar plugin
   use {
     'romgrk/barbar.nvim',
     requires = {'kyazdani42/nvim-web-devicons'}
   }
-  vim.g.bufferline = {
-    -- Enable/disable close button
-    closable = false,
-  }
 
   -- file explorer
   use {
     "nvim-neo-tree/neo-tree.nvim",
-    branch = "v2.x",
+    branch = "v3.x",
     requires = {
       "nvim-lua/plenary.nvim",
       "kyazdani42/nvim-web-devicons", -- not strictly required, but recommended
@@ -69,8 +87,8 @@ return require('packer').startup(function(use)
             never_show = { -- remains hidden even if visible is toggled to true
               ".DS_Store",
             },
+            follow_current_file = true, -- This will find and focus the file in the active buffer every
           },
-          follow_current_file = true, -- This will find and focus the file in the active buffer every
         },
       })
 
@@ -88,15 +106,10 @@ return require('packer').startup(function(use)
   }
 
   use 'JoosepAlviste/nvim-ts-context-commentstring'
+  require('nvim-treesitter.configs').setup {}
   use {
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate'
-  }
-  require'nvim-treesitter.configs'.setup {
-    context_commentstring = {
-      enable = true,
-      enable_autocmd = false,
-    }
   }
 
   use {
@@ -104,7 +117,7 @@ return require('packer').startup(function(use)
     requires = { 'kyazdani42/nvim-web-devicons', opt = true }
   }
   require('lualine').setup {
-    theme = 'gruvbox',
+    -- theme = 'tokyonight',
     sections = {
       lualine_a = {'mode'},
       lualine_b = {'branch', 'diff', 'diagnostics'},
@@ -136,9 +149,7 @@ return require('packer').startup(function(use)
   use 'dhruvasagar/vim-zoom'
   use 'jreybert/vimagit'
   use 'puremourning/vimspector'
-  use 'OmniSharp/omnisharp-vim'
   use 'frazrepo/vim-rainbow'
-  use 'blueyed/vim-diminactive'
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

@@ -27,5 +27,6 @@
   },
   "sumneko-lua.enableNvimLuaDev": true,
   "diagnostic.virtualText": true,
-  "diagnostic.virtualTextCurrentLineOnly": false
+  "diagnostic.virtualTextCurrentLineOnly": false,
+  "snippets.ultisnips.pythonPrompt": false
 }

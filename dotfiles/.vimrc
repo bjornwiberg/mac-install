@@ -7,10 +7,7 @@ endif
 " Specify a directory for plugins
 call plug#begin('~/.vim/plugged')
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" Plug 'SirVer/ultisnips'
 Plug 'APZelos/blamer.nvim'
-" Plug 'eliba2/vim-node-inspect'
-Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
@@ -19,34 +16,10 @@ Plug 'yardnsm/vim-import-cost', { 'do': 'npm install --production' }
 " Initialize plugin system
 call plug#end()
 
-function! MakeSession()
-  let b:sessiondir = $HOME . "/.vim/sessions" . getcwd()
-  if (filewritable(b:sessiondir) != 2)
-    exe 'silent !mkdir -p ' b:sessiondir
-    redraw!
-  endif
-  let b:filename = b:sessiondir . '/session.vim'
-  exe "mksession! " . b:filename
-endfunction
-
-function! LoadSession()
-  let b:sessiondir = $HOME . "/.vim/sessions" . getcwd()
-  let b:sessionfile = b:sessiondir . "/session.vim"
-  if (filereadable(b:sessionfile))
-    exe 'source ' b:sessionfile
-  else
-    echo "No session loaded."
-  endif
-endfunction
-
 " Gitgutter
 nmap <leader>d :GitGutterNextHunk<CR>
 nmap <leader>s :GitGutterPrevHunk<CR>
 nmap <leader>a :GitGutterPreviewHunk<CR>
-
-" Adding automatons for when entering or leaving Vim
-" au VimEnter * nested :call LoadSession()
-" au VimLeave * :call MakeSession()
 
 " Dim inactive windows using 'colorcolumn' setting
 " This tends to slow down redrawing, but is very useful.
@@ -80,10 +53,6 @@ if exists('+colorcolumn')
   augroup END
 endif
 
-"
-" set foldmethod=syntax
-" set nofoldenable
-"
 " FZF
 " Include hidden files and respect .gitignore when searching for file
 let $FZF_DEFAULT_COMMAND='rg --files -g "!.git/" --hidden'
@@ -94,45 +63,11 @@ nnoremap ƒ :Rg<cr>
 " CTRL+p to search for file
 nnoremap <C-P> :Files<cr>
 
-" " Node inspect mappings
-" nnoremap <silent><F4> :NodeInspectStart<cr>
-" nnoremap <silent><F5> :NodeInspectRun<cr>
-" nnoremap <silent><F6> :NodeInspectConnect("127.0.0.1:9229")<cr>
-" nnoremap <silent><F7> :NodeInspectStepInto<cr>
-" nnoremap <silent><F8> :NodeInspectStepOver<cr>
-" nnoremap <silent><F9> :NodeInspectToggleBreakpoint<cr>
-" nnoremap <silent><F10> :NodeInspectStop<cr>
-
 " Leader
 let mapleader = ","
 
 let g:coc_snippet_next = '<tab>'
 imap <C-l> <Plug>(coc-snippets-expand)
-
-" snippets.ultisnips.directories: [
-"   $HOME . "/mac-install/dotfiles/UltiSnips"
-" ],
-
-" " UltiSnips
-" let g:UltiSnipsSnippetDirectories = [$HOME . "/mac-install/dotfiles/UltiSnips"]
-" let g:UltiSnipsEditSplit="horizontal"
-" function! g:UltiSnips_Complete()
-"     call UltiSnips#ExpandSnippet()
-"     if g:ulti_expand_res == 0
-"         if pumvisible()
-"             return "\<C-n>"
-"         else
-"             call UltiSnips#JumpForwards()
-"             if g:ulti_jump_forwards_res == 0
-"               return "\<TAB>"
-"             endif
-"         endif
-"     endif
-"     return ""
-" endfunction
-"
-" au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
-" let g:UltiSnipsJumpForwardTrigger="<tab>"
 
 " Set prisma extension to graphql
 au BufNewFile,BufRead *.prisma setfiletype graphql
@@ -218,6 +153,26 @@ hi! ColorColumn cterm=NONE ctermbg=88
 set cursorline
 set cursorcolumn
 
+" always show signcolumns
+set signcolumn=yes
+"
+" Splits
+nnoremap ,h :split<enter>
+nnoremap ,v :vsplit<enter>
+set splitbelow
+
+" Search for selected text, forwards or backwards.
+vnoremap <silent> * :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy/<C-R><C-R>=substitute(
+  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
+vnoremap <silent> # :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy?<C-R><C-R>=substitute(
+  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
+
 " coc config
 let g:coc_global_extensions = [
   \ 'coc-css',
@@ -244,26 +199,7 @@ set shortmess+=c
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
-" always show signcolumns
-set signcolumn=yes
 
-" Splits
-nnoremap ,h :split<enter>
-nnoremap ,v :vsplit<enter>
-set splitbelow
-
-" Search for selected text, forwards or backwards.
-vnoremap <silent> * :<C-U>
-  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
-  \gvy/<C-R><C-R>=substitute(
-  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
-  \gV:call setreg('"', old_reg, old_regtype)<CR>
-vnoremap <silent> # :<C-U>
-  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
-  \gvy?<C-R><C-R>=substitute(
-  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
-  \gV:call setreg('"', old_reg, old_regtype)<CR>
-"
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
@@ -328,9 +264,6 @@ augroup mygroup
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
-" use `:OR` for organize import of current buffer
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-
 " blamer
 let g:blamer_enabled = 1
 let g:blamer_template ='<author>, <author-time> • <summary>'
@@ -344,6 +277,4 @@ augroup import_cost_auto_run
   autocmd BufEnter *.js,*.jsx,*.ts,*.tsx ImportCost
   autocmd CursorHold *.js,*.jsx,*.ts,*.tsx ImportCost
 augroup end
-
-let g:rainbow_active = 1
 
