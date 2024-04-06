@@ -54,9 +54,8 @@
         "javascript": "javascriptreact"
     },
     "terminal.integrated.copyOnSelection": true,
-    "editor.highlightActiveIndentGuide": false,
     "editor.tabCompletion": "on",
-    "workbench.colorTheme": "Solarized Dark",
+    "workbench.colorTheme": "Default Dark Modern",
     "css.validate": false,
     "less.validate": false,
     "scss.validate": false,
@@ -77,12 +76,18 @@
     },
     "editor.tabSize": 2,
     "editor.fontSize": 12,
-    "workbench.activityBar.visible": true,
     "breadcrumbs.enabled": true,
     "workbench.sideBar.location": "right",
     "editor.renderLineHighlight": "gutter",
     "[json]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "json.maxItemsComputed": 50000
+    "json.maxItemsComputed": 50000,
+    "editor.guides.highlightActiveIndentation": false,
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "git.confirmSync": false,
+    "git.ignoreRebaseWarning": true,
+    "typescript.updateImportsOnFileMove.enabled": "always"
 }
