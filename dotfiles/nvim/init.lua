@@ -13,9 +13,6 @@ require('editor')
 -- Load LSP configuration
 require('lsp')
 
--- Load plugin-specific configurations
-require('plugin-config')
-
 -- Auto reload Lua config files on save
 vim.api.nvim_create_autocmd("BufWritePost", {
   pattern = { "*.lua" },
