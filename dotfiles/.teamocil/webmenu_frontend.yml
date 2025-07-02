@@ -1,6 +1,6 @@
 windows:
-  - name: webmenu-matilda
-    root: ~/Sites/webmenu-matilda
+  - name: webmenu_frontend
+    root: ~/Sites/webmenu_frontend
     layout: e206,254x74,0,0[254x50,0,0,1,254x11,0,51,2,254x11,0,63{119x11,0,63,3,134x11,120,63,4}]
     panes:
       - commands:
@@ -9,7 +9,7 @@ windows:
       - commands:
           - echo
       - commands:
-          - PORT=3030 yarn dev
+          - PORT=3030 npm run dev
       - commands:
           - echo
 

@@ -1,93 +1,92 @@
 {
-    "workbench.colorCustomizations": {
-        "editor.lineHighlightBackground": "#090909",
-        "tab.activeBorder": "#fff",
-        "editorRuler.foreground": "#f00",
-        "statusBar.foreground": "#434C5E",
-        "statusBar.background": "#8FBCBB",
-        "statusBar.noFolderBackground": "#8FBCBB",
-        "statusBar.debuggingBackground": "#8FBCBB"
-    },
-    "vim.insertModeKeyBindings": [
-        {
-            "before": [
-                "j",
-                "k"
-            ],
-            "after": [
-                "<Esc>"
-            ]
-        }
-    ],
-    "vim.statusBarColorControl": false,
-    "vim.otherModesKeyBindingsNonRecursive": [
-        {
-            "before": [
-                "<C-n>"
-            ],
-            "after": [],
-            "commands": [
-                {
-                    "command": ":nohl",
-                    "args": []
-                }
-            ]
-        },
-    ],
-    "vim.hlsearch": true,
-    "files.trimTrailingWhitespace": true,
-    "files.insertFinalNewline": true,
-    "files.trimFinalNewlines": true,
-    "editor.rulers": [
-        72,
-        92
-    ],
-    "vim.disableExtension": true,
-    "gitlens.advanced.messages": {
-        "suppressShowKeyBindingsNotice": true
-    },
-    "editor.minimap.enabled": false,
-    "gitlens.historyExplorer.enabled": true,
-    "window.zoomLevel": 0,
-    "javascript.updateImportsOnFileMove.enabled": "never",
-    "emmet.includeLanguages": {
-        "javascript": "javascriptreact"
-    },
-    "terminal.integrated.copyOnSelection": true,
-    "editor.tabCompletion": "on",
-    "workbench.colorTheme": "Default Dark Modern",
-    "css.validate": false,
-    "less.validate": false,
-    "scss.validate": false,
-    "gitlens.views.fileHistory.enabled": true,
-    "gitlens.views.lineHistory.enabled": true,
-    "editor.suggestSelection": "first",
-    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-    "liveshare.featureSet": "insiders",
-    // Set the default
+  "workbench.colorCustomizations": {
+    "editor.lineHighlightBackground": "#090909",
+    "tab.activeBorder": "#fff"
+  },
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "editor.rulers": [72, 92],
+  "editor.minimap.enabled": false,
+  "window.zoomLevel": 0,
+  "javascript.updateImportsOnFileMove.enabled": "never",
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "terminal.integrated.copyOnSelection": true,
+  "editor.tabCompletion": "on",
+  "workbench.colorTheme": "Monokai",
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "editor.suggestSelection": "first",
+  "liveshare.featureSet": "insiders",
+  // Set the default
+  "editor.formatOnSave": true,
+  // Enable per-language
+  "[javascript]": {
     "editor.formatOnSave": true,
-    // Enable per-language
-    "[javascript]": {
-        "editor.formatOnSave": true,
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[javascriptreact]": {
-        "editor.defaultFormatter": "vscode.typescript-language-features"
-    },
-    "editor.tabSize": 2,
-    "editor.fontSize": 12,
-    "breadcrumbs.enabled": true,
-    "workbench.sideBar.location": "right",
-    "editor.renderLineHighlight": "gutter",
-    "[json]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "json.maxItemsComputed": 50000,
-    "editor.guides.highlightActiveIndentation": false,
-    "[typescriptreact]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "git.confirmSync": false,
-    "git.ignoreRebaseWarning": true,
-    "typescript.updateImportsOnFileMove.enabled": "always"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "editor.tabSize": 2,
+  "editor.fontSize": 12,
+  "workbench.sideBar.location": "right",
+  "editor.renderLineHighlight": "gutter",
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "json.maxItemsComputed": 50000,
+  "editor.guides.highlightActiveIndentation": false,
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "git.confirmSync": false,
+  "git.ignoreRebaseWarning": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "diffEditor.ignoreTrimWhitespace": true,
+  "playwright.showTrace": true,
+  "editor.fontFamily": "FiraCode Nerd Font Mono, monospace",
+  "editor.fontLigatures": true,
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "vim.enableNeovim": true,
+  "vim.neovimUseConfigFile": true,
+  "vim.statusBarColorControl": true,
+  "vim.useSystemClipboard": true,
+  "vim.visualstar": true,
+  "git.replaceTagsWhenPull": true,
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  },
+  "workbench.editor.labelFormat": "medium",
+  "githubPullRequests.pushBranch": "always",
+  "githubPullRequests.createOnPublishBranch": "never",
+  "eslint.nodeEnv": "",
+  "http.fetchAdditionalSupport": false,
+  "playwright.reuseBrowser": false,
+  "playwright.runGlobalSetupOnEachRun": true,
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "github.copilot.nextEditSuggestions.fixes": true,
+  "github.copilot.chat.editor.temporalContext.enabled": true,
+  "github.copilot.chat.edits.temporalContext.enabled": true,
+  "github.copilot.chat.generateTests.codeLens": true,
+  "github.copilot.chat.languageContext.fix.typescript.enabled": true,
+  "github.copilot.chat.languageContext.inline.typescript.enabled": true,
+  "github.copilot.chat.languageContext.typescript.enabled": true
+  // "workbench.editor.customLabels.patterns": {
+  //   "*/src/**/*": "${dirname(-3)}/${filename}.${extname}"
+  // }
 }

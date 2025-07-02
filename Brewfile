@@ -1,4 +1,5 @@
 tap "homebrew/cask-versions"
+brew "adoptopenjdk"
 brew "cask"
 brew "cmake"
 brew "node"
