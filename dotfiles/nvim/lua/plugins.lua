@@ -14,7 +14,12 @@ local packer_bootstrap = ensure_packer()
 
 return require('packer').startup(function(use)
   -- LSP and related plugins
-  use 'neovim/nvim-lspconfig'  -- LSP configurations
+  use {
+    'neovim/nvim-lspconfig',
+    config = function()
+      require('lsp')
+    end
+  }
   use 'hrsh7th/nvim-cmp'       -- Autocompletion plugin
   use 'hrsh7th/cmp-nvim-lsp'   -- LSP source for nvim-cmp
   use 'hrsh7th/cmp-buffer'      -- Buffer completions
