@@ -1,3 +1,14 @@
+vim.diagnostic.config({
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "",
+      [vim.diagnostic.severity.WARN]  = "",
+      [vim.diagnostic.severity.INFO]  = "",
+      [vim.diagnostic.severity.HINT]  = "",
+    },
+  },
+})
+
 return function(use)
   -- Editor plugin definitions
   use 'prettier/vim-prettier'
