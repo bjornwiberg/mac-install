@@ -1,10 +1,10 @@
 -- TypeScript LSP configuration
+local keymapping = require('keymapping')
+
 require('lspconfig').ts_ls.setup{
   on_attach = function(client, bufnr)
-    local opts = { noremap=true, silent=true }
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+    -- Set up standard LSP keymappings
+    keymapping.setup_lsp_keymaps(client, bufnr)
 
     -- Auto hover on cursor hold with responsive cursor trap prevention
     local last_cursor_pos = nil

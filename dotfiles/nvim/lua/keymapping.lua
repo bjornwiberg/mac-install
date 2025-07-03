@@ -4,6 +4,20 @@ local M = {}
 -- Key mapping helper
 local keymap = vim.keymap.set
 
+-- LSP Key mappings
+local function setup_lsp_keymaps(client, bufnr)
+  local opts = { noremap = true, silent = true, buffer = bufnr }
+
+  -- Go to definition
+  keymap('n', 'gd', vim.lsp.buf.definition, opts)
+
+  -- Go to implementation
+  keymap('n', 'gi', vim.lsp.buf.implementation, opts)
+end
+
+-- Export the LSP keymapping function
+M.setup_lsp_keymaps = setup_lsp_keymaps
+
 -- Toggle search highlighting
 keymap('n', '<Space>', ':set hlsearch! hlsearch?<Bar>:echo<CR>', { silent = true, desc = 'Toggle search highlight' })
 
