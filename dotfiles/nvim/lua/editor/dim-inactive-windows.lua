@@ -1,26 +1,3 @@
--- Editor settings and keymaps
-local M = {}
-
--- Leader key
-vim.g.mapleader = ","
-
--- Basic settings
-vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.smarttab = true
-vim.opt.cindent = true
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.expandtab = true
-vim.opt.wrap = false
-vim.opt.splitbelow = true
-vim.opt.incsearch = true
-vim.opt.ignorecase = true
-
--- Ensure syntax highlighting is enabled
-vim.cmd('syntax enable')
-vim.cmd('filetype plugin indent on')
-
 -- Dim inactive windows using colorcolumn
 local function dim_inactive_windows()
   local current_win = vim.api.nvim_get_current_win()
@@ -79,15 +56,3 @@ vim.api.nvim_create_autocmd({"BufLeave", "FocusLost", "InsertEnter", "WinLeave"}
     end
   end,
 })
-
--- Auto-reload config on save
-vim.api.nvim_create_augroup("AutoSourcing", { clear = true })
-vim.api.nvim_create_autocmd("BufWritePost", {
-  group = "AutoSourcing",
-  pattern = { "*.lua" },
-  callback = function()
-    vim.cmd("source %")
-  end,
-})
-
-return M
