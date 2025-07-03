@@ -85,6 +85,7 @@ vim.keymap.set('n', '<Leader>b', '<cmd>Neotree buffers float toggle<CR>', { desc
 
 -- Git Plugin Configurations
 -- Git commit log mappings
-vim.keymap.set('n', '<leader>gl', '<cmd>Magit<CR>', { desc = 'Open Magit (Git interface)' })
+vim.keymap.set('n', '<leader>gg', '<cmd>Magit<CR>', { desc = 'Open Magit (Git interface)' })
+vim.keymap.set('n', '<leader>gp', '<cmd>Neogit push<CR>', { desc = 'Git push' })
 
 return M
