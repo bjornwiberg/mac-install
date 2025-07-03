@@ -19,8 +19,4 @@ return function(use)
       }
     end
   }
-
-  -- Git Plugin Configurations
-  -- Git commit log mappings
-  vim.keymap.set('n', '<leader>gl', '<cmd>Magit<CR>', { desc = 'Open Magit (Git interface)' })
 end

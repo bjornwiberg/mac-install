@@ -70,4 +70,21 @@ cmp.setup({
   },
 })
 
+-- Key mappings for FZF
+vim.keymap.set('n', '<C-p>', '<cmd>FzfLua files<CR>', { desc = 'Find files' })
+vim.keymap.set('n', '<leader>rg', '<cmd>FzfLua live_grep<CR>', { desc = 'Live grep' })
+vim.keymap.set('n', '<leader>gco', '<cmd>FzfLua git_commits<CR>', { desc = 'Browse git commits' })
+vim.keymap.set('n', '<leader>gcs', '<cmd>FzfLua git_status<CR>', { desc = 'Git status' })
+vim.keymap.set('n', '<leader>gb', '<cmd>FzfLua git_branches<CR>', { desc = 'Git branches' })
+vim.keymap.set('n', '//', '<cmd>FzfLua grep_cword<CR>', { desc = 'Search word under cursor' })
+vim.keymap.set('v', '//', '<cmd>FzfLua grep_visual<CR>', { desc = 'Search visual selection' })
+
+-- Neo-tree key mappings
+vim.keymap.set('n', '<C-a>', '<cmd>Neotree right toggle<CR>', { desc = 'Toggle neo-tree' })
+vim.keymap.set('n', '<Leader>b', '<cmd>Neotree buffers float toggle<CR>', { desc = 'Toggle buffers' })
+
+-- Git Plugin Configurations
+-- Git commit log mappings
+vim.keymap.set('n', '<leader>gl', '<cmd>Magit<CR>', { desc = 'Open Magit (Git interface)' })
+
 return M
