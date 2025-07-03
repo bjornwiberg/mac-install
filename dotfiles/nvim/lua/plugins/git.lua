@@ -15,6 +15,7 @@ return function(use)
           delay = 500,
           ignore_whitespace = false,
         },
+      require("scrollbar.handlers.gitsigns").setup()
       }
     end
   }

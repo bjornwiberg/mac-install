@@ -6,6 +6,10 @@ return function(use)
   use 'nvim-tree/nvim-tree.lua'
   use 'nvim-tree/nvim-web-devicons'
 
+  -- Scrollbar plugin
+  use("petertriho/nvim-scrollbar")
+  require("scrollbar").setup()
+
   -- Tab bar plugin
   use {
     'romgrk/barbar.nvim',
