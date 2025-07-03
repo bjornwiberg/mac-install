@@ -1,0 +1,25 @@
+# Common exclusions
+.cache/
+.DS_Store
+.git/
+.idea/
+.next/
+.temp/
+.tmp/
+.vscode/
+*.log
+*.swo
+*.swp
+*.temp
+*.tmp
+*~
+build/
+coverage/
+dist/
+node_modules/
+out/
+Thumbs.db
+
+# Include .env files even if they're in .gitignore
+!.env
+!.env*

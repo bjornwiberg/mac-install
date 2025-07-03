@@ -146,7 +146,7 @@ return function(use)
         git_icons = true,
         file_icons = true,
         color_icons = true,
-        cmd = 'rg --files -g "!.git/" --hidden',
+        cmd = 'rg --files --hidden --no-ignore-vcs --ignore-file ~/.config/nvim/.rgignore',
         previewer = 'builtin',
       },
       grep = {
@@ -156,7 +156,7 @@ return function(use)
         git_icons = true,
         file_icons = true,
         color_icons = true,
-        cmd = 'rg --color=always --column -g "!.git/" --hidden -n --no-heading -S',
+        cmd = 'rg --color=always --column --hidden -n --no-heading -S --no-ignore-vcs --ignore-file ~/.config/nvim/.rgignore',
         previewer = 'builtin',
       },
     })
