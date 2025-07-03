@@ -90,39 +90,4 @@ vim.api.nvim_create_autocmd("BufWritePost", {
   end,
 })
 
--- Key mappings
-local keymap = vim.keymap.set
-
--- Toggle search highlighting
-keymap('n', '<Space>', ':set hlsearch! hlsearch?<Bar>:echo<CR>', { silent = true, desc = 'Toggle search highlight' })
-
--- Close floating windows with Escape
-keymap('n', '<Esc>', function()
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    if vim.api.nvim_win_get_config(win).relative ~= '' then
-      vim.api.nvim_win_close(win, false)
-      return
-    end
-  end
-  -- If no floating windows, clear search highlighting
-  vim.cmd('nohlsearch')
-end, { desc = 'Close floating windows or clear search' })
-
--- Copy selected text to clipboard (visual mode)
-keymap('v', 'yc', function()
-  -- Use a simpler approach: yank to unnamed register then get it
-  vim.cmd('normal! y')
-  local text = vim.fn.getreg('"')
-  vim.fn.system('pbcopy', text)
-  print('Selection copied to clipboard')
-end, { desc = 'Copy selection to clipboard' })
-
--- Move lines up and down (Alt-J and Alt-K on Mac)
-keymap('n', '∆', ':m .+1<CR>==', { desc = 'Move line down' })
-keymap('n', '˚', ':m .-2<CR>==', { desc = 'Move line up' })
-keymap('i', '∆', '<Esc>:m .+1<CR>==gi', { desc = 'Move line down' })
-keymap('i', '˚', '<Esc>:m .-2<CR>==gi', { desc = 'Move line up' })
-keymap('v', '∆', ':m \'>+1<CR>gv=gv', { desc = 'Move line down' })
-keymap('v', '˚', ':m \'<-2<CR>gv=gv', { desc = 'Move line up' })
-
 return M
