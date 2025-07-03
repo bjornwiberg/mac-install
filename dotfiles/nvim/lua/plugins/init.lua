@@ -14,7 +14,7 @@ local packer_bootstrap = ensure_packer()
 
 return require('packer').startup(function(use)
   -- LSP and related plugins (including autocompletion)
-  require('plugins.lsp')(use)
+  require('plugins.lsp').plugins(use)
   require('plugins.treesitter')(use)
   require('plugins.ui')(use)
   require('plugins.git')(use)
