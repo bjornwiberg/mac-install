@@ -7,7 +7,7 @@ return function(use)
       local has_treesitter, treesitter = pcall(require, 'nvim-treesitter.configs')
       if has_treesitter then
         treesitter.setup {
-          ensure_installed = { "typescript", "javascript", "tsx", "json", "html", "css", "lua" },
+          ensure_installed = { "typescript", "javascript", "tsx", "json", "html", "css", "lua", "dockerfile", "bash", "yaml", "markdown", "markdown_inline" },
           sync_install = false,
           auto_install = true,
           highlight = {
