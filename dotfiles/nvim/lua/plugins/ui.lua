@@ -1,6 +1,8 @@
 return function(use)
-  -- Theme and UI plugin definitions
-  use 'ellisonleao/gruvbox.nvim'
+  -- Color schemes
+  use 'folke/tokyonight.nvim'
+  --
+  vim.cmd("colorscheme tokyonight")
 
   -- File explorer
   use 'nvim-tree/nvim-tree.lua'
@@ -44,11 +46,6 @@ return function(use)
   use 'ryanoasis/vim-devicons'
   use 'edkolev/tmuxline.vim'
   use 'frazrepo/vim-rainbow'
-  use("petertriho/nvim-scrollbar")
-
-  -- UI Plugin Configurations
-  -- Setup theme
-  vim.cmd[[colorscheme gruvbox]]
 
   -- Setup nvim-tree (file explorer)
   local has_tree, tree = pcall(require, 'nvim-tree')
