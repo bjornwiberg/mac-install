@@ -93,6 +93,9 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 -- Key mappings
 local keymap = vim.keymap.set
 
+-- Toggle search highlighting
+keymap('n', '<Space>', ':set hlsearch! hlsearch?<Bar>:echo<CR>', { silent = true, desc = 'Toggle search highlight' })
+
 -- Close floating windows with Escape
 keymap('n', '<Esc>', function()
   for _, win in ipairs(vim.api.nvim_list_wins()) do
