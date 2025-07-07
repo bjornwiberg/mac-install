@@ -3,9 +3,6 @@ local keymapping = require('keymapping')
 
 require('lspconfig').ts_ls.setup{
   on_attach = function(client, bufnr)
-    -- Set up standard LSP keymappings
-    keymapping.setup_lsp_keymaps(client, bufnr)
-
     -- Auto hover on cursor hold with responsive cursor trap prevention
     local last_cursor_pos = nil
     local window_entered_time = 0

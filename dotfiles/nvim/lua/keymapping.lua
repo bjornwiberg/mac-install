@@ -4,19 +4,8 @@ local M = {}
 -- Key mapping helper
 local keymap = vim.keymap.set
 
--- LSP Key mappings
-local function setup_lsp_keymaps(client, bufnr)
-  local opts = { noremap = true, silent = true, buffer = bufnr }
-
-  -- Go to definition
-  keymap('n', 'gd', vim.lsp.buf.definition, opts)
-
-  -- Go to implementation
-  keymap('n', 'gi', vim.lsp.buf.implementation, opts)
-end
-
--- Export the LSP keymapping function
-M.setup_lsp_keymaps = setup_lsp_keymaps
+-- -- LSP Key mappings
+keymap('n', 'grr', '<cmd>FzfLua lsp_references<CR>', { noremap = true, silent = true })
 
 -- Toggle search highlighting
 keymap('n', '<Space>', ':set hlsearch! hlsearch?<Bar>:echo<CR>', { silent = true, desc = 'Toggle search highlight' })
@@ -62,7 +51,20 @@ local luasnip = require('luasnip')
 cmp.setup({
   mapping = {
     ['<C-e>'] = cmp.mapping.close(),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    ['<CR>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        if luasnip.expandable() then
+          luasnip.expand()
+        else
+          cmp.confirm({
+            select = true,
+          })
+        end
+      else
+        fallback()
+      end
+    end),
+
     ["<C-j>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
