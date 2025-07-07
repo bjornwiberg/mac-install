@@ -104,4 +104,7 @@ vim.keymap.set('n', '<Leader>b', '<cmd>Neotree buffers float toggle<CR>', { desc
 vim.keymap.set('n', '<leader>gg', '<cmd>Magit<CR>', { desc = 'Open Magit (Git interface)' })
 vim.keymap.set('n', '<leader>gp', '<cmd>Neogit push<CR>', { desc = 'Git push' })
 
+-- Markdown preview
+vim.keymap.set('n', '<leader>md', '<cmd>MarkdownPreviewToggle<CR>', { desc = 'Toggle markdown preview' })
+
 return M

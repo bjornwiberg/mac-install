@@ -78,4 +78,11 @@ return function(use)
       -- refer to the configuration section below
     }
   end
+
+  -- Markdown preview
+use({
+  "iamcco/markdown-preview.nvim",
+  run = function() vim.fn["mkdp#util#install"]() end,
+})
+
 end
