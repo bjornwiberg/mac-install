@@ -22,6 +22,3 @@ vim.cmd('filetype plugin indent on')
 
 -- Dim inactive windows
 require('editor.dim-inactive-windows')
-
--- Auto-reload config on save
-require('editor.auto-reload-config')
