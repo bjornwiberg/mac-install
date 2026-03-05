@@ -19,6 +19,7 @@ return require('packer').startup(function(use)
   require('plugins.ui')(use)
   require('plugins.git')(use)
   require('plugins.editor')(use)
+  require('plugins.ai')(use)
 
   if packer_bootstrap then
     require('packer').sync()

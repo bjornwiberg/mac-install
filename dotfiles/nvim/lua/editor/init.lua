@@ -20,5 +20,3 @@ vim.opt.ignorecase = true
 vim.cmd('syntax enable')
 vim.cmd('filetype plugin indent on')
 
--- Dim inactive windows
-require('editor.dim-inactive-windows')

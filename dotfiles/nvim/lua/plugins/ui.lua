@@ -2,7 +2,7 @@ return function(use)
   -- Color schemes
   use 'folke/tokyonight.nvim'
   --
-  vim.cmd("colorscheme tokyonight")
+  vim.cmd("colorscheme tokyonight-night")
 
   -- File explorer
   use 'nvim-tree/nvim-tree.lua'
@@ -158,6 +158,25 @@ return function(use)
         color_icons = true,
         cmd = 'rg --color=always --column --hidden -n --no-heading -S --no-ignore-vcs --ignore-file ~/.config/nvim/.rgignore',
         previewer = 'builtin',
+      },
+      -- Disable find command usage to avoid macOS compatibility issues
+      find = {
+        cmd = 'rg --files --hidden --no-ignore-vcs --ignore-file ~/.config/nvim/.rgignore',
+      },
+      -- Ensure LSP operations work properly
+      lsp = {
+        code_actions = {
+          previewer = 'builtin',
+        },
+        implementations = {
+          previewer = 'builtin',
+        },
+        references = {
+          previewer = 'builtin',
+        },
+        definitions = {
+          previewer = 'builtin',
+        },
       },
     })
   end
