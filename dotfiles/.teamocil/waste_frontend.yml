@@ -1,7 +1,7 @@
 windows:
   - name: waste_frontend
     root: ~/Sites/waste_frontend
-    layout: e206,254x74,0,0[254x50,0,0,1,254x11,0,51,2,254x11,0,63{119x11,0,63,3,134x11,120,63,4}]
+    layout: f60f,255x61,0,0[255x35,0,0,1,255x10,0,36,2,255x14,0,47{127x14,0,47,3,127x14,128,47[127x7,128,47,4,127x6,128,55,5]}]
     panes:
       - commands:
           - nvim
@@ -11,5 +11,7 @@ windows:
       - commands:
           - yarn dev
       - commands:
-          - yarn dev-be
+          - yarn dev:be
+      - commands:
+          - docker stop waste_db && docker rm waste_db && docker run -p 6543:6543 --name waste_db waste_db
 
