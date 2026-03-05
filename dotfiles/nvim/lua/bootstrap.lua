@@ -1,8 +1,23 @@
 -- System-level setup
-local M = {}
 
--- Set runtime path for plugins
-vim.o.runtimepath = vim.fn.stdpath('data') .. '/site/pack/*/start/*,' .. vim.o.runtimepath
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local out = vim.fn.system({
+    "git", "clone", "--filter=blob:none", "--branch=stable",
+    "https://github.com/folke/lazy.nvim.git", lazypath,
+  })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "Warn" },
+      { "\nPress any key to continue...", "Normal" },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
+end
+vim.opt.rtp:prepend(lazypath)
 
 -- Create Python 3 venv and install pynvim if it is not already installed.
 if vim.fn.empty(vim.fn.glob(vim.fn.stdpath('data') .. '/venv')) == 1 then
@@ -31,5 +46,3 @@ end
 if not vim.fn.isdirectory(vim.o.directory) then
   vim.fn.mkdir(vim.o.directory, 'p')
 end
-
-return M

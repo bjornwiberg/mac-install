@@ -1,9 +1,7 @@
-return function(use)
-  use({
+return {
+  {
     "coder/claudecode.nvim",
-    requires = {
-      { "folke/snacks.nvim" },
-    },
+    dependencies = { "folke/snacks.nvim" },
     config = function()
       require("claudecode").setup({
         terminal = {
@@ -11,5 +9,5 @@ return function(use)
         },
       })
     end,
-  })
-end
+  },
+}

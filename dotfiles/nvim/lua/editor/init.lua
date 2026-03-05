@@ -20,3 +20,15 @@ vim.opt.ignorecase = true
 vim.cmd('syntax enable')
 vim.cmd('filetype plugin indent on')
 
+-- Diagnostic signs
+vim.diagnostic.config({
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "",
+      [vim.diagnostic.severity.WARN]  = "",
+      [vim.diagnostic.severity.INFO]  = "",
+      [vim.diagnostic.severity.HINT]  = "",
+    },
+  },
+})
+

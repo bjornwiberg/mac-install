@@ -1,11 +1,11 @@
-return function(use)
+return {
   -- Git plugin definitions
-  use 'tpope/vim-fugitive'
-  use 'TimUntersberger/neogit'
-  use 'jreybert/vimagit'
-  use {
+  { 'tpope/vim-fugitive' },
+  { 'TimUntersberger/neogit' },
+  { 'jreybert/vimagit' },
+  {
     'lewis6991/gitsigns.nvim',
-    requires = { 'nvim-lua/plenary.nvim' },
+    dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
       require('gitsigns').setup {
         current_line_blame = true,
@@ -15,8 +15,10 @@ return function(use)
           delay = 500,
           ignore_whitespace = false,
         },
-      require("scrollbar.handlers.gitsigns").setup()
+        on_attach = function()
+          require("scrollbar.handlers.gitsigns").setup()
+        end,
       }
     end
   }
-end
+}

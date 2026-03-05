@@ -10,8 +10,5 @@ require('editor')
 -- Load plugin management
 require('plugins')
 
--- Load LSP configuration
-require('plugins.lsp').setup()
-
 -- Load key mappings (after all plugins are loaded)
 require('keymapping')
