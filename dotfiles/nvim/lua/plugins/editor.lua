@@ -51,14 +51,14 @@ return {
   -- ESLint
   { 'mfussenegger/nvim-lint' },
 
-  -- Commenting
+  -- Commenting (treesitter-native, handles JSX/TSX with {/* */} automatically)
   {
-    'numToStr/Comment.nvim',
+    'folke/ts-comments.nvim',
+    event = 'VeryLazy',
     config = function()
-      require('Comment').setup()
-    end
+      require('ts-comments').setup()
+    end,
   },
-  { 'JoosepAlviste/nvim-ts-context-commentstring' },
 
   -- Dim inactive windows
   {
