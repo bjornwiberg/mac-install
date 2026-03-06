@@ -200,6 +200,18 @@ vim.keymap.set('n', '[g', '<cmd>Gitsigns prev_hunk<CR>', { desc = 'Previous hunk
 -- Markdown preview
 vim.keymap.set('n', '<leader>md', '<cmd>MarkdownPreviewToggle<CR>', { desc = 'Toggle markdown preview' })
 
+-- Neotest
+vim.keymap.set('n', '<leader>tc', function() require('neotest').run.run() end,                      { desc = 'Run test under cursor' })
+vim.keymap.set('n', '<leader>tf', function() require('neotest').run.run(vim.fn.expand('%:p')) end, { desc = 'Run test file' })
+vim.keymap.set('n', '<leader>ta', function() require('neotest').run.run(vim.fn.getcwd()) end,                          { desc = 'Run all vitest tests' })
+vim.keymap.set('n', '<leader>tP', function() require('neotest').run.run(vim.fn.getcwd() .. '/playwright') end,        { desc = 'Run all playwright tests' })
+vim.keymap.set('n', '<leader>tS', function() require('neotest').run.stop() end,                  { desc = 'Stop test run' })
+vim.keymap.set('n', '<leader>ts', function() require('neotest').summary.toggle() end,            { desc = 'Toggle test summary' })
+vim.keymap.set('n', '<leader>to', function() require('neotest').output_panel.toggle() end,       { desc = 'Toggle output panel' })
+vim.keymap.set('n', '<leader>tO', function() require('neotest').output.open({ enter = true }) end, { desc = 'Open test output' })
+vim.keymap.set('n', ']t', function() require('neotest').jump.next({ status = 'failed' }) end,    { desc = 'Jump to next failed test' })
+vim.keymap.set('n', '[t', function() require('neotest').jump.prev({ status = 'failed' }) end,    { desc = 'Jump to prev failed test' })
+
 vim.keymap.set('n', '<CR>', '<Plug>(zoom-toggle)', { desc = 'Toggle Zoom' })
 
 return M

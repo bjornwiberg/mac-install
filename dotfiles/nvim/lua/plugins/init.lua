@@ -4,5 +4,6 @@ require('lazy').setup({
   require('plugins.ui'),
   require('plugins.git'),
   require('plugins.editor'),
+  require('plugins.testing'),
   require('plugins.ai'),
 })
