@@ -16,6 +16,14 @@ vim.opt.splitbelow = true
 vim.opt.incsearch = true
 vim.opt.ignorecase = true
 
+-- Register Dockerfile.* and .env.* variants for filetype detection
+vim.filetype.add({
+  pattern = {
+    ['Dockerfile%..*'] = 'dockerfile',
+    ['%.env%..*']      = 'sh',
+  },
+})
+
 -- Ensure syntax highlighting is enabled
 vim.cmd('syntax enable')
 vim.cmd('filetype plugin indent on')
@@ -29,6 +37,10 @@ vim.diagnostic.config({
       [vim.diagnostic.severity.INFO]  = "",
       [vim.diagnostic.severity.HINT]  = "",
     },
+  },
+  float = {
+    border = 'rounded',
+    source = true,  -- show which LSP/linter the diagnostic comes from
   },
 })
 

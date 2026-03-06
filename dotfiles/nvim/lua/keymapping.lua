@@ -65,6 +65,16 @@ vim.api.nvim_create_autocmd("TermOpen", {
 })
 
 -- LSP Key mappings
+-- K: show diagnostics if any on current line, otherwise LSP hover
+keymap('n', 'K', function()
+  local diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line('.') - 1 })
+  if #diagnostics > 0 then
+    vim.diagnostic.open_float(nil, { focusable = true })
+  else
+    vim.lsp.buf.hover()
+  end
+end, { desc = 'Show diagnostics or hover' })
+
 keymap('n', 'grr', '<cmd>FzfLua lsp_references<CR>', { noremap = true, silent = true })
 -- rename symbol
 keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', { desc = 'Rename symbol' })
@@ -115,6 +125,22 @@ local luasnip = require('luasnip')
 cmp.setup({
   mapping = {
     ['<C-e>'] = cmp.mapping.close(),
+    ['<S-down>'] = cmp.mapping.scroll_docs(4),
+    ['<S-up>']   = cmp.mapping.scroll_docs(-4),
+    ['<C-d>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        for _ = 1, 5 do cmp.select_next_item({ behavior = cmp.SelectBehavior.Select }) end
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
+    ['<C-u>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        for _ = 1, 5 do cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select }) end
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
     ['<CR>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         if luasnip.expandable() then
@@ -169,7 +195,7 @@ vim.keymap.set('n', '<leader>gp', '<cmd>Neogit push<CR>', { desc = 'Git push' })
 -- Gitgutter mappings
 -- Use ]g and [g for navigating git hunks (defined above in diagnostics)
 vim.keymap.set('n', ']g', '<cmd>Gitsigns next_hunk<CR>', { desc = 'Next hunk' })
-vim.keymap.set('n', '[g', '<cmd>Gitsigns prev_hunk<CR>', { desc = 'Previos hunk' })
+vim.keymap.set('n', '[g', '<cmd>Gitsigns prev_hunk<CR>', { desc = 'Previous hunk' })
 
 -- Markdown preview
 vim.keymap.set('n', '<leader>md', '<cmd>MarkdownPreviewToggle<CR>', { desc = 'Toggle markdown preview' })

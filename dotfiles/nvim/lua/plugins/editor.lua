@@ -60,6 +60,17 @@ return {
   },
   { 'JoosepAlviste/nvim-ts-context-commentstring' },
 
+  -- Dim inactive windows
+  {
+    'levouh/tint.nvim',
+    config = function()
+      require('tint').setup({
+        tint = -60,
+        saturation = 0.5,
+      })
+    end,
+  },
+
   -- Other useful plugins
   { "mg979/vim-visual-multi", branch = "master" },
   { 'christoomey/vim-tmux-navigator' },

@@ -9,6 +9,17 @@ return {
     end,
   },
 
+  -- Icons (mini.icons replaces nvim-web-devicons for fzf-lua glob support)
+  {
+    'echasnovski/mini.icons',
+    version = false,
+    config = function()
+      require('mini.icons').setup()
+      -- Make fzf-lua and other plugins that use nvim-web-devicons API use mini.icons
+      require('mini.icons').mock_nvim_web_devicons()
+    end,
+  },
+
   -- File explorer
   { 'nvim-tree/nvim-tree.lua',
     config = function()
@@ -169,6 +180,66 @@ return {
           implementations = { previewer = 'builtin' },
           references      = { previewer = 'builtin' },
           definitions     = { previewer = 'builtin' },
+        },
+      })
+    end,
+  },
+
+  -- Notification system
+  {
+    'rcarriga/nvim-notify',
+    config = function()
+      local c = require('tokyonight.colors').setup({ style = 'night' })
+      require('notify').setup({
+        background_colour = c.bg_dark,
+        render = 'wrapped-compact',
+        stages = 'fade',
+        timeout = 3000,
+      })
+      vim.notify = require('notify')
+    end,
+  },
+
+  -- Noice: unified UI for cmdline, messages, LSP hover, signature help, diagnostics
+  {
+    'folke/noice.nvim',
+    dependencies = {
+      'MunifTanjim/nui.nvim',
+      'rcarriga/nvim-notify',
+    },
+    config = function()
+      require('noice').setup({
+        lsp = {
+          -- Let noice handle hover and signature help
+          hover    = { enabled = true },
+          signature = { enabled = true },
+          -- Override markdown rendering so cmp + other plugins use Treesitter
+          override = {
+            ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
+            ['vim.lsp.util.stylize_markdown'] = true,
+            ['cmp.entry.get_documentation'] = true,
+          },
+        },
+        cmdline = {
+          view = 'cmdline_popup',
+        },
+        views = {
+          cmdline_popup = {
+            position = {
+              row = '50%',
+              col = '50%',
+            },
+            size = {
+              width = 60,
+              height = 'auto',
+            },
+          },
+        },
+        presets = {
+          bottom_search        = true,   -- classic bottom cmdline for search
+          command_palette      = true,   -- cmdline + popupmenu together
+          long_message_to_split = true,  -- long messages go to a split
+          lsp_doc_border       = true,   -- border on hover/signature docs
         },
       })
     end,
