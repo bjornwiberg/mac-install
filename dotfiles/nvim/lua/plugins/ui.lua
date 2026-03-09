@@ -225,19 +225,19 @@ return {
         },
         views = {
           cmdline_popup = {
-            position = {
-              row = '50%',
-              col = '50%',
-            },
-            size = {
-              width = 60,
-              height = 'auto',
-            },
+            position = { row = '35%', col = '50%' },
+            size = { width = 60, height = 'auto' },
+          },
+          popupmenu = {
+            relative = 'editor',
+            position = { row = '45%', col = '50%' },
+            size = { width = 60, height = 10 },
+            border = { style = 'rounded', padding = { 0, 1 } },
           },
         },
         presets = {
           bottom_search        = true,   -- classic bottom cmdline for search
-          command_palette      = true,   -- cmdline + popupmenu together
+          command_palette      = false,  -- we manage positions manually
           long_message_to_split = true,  -- long messages go to a split
           lsp_doc_border       = true,   -- border on hover/signature docs
         },
