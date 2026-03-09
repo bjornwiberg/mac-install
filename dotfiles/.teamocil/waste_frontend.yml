@@ -13,5 +13,5 @@ windows:
       - commands:
           - yarn dev:be
       - commands:
-          - docker stop waste_db && docker rm waste_db && docker run -p 6543:6543 --name waste_db waste_db
+          - yarn start:db
 
