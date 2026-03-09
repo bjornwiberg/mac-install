@@ -143,12 +143,16 @@ return {
             ["<C-d>"] = "half-page-down",
             ["<S-down>"] = "preview-page-down",
             ["<S-up>"]   = "preview-page-up",
+            ["<C-g>"] = "preview-page-down",
+            ["<C-f>"]   = "preview-page-up",
           },
           fzf = {
             ["ctrl-u"]     = "half-page-up",
             ["ctrl-d"]     = "half-page-down",
             ["shift-down"] = "preview-page-down",
             ["shift-up"]   = "preview-page-up",
+            ["ctrl-g"]     = "preview-page-down",
+            ["ctrl-f"]     = "preview-page-up",
           },
         },
         files = {
