@@ -97,4 +97,53 @@ return {
     "iamcco/markdown-preview.nvim",
     build = function() vim.fn["mkdp#util#install"]() end,
   },
+  {
+    "rmagatti/auto-session",
+    lazy = false,
+
+    ---enables autocomplete for opts
+    ---@module "auto-session"
+    ---@type AutoSession.Config
+    config = function()
+      -- Only save buffers visible in windows, not all hidden/background buffers
+      vim.o.sessionoptions = "blank,curdir,folds,help,tabpages,winsize,terminal"
+
+      local function close_junk_buffers()
+        local visible = {}
+        for _, win in ipairs(vim.api.nvim_list_wins()) do
+          visible[vim.api.nvim_win_get_buf(win)] = true
+        end
+
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+          if vim.api.nvim_buf_is_valid(buf) then
+            local name = vim.api.nvim_buf_get_name(buf)
+            local buftype = vim.bo[buf].buftype
+
+            -- Always close known junk patterns
+            local is_junk = name:match("^term://")
+              or name:match("node_modules/")
+              or name:match("^magit://")
+              or name:match("%[Claude Code%]")
+              or name:match("Neotest Summary")
+
+            -- Close non-visible regular file buffers (but leave terminals alone)
+            local is_hidden_file = not visible[buf]
+              and buftype == ""
+              and name ~= ""
+
+            if is_junk or is_hidden_file then
+              pcall(vim.api.nvim_buf_delete, buf, { force = true })
+            end
+          end
+        end
+      end
+
+      require("auto-session").setup({
+        suppressed_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
+        bypass_save_filetypes = { "neo-tree", "neotest-summary", "terminal", "nofile" },
+        pre_save_cmds = { close_junk_buffers },
+        post_restore_cmds = { close_junk_buffers },
+      })
+    end,
+  },
 }
