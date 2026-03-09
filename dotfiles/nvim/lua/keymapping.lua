@@ -7,15 +7,15 @@ local keymap = vim.keymap.set
 -- Claude mappings
 local opts = { noremap = true, silent = true }
 
-keymap("n", "<leader>ac", "<cmd>ClaudeCode<cr>", vim.tbl_extend("force", opts, {
-  desc = "Toggle Claude",
-}))
-
 keymap("n", "<C-a>", "<cmd>ClaudeCodeFocus<cr>", vim.tbl_extend("force", opts, {
   desc = "Focus Claude",
 }))
 
-keymap("n", "<leader>ar", "<cmd>ClaudeCode --resume<cr>", vim.tbl_extend("force", opts, {
+keymap("n", "<leader>ac", "<cmd>ClaudeCode<cr>", vim.tbl_extend("force", opts, {
+  desc = "Toggle Claude",
+}))
+
+keymap("n", "<leader>aR", "<cmd>ClaudeCode --resume<cr>", vim.tbl_extend("force", opts, {
   desc = "Resume Claude",
 }))
 
@@ -37,7 +37,7 @@ keymap("v", "<leader>as", "<cmd>ClaudeCodeSend<cr>", vim.tbl_extend("force", opt
 }))
 
 -- File explorers: add file
-keymap("n", "<leader>as", "<cmd>ClaudeCodeTreeAdd<cr>", vim.tbl_extend("force", opts, {
+keymap("n", "<leader>af", "<cmd>ClaudeCodeTreeAdd<cr>", vim.tbl_extend("force", opts, {
   desc = "Add file",
 }))
 
@@ -74,6 +74,9 @@ keymap('n', 'K', function()
     vim.lsp.buf.hover()
   end
 end, { desc = 'Show diagnostics or hover' })
+
+-- Always show LSP hover, even when diagnostics are present
+keymap('n', '<leader>K', vim.lsp.buf.hover, { desc = 'LSP hover' })
 
 keymap('n', 'grr', '<cmd>FzfLua lsp_references<CR>', { noremap = true, silent = true })
 -- rename symbol
@@ -186,7 +189,7 @@ vim.keymap.set('n', '//', '<cmd>FzfLua grep_cword<CR>', { desc = 'Search word un
 vim.keymap.set('v', '//', '<cmd>FzfLua grep_visual<CR>', { desc = 'Search visual selection' })
 
 -- Neo-tree key mappings
-vim.keymap.set('n', '<C-s>', '<cmd>Neotree right focus<CR>', { desc = 'Toggle neo-tree' })
+vim.keymap.set('n', '<C-s>', '<cmd>Neotree right toggle<CR>', { desc = 'Toggle neo-tree' })
 vim.keymap.set('n', '<Leader>b', '<cmd>Neotree buffers float toggle<CR>', { desc = 'Toggle buffers' })
 
 -- Git Plugin Configurations
@@ -209,9 +212,7 @@ vim.keymap.set('n', '<leader>tS', function() require('neotest').run.stop() end, 
 vim.keymap.set('n', '<leader>ts', function() require('neotest').summary.toggle() end,            { desc = 'Toggle test summary' })
 vim.keymap.set('n', '<leader>to', function() require('neotest').output_panel.toggle() end,       { desc = 'Toggle output panel' })
 vim.keymap.set('n', '<leader>tO', function() require('neotest').output.open({ enter = true }) end, { desc = 'Open test output' })
-vim.keymap.set('n', ']t', function() require('neotest').jump.next({ status = 'failed' }) end,    { desc = 'Jump to next failed test' })
-vim.keymap.set('n', '[t', function() require('neotest').jump.prev({ status = 'failed' }) end,    { desc = 'Jump to prev failed test' })
-
-vim.keymap.set('n', '<CR>', '<Plug>(zoom-toggle)', { desc = 'Toggle Zoom' })
+vim.keymap.set('n', ']t', function() require('neotest').jump.next() end, { desc = 'Jump to next test' })
+vim.keymap.set('n', '[t', function() require('neotest').jump.prev() end, { desc = 'Jump to prev test' })
 
 return M
