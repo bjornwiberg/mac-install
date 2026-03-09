@@ -90,4 +90,71 @@ lookup () {
         fi
 }
 
+# Force-quit Docker Desktop and start it again. Use when Docker daemon hangs
+# (e.g. after Docker Desktop freezes) and "Restart" from the menu doesn't work.
+restart-docker () {
+  echo "Stopping Docker Desktop and related processes..."
+  pkill -9 -f "Docker Desktop" 2>/dev/null || true
+  pkill -9 -f "com.docker.backend" 2>/dev/null || true
+  pkill -9 -f "com.docker.hyperkit" 2>/dev/null || true
+  killall "Docker" 2>/dev/null || true
+  killall "Docker Desktop" 2>/dev/null || true
+  sleep 2
+  echo "Starting Docker Desktop..."
+  open -a "Docker"
+  echo "Waiting for Docker daemon to be ready (up to 60s)..."
+  for i in $(seq 1 60); do
+    if docker info >/dev/null 2>&1; then
+      echo "Docker is ready."
+      return 0
+    fi
+    sleep 1
+  done
+  echo "Docker did not become ready within 60s. Check Docker Desktop in the menu bar."
+  return 1
+}
+
+ydl-avc() {
+    if [ $# -eq 0 ]; then
+        cat << 'EOF'
+Usage: ydl-avc VIDEO_ID [VIDEO_ID2 ...]
+
+Downloads best H.264 MP4 video + audio (merged to MP4)
+EOF
+        return 1
+    fi
+
+    local url_base="https://www.youtube.com/watch?v="
+
+    local count=0 success=0 failed=0
+
+    for id in "$@"; do
+        ((count++))
+        id="${id##*v=}"          # clean if full URL pasted
+        id="${id%%[&?]*}"
+
+        printf "\n┌───────────────────────────────────────\n"
+        printf "│ [%d]  %s\n" "$count" "$id"
+        printf "└───────────────────────────────────────\n"
+
+        yt-dlp \
+            -f "bv*[vcodec^=avc]+ba[ext=m4a]/bv*+ba/best" \
+            --merge-output-format mp4 \
+            --no-playlist \
+            "${url_base}${id}"
+
+        if [ $? -eq 0 ]; then
+            ((success++))
+            echo "✓ Done"
+        else
+            ((failed++))
+            echo "✗ Failed"
+        fi
+    done
+
+    echo "──────────────────────────────────────────────"
+    echo "Processed: $count | Success: $success | Failed: $failed"
+}
+
+
 compctl -g '~/.teamocil/*(:t:r)' teamocil
