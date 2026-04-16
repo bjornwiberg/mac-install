@@ -65,32 +65,7 @@ return {
     end,
   },
 
-  -- Indent guides
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    config = function()
-      local highlight = {
-        "RainbowRed", "RainbowYellow", "RainbowBlue", "RainbowOrange",
-        "RainbowGreen", "RainbowViolet", "RainbowCyan",
-      }
-
-      local hooks = require "ibl.hooks"
-
-      -- create the highlight groups in the highlight setup hook, so they are reset
-      -- every time the colorscheme changes
-      hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-        vim.api.nvim_set_hl(0, "RainbowRed",    { fg = "#E06C75" })
-        vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
-        vim.api.nvim_set_hl(0, "RainbowBlue",   { fg = "#61AFEF" })
-        vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
-        vim.api.nvim_set_hl(0, "RainbowGreen",  { fg = "#98C379" })
-        vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
-        vim.api.nvim_set_hl(0, "RainbowCyan",   { fg = "#56B6C2" })
-      end)
-
-      require('ibl').setup { indent = { highlight = highlight } }
-    end,
-  },
+  -- Indent guides (via snacks.nvim)
 
   -- Neo-tree file explorer
   {
@@ -115,28 +90,106 @@ return {
             enabled = true, -- intelligently follow the current file
           },
         },
-        commands = {
-          github_permalink = function(state)
-            local node = state.tree:get_node()
-            if node and _G._github_file_url then
-              _G._github_file_url(node:get_id(), true)
-            end
-          end,
-          github_branch_url = function(state)
-            local node = state.tree:get_node()
-            if node and _G._github_file_url then
-              _G._github_file_url(node:get_id(), false)
-            end
-          end,
-        },
-        window = {
-          mappings = {
-            ["ghp"] = "github_permalink",
-            ["ghu"] = "github_branch_url",
-          },
-        },
       })
     end,
+  },
+
+  -- Snacks.nvim (explorer + utilities)
+  {
+    "folke/snacks.nvim",
+    opts = {
+      statuscolumn = { enabled = true },
+      explorer = {
+        replace_netrw = true,
+      },
+      indent = {
+        indent = {
+          hl = {
+            "SnacksIndent1",
+            "SnacksIndent2",
+            "SnacksIndent3",
+            "SnacksIndent4",
+            "SnacksIndent5",
+            "SnacksIndent6",
+            "SnacksIndent7",
+            "SnacksIndent8",
+          },
+        },
+      },
+      picker = {
+        previewers = {
+          git = {
+            args = { "-c", "diff.ignoreAllSpace=true" },
+          },
+        },
+        win = {
+          input = {
+            keys = {
+              ["<Esc>"] = { "close", mode = { "i", "n" } },
+              ["<c-g>"] = { "preview_scroll_up", mode = { "i", "n" } },
+            },
+          },
+          list = {
+            keys = {
+              ["<c-g>"] = "preview_scroll_up",
+            },
+          },
+        },
+        sources = {
+          explorer = {
+            layout = {
+              preset = "sidebar",
+              preview = false,
+              layout = {
+                position = "right",
+                width = 35,
+              },
+            },
+            hidden = true,
+            auto_close = false,
+            follow_file = true,
+            win = {
+              list = {
+                keys = {
+                  ["<leader>ghf"] = {
+                    function()
+                      local pickers = Snacks.picker.get({ source = "explorer" })
+                      local item = pickers[1] and pickers[1]:current()
+                      if item and item.file and not item.dir then
+                        local cwd = vim.fn.fnamemodify(item.file, ":h")
+                        local rel = vim.fn.system("git -C " .. vim.fn.shellescape(cwd) .. " ls-files --full-name " .. vim.fn.shellescape(item.file)):gsub("%s+$", "")
+                        local branch = vim.fn.system("git -C " .. vim.fn.shellescape(cwd) .. " rev-parse --abbrev-ref HEAD"):gsub("%s+$", "")
+                        local remote = vim.fn.system("git -C " .. vim.fn.shellescape(cwd) .. " config --get remote.origin.url"):gsub("%s+$", ""):gsub("^git@github.com:", "https://github.com/"):gsub("%.git$", "")
+                        local url = remote .. "/blob/" .. branch .. "/" .. rel
+                        vim.fn.setreg('+', url)
+                        vim.notify("Copied: " .. url)
+                      end
+                    end,
+                    desc = "Copy GitHub file URL",
+                  },
+                  ["<leader>ghp"] = {
+                    function()
+                      local pickers = Snacks.picker.get({ source = "explorer" })
+                      local item = pickers[1] and pickers[1]:current()
+                      if item and item.file and not item.dir then
+                        local cwd = vim.fn.fnamemodify(item.file, ":h")
+                        local rel = vim.fn.system("git -C " .. vim.fn.shellescape(cwd) .. " ls-files --full-name " .. vim.fn.shellescape(item.file)):gsub("%s+$", "")
+                        local commit = vim.fn.system("git -C " .. vim.fn.shellescape(cwd) .. " log -n 1 --pretty=format:%H -- " .. vim.fn.shellescape(item.file)):gsub("%s+$", "")
+                        local remote = vim.fn.system("git -C " .. vim.fn.shellescape(cwd) .. " config --get remote.origin.url"):gsub("%s+$", ""):gsub("^git@github.com:", "https://github.com/"):gsub("%.git$", "")
+                        local url = remote .. "/blob/" .. commit .. "/" .. rel
+                        vim.fn.setreg('+', url)
+                        vim.notify("Copied: " .. url)
+                      end
+                    end,
+                    desc = "Copy GitHub permalink",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
 
   -- FZF with icons using fzf-lua (better icon support)
