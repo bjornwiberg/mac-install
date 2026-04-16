@@ -190,7 +190,8 @@ vim.keymap.set({ 'n', 'x' }, '<leader>sr', function()
 end, { desc = 'Search and Replace' })
 
 -- Markdown preview
-vim.keymap.set('n', '<leader>md', '<cmd>MarkdownPreviewToggle<CR>', { desc = 'Toggle markdown preview' })
+vim.keymap.set('n', '<leader>mdp', '<cmd>RenderMarkdown toggle<CR>', { desc = 'Toggle markdown render' })
+vim.keymap.set('n', '<leader>mdb', '<cmd>MarkdownPreviewToggle<CR>', { desc = 'Markdown preview (browser)' })
 
 -- Restart tmux pane (send C-c, then re-run last command)
 vim.keymap.set('n', '<leader>rp', function()

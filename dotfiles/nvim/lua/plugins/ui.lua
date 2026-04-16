@@ -1,4 +1,22 @@
 return {
+  -- Rendered markdown (inline preview)
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    ft = { 'markdown' },
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' },
+    opts = {},
+  },
+
+  -- Markdown browser preview (Mermaid support)
+  {
+    'iamcco/markdown-preview.nvim',
+    ft = { 'markdown' },
+    build = function() vim.fn['mkdp#util#install']() end,
+    init = function()
+      vim.g.mkdp_filetypes = { 'markdown' }
+    end,
+  },
+
   -- Color schemes
   {
     'folke/tokyonight.nvim',
