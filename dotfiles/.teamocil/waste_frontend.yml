@@ -4,6 +4,11 @@ windows:
     layout: f60f,255x61,0,0[255x35,0,0,1,255x10,0,36,2,255x14,0,47{127x14,0,47,3,127x14,128,47[127x7,128,47,4,127x6,128,55,5]}]
     panes:
       - commands:
+          - tmux set-option -p -t :.0 @name nvim
+          - tmux set-option -p -t :.1 @name shell
+          - tmux set-option -p -t :.2 @name frontend
+          - tmux set-option -p -t :.3 @name backend
+          - tmux set-option -p -t :.4 @name database
           - nvim
         focus: true
       - commands:
@@ -14,4 +19,3 @@ windows:
           - yarn dev:be
       - commands:
           - yarn start:db
-

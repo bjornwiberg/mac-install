@@ -4,6 +4,10 @@ windows:
     layout: e206,254x74,0,0[254x50,0,0,1,254x11,0,51,2,254x11,0,63{119x11,0,63,3,134x11,120,63,4}]
     panes:
       - commands:
+          - tmux set-option -p -t :.0 @name nvim
+          - tmux set-option -p -t :.1 @name client-shell
+          - tmux set-option -p -t :.2 @name client
+          - tmux set-option -p -t :.3 @name service
           - nvim
         focus: true
       - commands:
@@ -14,4 +18,3 @@ windows:
       - commands:
           - cd Service
           - dotnet run
-

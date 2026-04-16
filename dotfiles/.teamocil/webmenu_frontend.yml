@@ -4,6 +4,10 @@ windows:
     layout: e206,254x74,0,0[254x50,0,0,1,254x11,0,51,2,254x11,0,63{119x11,0,63,3,134x11,120,63,4}]
     panes:
       - commands:
+          - tmux set-option -p -t :.0 @name nvim
+          - tmux set-option -p -t :.1 @name shell
+          - tmux set-option -p -t :.2 @name frontend
+          - tmux set-option -p -t :.3 @name shell-2
           - nvim
         focus: true
       - commands:
@@ -12,4 +16,3 @@ windows:
           - PORT=3030 npm run dev
       - commands:
           - echo
-

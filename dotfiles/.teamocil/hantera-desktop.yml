@@ -4,6 +4,10 @@ windows:
     layout: 7f40,425x103,0,0[425x82,0,0{282x82,0,0,1,142x82,283,0,5},425x20,0,83{205x20,0,83,3,219x20,206,83,4}]
     panes:
       - commands:
+          - tmux set-option -p -t :.0 @name nvim
+          - tmux set-option -p -t :.1 @name frontend
+          - tmux set-option -p -t :.2 @name shell
+          - tmux set-option -p -t :.3 @name shell-2
           - nvim
         focus: true
       - commands:
@@ -12,4 +16,3 @@ windows:
         - echo
       - commands:
           - echo
-
