@@ -9,39 +9,51 @@ return {
       vim.g['prettier#autoformat_require_pragma'] = 0
       vim.g['prettier#exec_cmd_async'] = 1
 
-      -- Format on save: skip formatting if Biome is available (Biome's fixAll handles both fixing and formatting)
+      -- Format on save: Biome > Prettier > LSP > built-in indent (gg=G)
       vim.api.nvim_create_autocmd("BufWritePre", {
-        pattern = { "*.js", "*.jsx", "*.ts", "*.tsx", "*.css", "*.scss", "*.html", "*.json", "*.md", "*.yaml", "*.yml" },
+        pattern = "*",
         callback = function()
-          -- Check if Biome LSP is available - if so, skip formatting (Biome's code action handles it)
+          -- Skip special buffers
+          if vim.bo.buftype ~= "" then return end
+
+          -- Check if Biome LSP is available - if so, skip (Biome's fixAll handles it)
           local clients = vim.lsp.get_clients({ bufnr = 0 })
           for _, client in ipairs(clients) do
-            if client.name == 'biome' then
-              -- Biome handles formatting via fixAll code action, so skip here
+            if client.name == 'biome' then return end
+          end
+
+          -- Check if biome.json exists - skip to avoid conflicts
+          local file_dir = vim.fn.expand('%:p:h')
+          local biome_config = vim.fs.find({ 'biome.json', 'biome.jsonc' }, { upward = true, path = file_dir })[1]
+          if biome_config then return end
+
+          -- Try Prettier for supported file types when prettier binary is available
+          local prettier_ft = {javascript=true, javascriptreact=true, typescript=true, typescriptreact=true, css=true, scss=true, html=true, json=true, markdown=true}
+          if prettier_ft[vim.bo.filetype] then
+            local has_prettier = vim.fn.executable('prettier') == 1
+            if not has_prettier then
+              has_prettier = vim.fs.find('node_modules/.bin/prettier', { upward = true, path = file_dir })[1] ~= nil
+            end
+            if has_prettier then
+              pcall(vim.cmd, 'Prettier')
               return
             end
           end
 
-          -- Check if biome.json exists by searching upward from the current file's directory
-          local file_dir = vim.fn.expand('%:p:h')
-          local biome_config = vim.fs.find({ 'biome.json', 'biome.jsonc' }, { upward = true, path = file_dir })[1]
-
-          if biome_config then
-            -- Biome project - skip formatting to avoid conflicts (Biome will handle it if attached)
-            return
-          else
-            -- Not a Biome project, try Prettier (will fail silently if not available)
-            local ok, _ = pcall(vim.cmd, 'Prettier')
-            if not ok then
-              -- Prettier not available, try LSP formatting with any available formatter
-              for _, client in ipairs(clients) do
-                if client.supports_method("textDocument/formatting") then
-                  vim.lsp.buf.format({ async = false })
-                  return
-                end
-              end
+          -- Try LSP formatting
+          for _, client in ipairs(clients) do
+            if client.supports_method("textDocument/formatting") then
+              vim.lsp.buf.format({ async = false })
+              return
             end
           end
+
+          -- Fallback: built-in indent (skip for formats where it's destructive)
+          local skip_indent = {yaml=true, yml=true, python=true}
+          if skip_indent[vim.bo.filetype] then return end
+          local view = vim.fn.winsaveview()
+          vim.cmd("silent normal! gg=G")
+          vim.fn.winrestview(view)
         end,
       })
     end,
@@ -121,15 +133,15 @@ return {
 
             -- Always close known junk patterns
             local is_junk = name:match("^term://")
-              or name:match("node_modules/")
-              or name:match("^magit://")
-              or name:match("%[Claude Code%]")
-              or name:match("Neotest Summary")
+            or name:match("node_modules/")
+            or name:match("^magit://")
+            or name:match("%[Claude Code%]")
+            or name:match("Neotest Summary")
 
             -- Close non-visible regular file buffers (but leave terminals alone)
             local is_hidden_file = not visible[buf]
-              and buftype == ""
-              and name ~= ""
+            and buftype == ""
+            and name ~= ""
 
             if is_junk or is_hidden_file then
               pcall(vim.api.nvim_buf_delete, buf, { force = true })
@@ -139,11 +151,17 @@ return {
       end
 
       require("auto-session").setup({
+
         suppressed_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
         bypass_save_filetypes = { "neo-tree", "neotest-summary", "terminal", "nofile" },
         pre_save_cmds = { close_junk_buffers },
         post_restore_cmds = { close_junk_buffers },
       })
     end,
+  },
+  {
+    'MagicDuck/grug-far.nvim',
+    opts = { headerMaxWidth = 80 },
+    cmd = { "GrugFar", "GrugFarWithin" },
   },
 }
