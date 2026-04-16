@@ -50,6 +50,10 @@ keymap("n", "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", vim.tbl_extend("force",
   desc = "Deny diff",
 }))
 
+keymap("n", "<leader>aY", "<cmd>ClaudeCode --dangerously-skip-permissions<cr>", vim.tbl_extend("force", opts, {
+  desc = "Claude (skip permissions)",
+}))
+
 -- Enables navigate out from claude terminal with Ctrl-l
 vim.api.nvim_create_autocmd("TermOpen", {
   callback = function(ev)
@@ -65,31 +69,15 @@ vim.api.nvim_create_autocmd("TermOpen", {
 })
 
 -- LSP Key mappings
--- K: show diagnostics if any on current line, otherwise LSP hover
-keymap('n', 'K', function()
-  local diagnostics = vim.diagnostic.get(0, { lnum = vim.fn.line('.') - 1 })
-  if #diagnostics > 0 then
-    vim.diagnostic.open_float(nil, { focusable = true })
-  else
-    vim.lsp.buf.hover()
-  end
-end, { desc = 'Show diagnostics or hover' })
-
--- Always show LSP hover, even when diagnostics are present
-keymap('n', '<leader>K', vim.lsp.buf.hover, { desc = 'LSP hover' })
 
 keymap('n', 'grr', '<cmd>FzfLua lsp_references<CR>', { noremap = true, silent = true })
--- rename symbol
-keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', { desc = 'Rename symbol' })
--- code action
-keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', { desc = 'Code action' })
 
 -- Toggle search highlighting
 keymap('n', '<Space>', ':set hlsearch! hlsearch?<Bar>:echo<CR>', { silent = true, desc = 'Toggle search highlight' })
 
-  -- Split windows
-  keymap('n', '<leader>h', ':split<CR>', { desc = 'Horizontal split' })
-  keymap('n', '<leader>v', ':vsplit<CR>', { desc = 'Vertical split' })
+-- Split windows
+keymap('n', '<leader>h', ':split<CR>', { desc = 'Horizontal split' })
+keymap('n', '<leader>v', ':vsplit<CR>', { desc = 'Vertical split' })
 
 -- Close floating windows with Escape
 keymap('n', '<Esc>', function()
@@ -117,67 +105,13 @@ keymap('n', '∆', ':m .+1<CR>==', { desc = 'Move line down' })
 keymap('n', '˚', ':m .-2<CR>==', { desc = 'Move line up' })
 keymap('i', '∆', '<Esc>:m .+1<CR>==gi', { desc = 'Move line down' })
 keymap('i', '˚', '<Esc>:m .-2<CR>==gi', { desc = 'Move line up' })
+
+-- Word movement in insert mode
+keymap('i', '<C-h>', '<S-Left>', { desc = 'Move word left' })
+keymap('i', '<C-l>', '<S-Right>', { desc = 'Move word right' })
+
 keymap('v', '∆', ':m \'>+1<CR>gv=gv', { desc = 'Move line down' })
 keymap('v', '˚', ':m \'<-2<CR>gv=gv', { desc = 'Move line up' })
-
--- Cmp and Luasnip keymaps
-local cmp = require('cmp')
-local luasnip = require('luasnip')
-
--- Set up cmp mappings with luasnip integration
-cmp.setup({
-  mapping = {
-    ['<C-e>'] = cmp.mapping.close(),
-    ['<S-down>'] = cmp.mapping.scroll_docs(4),
-    ['<S-up>']   = cmp.mapping.scroll_docs(-4),
-    ['<C-d>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        for _ = 1, 5 do cmp.select_next_item({ behavior = cmp.SelectBehavior.Select }) end
-      else
-        fallback()
-      end
-    end, { "i", "s" }),
-    ['<C-u>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        for _ = 1, 5 do cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select }) end
-      else
-        fallback()
-      end
-    end, { "i", "s" }),
-    ['<CR>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        if luasnip.expandable() then
-          luasnip.expand()
-        else
-          cmp.confirm({
-            select = true,
-          })
-        end
-      else
-        fallback()
-      end
-    end),
-
-    ["<C-j>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-      else
-        fallback()
-      end
-    end, { "i", "s" }),
-    ["<C-k>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, { "i", "s" }),
-  },
-})
 
 -- Key mappings for FZF
 vim.keymap.set('n', '<C-p>', '<cmd>FzfLua files<CR>', { desc = 'Find files' })
@@ -193,15 +127,175 @@ vim.keymap.set('n', '<C-s>', '<cmd>Neotree right toggle<CR>', { desc = 'Toggle n
 vim.keymap.set('n', '<Leader>b', '<cmd>Neotree buffers float toggle<CR>', { desc = 'Toggle buffers' })
 
 -- Git Plugin Configurations
-vim.keymap.set('n', '<leader>gp', '<cmd>Neogit push<CR>', { desc = 'Git push' })
+vim.keymap.set('n', '<leader>gp', function()
+  local branch = vim.trim(vim.fn.system('git branch --show-current'))
+  vim.notify('Pushing ' .. branch .. '...', vim.log.levels.INFO)
+  vim.fn.jobstart({ 'git', 'push', '-u', 'origin', 'HEAD' }, {
+    stdout_buffered = true,
+    stderr_buffered = true,
+    on_exit = function(_, code)
+      vim.schedule(function()
+        if code == 0 then
+          vim.notify('Pushed ' .. branch .. ' successfully', vim.log.levels.INFO)
+        else
+          vim.notify('Push ' .. branch .. ' failed (exit ' .. code .. ')', vim.log.levels.ERROR)
+        end
+      end)
+    end,
+  })
+end, { desc = 'Git push (set upstream)' })
+vim.keymap.set('n', '<leader>gP', function()
+  local branch = vim.trim(vim.fn.system('git branch --show-current'))
+  vim.notify('Pulling ' .. branch .. '...', vim.log.levels.INFO)
+  vim.fn.jobstart({ 'git', 'pull' }, {
+    stdout_buffered = true,
+    stderr_buffered = true,
+    on_exit = function(_, code)
+      vim.schedule(function()
+        if code == 0 then
+          vim.notify('Pulled ' .. branch .. ' successfully', vim.log.levels.INFO)
+          vim.cmd('checktime')
+        else
+          vim.notify('Pull ' .. branch .. ' failed (exit ' .. code .. ')', vim.log.levels.ERROR)
+        end
+      end)
+    end,
+  })
+end, { desc = 'Git pull' })
 
 -- Gitgutter mappings
 -- Use ]g and [g for navigating git hunks (defined above in diagnostics)
 vim.keymap.set('n', ']g', '<cmd>Gitsigns next_hunk<CR>', { desc = 'Next hunk' })
 vim.keymap.set('n', '[g', '<cmd>Gitsigns prev_hunk<CR>', { desc = 'Previous hunk' })
+-- Github URLs
+vim.keymap.set('v', '<leader>ghp', '<cmd>GetGithubPermalink<CR><Esc>', { desc = 'Copy Github Permalink' })
+vim.keymap.set('v', '<leader>ghu', '<cmd>GetGithubUrl<CR><Esc>', { desc = 'Copy Github Url' })
+vim.keymap.set('n', '<leader>ghfu', '<cmd>GetGithubBranchFileUrl<CR>', { desc = 'Copy Github file URL (branch)' })
+vim.keymap.set('n', '<leader>ghfp', '<cmd>GetGithubFilePermalink<CR>', { desc = 'Copy Github file permalink' })
+
+-- Search and Replace (grug-far)
+vim.keymap.set({ 'n', 'x' }, '<leader>sr', function()
+  local grug = require("grug-far")
+  local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
+  grug.open({
+    transient = true,
+    prefills = {
+      filesFilter = ext and ext ~= "" and "*." .. ext or nil,
+    },
+  })
+end, { desc = 'Search and Replace' })
 
 -- Markdown preview
 vim.keymap.set('n', '<leader>md', '<cmd>MarkdownPreviewToggle<CR>', { desc = 'Toggle markdown preview' })
+
+-- Restart tmux pane (send C-c, then re-run last command)
+vim.keymap.set('n', '<leader>rp', function()
+  local current_pane = vim.fn.system('tmux display-message -p "#{pane_index}"'):gsub("%s+$", "")
+  local output = vim.fn.system('tmux list-panes -F "#{pane_index}|#{@name}|#{pane_current_command}"')
+
+  local panes = {}
+  for line in output:gmatch("[^\n]+") do
+    local idx, name, cmd = line:match("^(%d+)|([^|]*)|(.+)$")
+    if idx and idx ~= current_pane then
+      local label = (name and name ~= "") and name or cmd
+      table.insert(panes, { target = ":." .. idx, label = label })
+    end
+  end
+
+  if #panes == 0 then
+    vim.notify("No other panes in this window", vim.log.levels.WARN)
+    return
+  end
+
+  local lines = { " Restart pane:" }
+  for i, p in ipairs(panes) do
+    table.insert(lines, "  " .. i .. ": " .. p.label)
+  end
+
+  local width = 0
+  for _, l in ipairs(lines) do width = math.max(width, #l) end
+  width = math.max(width + 2, 20)
+
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+  vim.bo[buf].modifiable = false
+
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = "editor",
+    row = math.floor((vim.o.lines - #lines) / 2),
+    col = math.floor((vim.o.columns - width) / 2),
+    width = width,
+    height = #lines,
+    style = "minimal",
+    border = "rounded",
+  })
+
+  -- Highlight the header
+  vim.api.nvim_buf_add_highlight(buf, -1, "Title", 0, 0, -1)
+
+  local function close()
+    if vim.api.nvim_win_is_valid(win) then vim.api.nvim_win_close(win, true) end
+    if vim.api.nvim_buf_is_valid(buf) then vim.api.nvim_buf_delete(buf, { force = true }) end
+  end
+
+  -- Map number keys and escape/q to close
+  for i, p in ipairs(panes) do
+    vim.keymap.set("n", tostring(i), function()
+      close()
+      vim.fn.system("tmux send-keys -t " .. p.target .. " C-c")
+      vim.defer_fn(function()
+        vim.fn.system("tmux send-keys -t " .. p.target .. " Up Enter")
+        vim.notify("Restarted: " .. p.label, vim.log.levels.INFO)
+      end, 200)
+    end, { buffer = buf, nowait = true })
+  end
+
+  for _, key in ipairs({ "q", "<Esc>", "<C-c>" }) do
+    vim.keymap.set("n", key, close, { buffer = buf, nowait = true })
+  end
+end, { desc = 'Restart tmux pane' })
+
+-- Run current file (detects filetype and finds appropriate runner)
+vim.keymap.set('n', '<leader>rf', function()
+  local file = vim.fn.expand('%:p')
+  local ft = vim.bo.filetype
+  local runners = {
+    python = function()
+      local venv = vim.fn.getcwd() .. '/venv/bin/python'
+      return (vim.fn.filereadable(venv) == 1 and venv or 'python3') .. ' ' .. file
+    end,
+    javascript = function() return 'node ' .. file end,
+    typescript = function() return 'npx tsx ' .. file end,
+    lua = function() return 'lua ' .. file end,
+    sh = function() return 'bash ' .. file end,
+    zsh = function() return 'zsh ' .. file end,
+    ruby = function() return 'ruby ' .. file end,
+    go = function() return 'go run ' .. file end,
+    rust = function() return 'cargo run' end,
+  }
+  local runner = runners[ft]
+  if runner then
+    local cmd = runner()
+    local buf = vim.api.nvim_create_buf(false, true)
+    local width = math.floor(vim.o.columns * 0.8)
+    local height = math.floor(vim.o.lines * 0.8)
+    vim.api.nvim_open_win(buf, true, {
+      relative = 'editor',
+      width = width,
+      height = height,
+      col = math.floor((vim.o.columns - width) / 2),
+      row = math.floor((vim.o.lines - height) / 2),
+      style = 'minimal',
+      border = 'rounded',
+      title = ' ' .. cmd .. ' ',
+      title_pos = 'center',
+    })
+    vim.fn.termopen(cmd)
+    vim.cmd('startinsert')
+  else
+    vim.notify('No runner configured for filetype: ' .. ft, vim.log.levels.WARN)
+  end
+end, { desc = 'Run current file' })
 
 -- Neotest
 vim.keymap.set('n', '<leader>tc', function() require('neotest').run.run() end,                      { desc = 'Run test under cursor' })
