@@ -115,6 +115,26 @@ return {
             enabled = true, -- intelligently follow the current file
           },
         },
+        commands = {
+          github_permalink = function(state)
+            local node = state.tree:get_node()
+            if node and _G._github_file_url then
+              _G._github_file_url(node:get_id(), true)
+            end
+          end,
+          github_branch_url = function(state)
+            local node = state.tree:get_node()
+            if node and _G._github_file_url then
+              _G._github_file_url(node:get_id(), false)
+            end
+          end,
+        },
+        window = {
+          mappings = {
+            ["ghp"] = "github_permalink",
+            ["ghu"] = "github_branch_url",
+          },
+        },
       })
     end,
   },
