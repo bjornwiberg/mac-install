@@ -41,6 +41,8 @@ vim.filetype.add({
 vim.cmd('syntax enable')
 vim.cmd('filetype plugin indent on')
 
+
+
 -- Diagnostic signs
 vim.diagnostic.config({
   signs = {

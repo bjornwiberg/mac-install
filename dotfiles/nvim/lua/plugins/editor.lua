@@ -153,7 +153,7 @@ return {
       require("auto-session").setup({
 
         suppressed_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
-        bypass_save_filetypes = { "neo-tree", "neotest-summary", "terminal", "nofile" },
+        bypass_save_filetypes = { "neo-tree", "neotest-summary", "terminal", "nofile", "help" },
         pre_save_cmds = { close_junk_buffers },
         post_restore_cmds = { close_junk_buffers },
       })
