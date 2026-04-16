@@ -113,17 +113,19 @@ keymap('i', '<C-l>', '<S-Right>', { desc = 'Move word right' })
 keymap('v', '∆', ':m \'>+1<CR>gv=gv', { desc = 'Move line down' })
 keymap('v', '˚', ':m \'<-2<CR>gv=gv', { desc = 'Move line up' })
 
--- Key mappings for FZF
-vim.keymap.set('n', '<C-p>', '<cmd>FzfLua files<CR>', { desc = 'Find files' })
-vim.keymap.set('n', '<leader>rg', '<cmd>FzfLua live_grep<CR>', { desc = 'Live grep' })
-vim.keymap.set('n', '<leader>gc', '<cmd>FzfLua git_commits<CR>', { desc = 'Browse git commits' })
-vim.keymap.set('n', '<leader>gs', '<cmd>FzfLua git_status<CR>', { desc = 'Git status' })
-vim.keymap.set('n', '<leader>gb', '<cmd>FzfLua git_branches<CR>', { desc = 'Git branches' })
-vim.keymap.set('n', '//', '<cmd>FzfLua grep_cword<CR>', { desc = 'Search word under cursor' })
-vim.keymap.set('v', '//', '<cmd>FzfLua grep_visual<CR>', { desc = 'Search visual selection' })
+-- Pickers (Snacks)
+vim.keymap.set('n', '<C-p>', function() Snacks.picker.files() end, { desc = 'Find files' })
+vim.keymap.set('n', '<leader>rg', function() Snacks.picker.grep() end, { desc = 'Live grep' })
+vim.keymap.set('n', '<leader>gc', function() Snacks.picker.git_log() end, { desc = 'Git commits' })
+vim.keymap.set('n', '<leader>gs', function() Snacks.picker.git_status() end, { desc = 'Git status' })
+vim.keymap.set('n', '<leader>gb', function() Snacks.picker.git_branches() end, { desc = 'Git branches' })
+vim.keymap.set('n', '//', function() Snacks.picker.grep_word() end, { desc = 'Search word under cursor' })
+vim.keymap.set('v', '//', function() Snacks.picker.grep_word() end, { desc = 'Search visual selection' })
+vim.keymap.set('n', '<leader>km', function() Snacks.picker.keymaps() end, { desc = 'Keymaps' })
+vim.keymap.set('n', '<leader>ghr', function() Snacks.gh.pr() end, { desc = 'GitHub PRs' })
 
--- Neo-tree key mappings
-vim.keymap.set('n', '<C-s>', '<cmd>Neotree right toggle<CR>', { desc = 'Toggle neo-tree' })
+-- File explorer
+vim.keymap.set('n', '<C-s>', function() Snacks.explorer.open() end, { desc = 'Toggle file explorer' })
 vim.keymap.set('n', '<Leader>b', '<cmd>Neotree buffers float toggle<CR>', { desc = 'Toggle buffers' })
 
 -- Git Plugin Configurations
@@ -167,11 +169,13 @@ end, { desc = 'Git pull' })
 -- Use ]g and [g for navigating git hunks (defined above in diagnostics)
 vim.keymap.set('n', ']g', '<cmd>Gitsigns next_hunk<CR>', { desc = 'Next hunk' })
 vim.keymap.set('n', '[g', '<cmd>Gitsigns prev_hunk<CR>', { desc = 'Previous hunk' })
--- Github URLs
-vim.keymap.set('v', '<leader>ghp', '<cmd>GetGithubPermalink<CR><Esc>', { desc = 'Copy Github Permalink' })
-vim.keymap.set('v', '<leader>ghu', '<cmd>GetGithubUrl<CR><Esc>', { desc = 'Copy Github Url' })
-vim.keymap.set('n', '<leader>ghfu', '<cmd>GetGithubBranchFileUrl<CR>', { desc = 'Copy Github file URL (branch)' })
-vim.keymap.set('n', '<leader>ghfp', '<cmd>GetGithubFilePermalink<CR>', { desc = 'Copy Github file permalink' })
+-- Github URLs (snacks.gitbrowse)
+local function copy_url(url) vim.fn.setreg('+', url); vim.notify("Copied: " .. url) end
+local function copy_url_no_lines(url) url = url:gsub("#L%d+%-L%d+$", ""); copy_url(url) end
+vim.keymap.set('n', '<leader>ghf', function() Snacks.gitbrowse({ what = "file", open = copy_url_no_lines }) end, { desc = 'Copy Github file URL' })
+vim.keymap.set('v', '<leader>ghf', function() Snacks.gitbrowse({ what = "file", open = copy_url }) end, { desc = 'Copy Github file URL (lines)' })
+vim.keymap.set('n', '<leader>ghp', function() Snacks.gitbrowse({ what = "permalink", open = copy_url_no_lines }) end, { desc = 'Copy Github permalink' })
+vim.keymap.set('v', '<leader>ghp', function() Snacks.gitbrowse({ what = "permalink", open = copy_url }) end, { desc = 'Copy Github permalink (lines)' })
 
 -- Search and Replace (grug-far)
 vim.keymap.set({ 'n', 'x' }, '<leader>sr', function()
