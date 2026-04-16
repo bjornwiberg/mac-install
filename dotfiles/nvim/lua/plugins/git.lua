@@ -4,58 +4,6 @@ return {
   { 'TimUntersberger/neogit' },
   { 'jreybert/vimagit' },
   {
-    "k2589/getgithublink.nvim",
-    config = function()
-      require("getgithublink").setup()
-
-      -- Helper: build a GitHub URL for a file path (no line range)
-      local function github_file_url(filepath, use_permalink)
-        local handle, result
-
-        handle = io.popen('git rev-parse --show-toplevel')
-        if not handle then return end
-        local git_root = handle:read("*a"):gsub("\n$", "")
-        handle:close()
-
-        local relative = filepath:sub(#git_root + 2)
-
-        handle = io.popen('git config --get remote.origin.url')
-        if not handle then return end
-        result = handle:read("*a")
-        handle:close()
-        local repo_url = result:gsub("^git@github.com:", "https://github.com/"):gsub("%.git%s*$", "")
-
-        local ref
-        if use_permalink then
-          handle = io.popen('git rev-parse HEAD')
-          if not handle then return end
-          ref = handle:read("*a"):gsub("\n$", "")
-          handle:close()
-        else
-          handle = io.popen('git rev-parse --abbrev-ref HEAD')
-          if not handle then return end
-          ref = handle:read("*a"):gsub("\n$", "")
-          handle:close()
-        end
-
-        local url = string.format("%s/blob/%s/%s", repo_url, ref, relative)
-        vim.fn.setreg('+', url)
-        vim.notify("Copied: " .. url, vim.log.levels.INFO)
-      end
-
-      vim.api.nvim_create_user_command('GetGithubBranchFileUrl', function()
-        github_file_url(vim.fn.expand('%:p'), false)
-      end, { desc = 'Copy GitHub file URL (branch)' })
-
-      vim.api.nvim_create_user_command('GetGithubFilePermalink', function()
-        github_file_url(vim.fn.expand('%:p'), true)
-      end, { desc = 'Copy GitHub file permalink (commit)' })
-
-      -- Expose for neo-tree integration
-      _G._github_file_url = github_file_url
-    end,
-  },
-  {
     'lewis6991/gitsigns.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
