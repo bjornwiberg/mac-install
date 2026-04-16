@@ -26,7 +26,7 @@ return {
           local opts = { buffer = bufnr }
 
           -- Preview hunk inline popup
-          vim.keymap.set('n', '<leader>Hp', gs.preview_hunk, vim.tbl_extend('force', opts, { desc = 'Preview hunk' }))
+          vim.keymap.set('n', '<leader>Hp', gs.preview_hunk_inline, vim.tbl_extend('force', opts, { desc = 'Preview hunk' }))
 
           -- Stage / reset / unstage hunk (normal mode)
           vim.keymap.set('n', '<leader>Hs', gs.stage_hunk,       vim.tbl_extend('force', opts, { desc = '(Un)stage hunk' }))

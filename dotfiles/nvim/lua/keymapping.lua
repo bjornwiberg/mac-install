@@ -75,6 +75,9 @@ keymap('n', 'grr', '<cmd>FzfLua lsp_references<CR>', { noremap = true, silent = 
 -- Toggle search highlighting
 keymap('n', '<Space>', ':set hlsearch! hlsearch?<Bar>:echo<CR>', { silent = true, desc = 'Toggle search highlight' })
 
+-- Zen mode
+keymap('n', '<C-w>z', function() Snacks.zen() end, { desc = 'Toggle zen mode' })
+
 -- Split windows
 keymap('n', '<leader>h', ':split<CR>', { desc = 'Horizontal split' })
 keymap('n', '<leader>v', ':vsplit<CR>', { desc = 'Vertical split' })

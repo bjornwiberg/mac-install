@@ -117,6 +117,12 @@ return {
     "folke/snacks.nvim",
     opts = {
       statuscolumn = { enabled = true },
+      zen = {
+        show = {
+          statusline = true,
+          tabline = false,
+        },
+      },
       explorer = {
         replace_netrw = true,
       },
