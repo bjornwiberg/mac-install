@@ -3,6 +3,19 @@
 -- Leader key
 vim.g.mapleader = ","
 
+-- Auto-reload files changed outside of Neovim (silently if buffer is unmodified)
+vim.opt.autoread = true
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold' }, {
+  command = 'if mode() != "c" | silent! checktime | endif',
+  desc = 'Check for file changes when Neovim regains focus or buffer is entered',
+})
+vim.api.nvim_create_autocmd('FileChangedShellPost', {
+  callback = function()
+    vim.notify('File changed on disk. Buffer reloaded.', vim.log.levels.INFO)
+  end,
+  desc = 'Notify after auto-reloading a changed file',
+})
+
 -- Basic settings
 vim.opt.number = true
 vim.opt.relativenumber = true

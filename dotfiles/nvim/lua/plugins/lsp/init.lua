@@ -9,8 +9,7 @@ return {
 -- Per-server LSP configs
       require('plugins.lsp.ts')
       require('plugins.lsp.biome')
-      -- Add more servers as needed, e.g.:
-      -- require('plugins.lsp.lua_ls')
+      require('plugins.lsp.pyright')
     end,
   },
 
@@ -74,6 +73,55 @@ return {
           expand = function(args)
             luasnip.lsp_expand(args.body)
           end,
+        },
+        mapping = {
+          ['<C-s>'] = cmp.mapping.complete(),
+          ['<C-e>'] = cmp.mapping.close(),
+          ['<C-d>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              for _ = 1, 5 do cmp.select_next_item({ behavior = cmp.SelectBehavior.Select }) end
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+          ['<C-u>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              for _ = 1, 5 do cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select }) end
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+          ['<C-g>'] = cmp.mapping.scroll_docs(4),
+          ['<C-f>'] = cmp.mapping.scroll_docs(-4),
+          ['<CR>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              if luasnip.expandable() then
+                luasnip.expand()
+              else
+                cmp.confirm({ select = true })
+              end
+            else
+              fallback()
+            end
+          end),
+          ["<C-j>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+            elseif luasnip.expand_or_jumpable() then
+              luasnip.expand_or_jump()
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+          ["<C-k>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
         },
         window = {
           completion = {

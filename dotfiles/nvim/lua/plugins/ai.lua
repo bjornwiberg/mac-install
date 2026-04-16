@@ -5,7 +5,8 @@ return {
     config = function()
       require("claudecode").setup({
         terminal = {
-          split_side = "left", -- "left" or "right"
+          provider = "snacks",
+          split_side = "left",
         },
       })
     end,
