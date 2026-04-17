@@ -117,7 +117,13 @@ keymap('v', '∆', ':m \'>+1<CR>gv=gv', { desc = 'Move line down' })
 keymap('v', '˚', ':m \'<-2<CR>gv=gv', { desc = 'Move line up' })
 
 -- Pickers (Snacks)
-vim.keymap.set('n', '<C-p>', function() Snacks.picker.files() end, { desc = 'Find files' })
+vim.keymap.set('n', '<C-p>', function()
+  Snacks.picker.smart({
+    hidden = true,
+    ignored = true,
+    filter = { cwd = true },
+  })
+end, { desc = 'Find files (smart)' })
 vim.keymap.set('n', '<leader>rg', function() Snacks.picker.grep() end, { desc = 'Live grep' })
 vim.keymap.set('n', '<leader>gc', function() Snacks.picker.git_log() end, { desc = 'Git commits' })
 vim.keymap.set('n', '<leader>gs', function() Snacks.picker.git_status() end, { desc = 'Git status' })
