@@ -150,7 +150,6 @@ vim.keymap.set('n', '<leader>gS', function()
   local gs = require('gitsigns')
   if vim.tbl_isempty(bcache.staged_diffs) then gs.stage_buffer() else gs.reset_buffer_index() end
 end, { desc = '(Un)stage buffer' })
-vim.keymap.set('n', '<leader>N',  '<cmd>Neogit<CR>', { desc = 'Neogit' })
 
 -- Search
 vim.keymap.set('n', '//', function() Snacks.picker.grep_word() end, { desc = 'Search word under cursor' })

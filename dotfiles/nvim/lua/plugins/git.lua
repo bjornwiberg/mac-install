@@ -1,7 +1,20 @@
 return {
   -- Git plugin definitions
   { 'tpope/vim-fugitive' },
-  { 'TimUntersberger/neogit' },
+  {
+    "NeogitOrg/neogit",
+    lazy = true,
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "sindrets/diffview.nvim",
+      "m00qek/baleia.nvim",
+      "folke/snacks.nvim",
+    },
+    cmd = "Neogit",
+    keys = {
+      { "<leader>gg", "<cmd>Neogit<cr>", desc = "Show Neogit UI" }
+    }
+  },
   { 'jreybert/vimagit' },
   {
     'lewis6991/gitsigns.nvim',
