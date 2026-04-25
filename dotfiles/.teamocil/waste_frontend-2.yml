@@ -1,0 +1,23 @@
+windows:
+  - name: waste_frontend-2
+    root: ~/Sites/waste_frontend-2
+    layout: 538e,239x65,0,0[239x37,0,0,15,239x11,0,38{119x11,0,38,16,119x11,120,38,20},239x15,0,50{119x15,0,50,17,119x15,120,50[119x8,120,50,18,119x6,120,59,19]}]
+    panes:
+      - commands:
+          - tmux set-option -p -t :.0 @name nvim
+          - tmux set-option -p -t :.1 @name shell
+          - tmux set-option -p -t :.2 @name drizzle
+          - tmux set-option -p -t :.3 @name frontend
+          - tmux set-option -p -t :.4 @name backend
+          - tmux set-option -p -t :.5 @name database
+          - nvim
+        focus: true
+      - commands:
+      - commands:
+          - DATABASE_URL="postgres://postgres:postgres@localhost:6544/hantera_enhet" yarn db:view --port 4984
+      - commands:                                                       
+          - PORT=3001 NEXT_PUBLIC_API_URL=http://localhost:3031 yarn dev
+      - commands:                                                       
+          - BACKEND_PORT=3031 DATABASE_URL="postgres://postgres:postgres@localhost:6544/hantera_enhet" CORS_ALLOWED_PORTS=3001 yarn dev:be                                    
+      - commands:                                                       
+          - RM=1 TAG=waste_db:alt PGPORT=6544 yarn start:db
