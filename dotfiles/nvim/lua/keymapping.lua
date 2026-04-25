@@ -186,6 +186,68 @@ vim.keymap.set('v', '<leader>ghf', function() Snacks.gitbrowse({ what = "file", 
 vim.keymap.set('n', '<leader>ghp', function() Snacks.gitbrowse({ what = "permalink", open = copy_url_no_lines }) end, { desc = 'Copy Github permalink' })
 vim.keymap.set('v', '<leader>ghp', function() Snacks.gitbrowse({ what = "permalink", open = copy_url }) end, { desc = 'Copy Github permalink (lines)' })
 
+-- Node package manager (auto-detect yarn/pnpm/npm)
+local function node_detect_pm()
+  local cwd = vim.fn.getcwd()
+  if vim.fs.find('yarn.lock', { upward = true, path = cwd })[1] then return 'yarn' end
+  if vim.fs.find('pnpm-lock.yaml', { upward = true, path = cwd })[1] then return 'pnpm' end
+  if vim.fs.find('package-lock.json', { upward = true, path = cwd })[1] then return 'npm' end
+  return nil
+end
+
+vim.keymap.set('n', '<leader>ni', function()
+  local pm = node_detect_pm()
+  if not pm then
+    vim.notify('No lockfile found', vim.log.levels.WARN)
+    return
+  end
+  local cmd = pm .. ' install'
+  local output = {}
+  local start = vim.loop.hrtime()
+  vim.notify('Running ' .. cmd .. '...', vim.log.levels.INFO, { title = 'Node' })
+  vim.fn.jobstart(cmd, {
+    stdout_buffered = true,
+    stderr_buffered = true,
+    on_stdout = function(_, data) if data then vim.list_extend(output, data) end end,
+    on_stderr = function(_, data) if data then vim.list_extend(output, data) end end,
+    on_exit = function(_, code)
+      vim.schedule(function()
+        local elapsed = string.format('%.1fs', (vim.loop.hrtime() - start) / 1e9)
+        if code == 0 then
+          vim.notify('✓ ' .. cmd .. ' completed in ' .. elapsed, vim.log.levels.INFO, { title = 'Node', timeout = 5000 })
+        else
+          vim.notify('✗ ' .. cmd .. ' failed:\n' .. table.concat(output, '\n'), vim.log.levels.ERROR, { title = 'Node' })
+        end
+      end)
+    end,
+  })
+end, { desc = 'Node install (auto-detect)' })
+
+vim.keymap.set('n', '<leader>na', function()
+  local pm = node_detect_pm()
+  if not pm then
+    vim.notify('No lockfile found', vim.log.levels.WARN)
+    return
+  end
+  local cmd = pm .. ' audit'
+  local buf = vim.api.nvim_create_buf(false, true)
+  local width = math.min(90, math.floor(vim.o.columns * 0.8))
+  local height = math.floor(vim.o.lines * 0.8)
+  vim.api.nvim_open_win(buf, true, {
+    relative = 'editor',
+    width = width,
+    height = height,
+    col = math.floor((vim.o.columns - width) / 2),
+    row = math.floor((vim.o.lines - height) / 2),
+    style = 'minimal',
+    border = 'rounded',
+    title = ' ' .. cmd .. ' ',
+    title_pos = 'center',
+  })
+  vim.fn.termopen(cmd)
+  vim.keymap.set('n', 'q', '<cmd>close<CR>', { buffer = buf, nowait = true })
+end, { desc = 'Node audit (auto-detect)' })
+
 -- Search and Replace (grug-far)
 vim.keymap.set({ 'n', 'x' }, '<leader>sr', function()
   local grug = require("grug-far")
