@@ -49,7 +49,7 @@ return {
           end
 
           -- Fallback: built-in indent (skip for formats where it's destructive)
-          local skip_indent = {yaml=true, yml=true, python=true}
+          local skip_indent = {yaml=true, yml=true, python=true, tmux=true, conf=true, sh=true, bash=true, zsh=true, dosini=true}
           if skip_indent[vim.bo.filetype] then return end
           local view = vim.fn.winsaveview()
           vim.cmd("silent normal! gg=G")
@@ -153,7 +153,7 @@ return {
       require("auto-session").setup({
 
         suppressed_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
-        bypass_save_filetypes = { "neo-tree", "neotest-summary", "terminal", "nofile", "help" },
+        bypass_save_filetypes = { "snacks_picker_list", "neotest-summary", "terminal", "nofile", "help" },
         pre_save_cmds = { close_junk_buffers },
         post_restore_cmds = { close_junk_buffers },
       })
