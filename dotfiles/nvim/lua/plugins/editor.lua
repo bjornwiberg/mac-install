@@ -89,9 +89,6 @@ return {
   { 'tpope/vim-surround' },
   { 'dhruvasagar/vim-zoom' },
 
-  -- GitHub Copilot
-  { 'github/copilot.vim' },
-
   -- Which-key for keybinding help
   {
     "folke/which-key.nvim",

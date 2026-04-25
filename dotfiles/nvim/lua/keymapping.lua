@@ -4,9 +4,10 @@ local M = {}
 -- Key mapping helper
 local keymap = vim.keymap.set
 
--- Claude mappings
+-- Claude mappings (disabled while trying folke/sidekick.nvim)
 local opts = { noremap = true, silent = true }
 
+--[[
 keymap("n", "<C-a>", "<cmd>ClaudeCodeFocus<cr>", vim.tbl_extend("force", opts, {
   desc = "Focus Claude",
 }))
@@ -67,6 +68,7 @@ vim.api.nvim_create_autocmd("TermOpen", {
     vim.keymap.set("t", "<C-l>", "<Cmd>TmuxNavigateRight<CR>", buf_opts)
   end,
 })
+--]]
 
 -- LSP Key mappings
 
