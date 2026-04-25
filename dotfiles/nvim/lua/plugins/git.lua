@@ -28,14 +28,11 @@ return {
           -- Preview hunk inline popup
           vim.keymap.set('n', '<leader>Hp', gs.preview_hunk_inline, vim.tbl_extend('force', opts, { desc = 'Preview hunk' }))
 
-          -- Stage / reset / unstage hunk (normal mode)
-          vim.keymap.set('n', '<leader>Hs', gs.stage_hunk,       vim.tbl_extend('force', opts, { desc = '(Un)stage hunk' }))
-          vim.keymap.set('n', '<leader>Hr', gs.reset_hunk,       vim.tbl_extend('force', opts, { desc = 'Reset hunk' }))
-
-          -- Stage selected lines (visual mode) — like VSCode's "Stage Selected Lines"
-          vim.keymap.set('v', '<leader>Hs', function()
+          -- Toggle stage/unstage hunk (normal mode + visual on selected lines)
+          vim.keymap.set('n', '<leader>HS', gs.stage_hunk, vim.tbl_extend('force', opts, { desc = '(Un)stage hunk' }))
+          vim.keymap.set('v', '<leader>HS', function()
             gs.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
-          end, vim.tbl_extend('force', opts, { desc = 'Stage selected lines' }))
+          end, vim.tbl_extend('force', opts, { desc = '(Un)stage selected lines' }))
         end,
       }
     end

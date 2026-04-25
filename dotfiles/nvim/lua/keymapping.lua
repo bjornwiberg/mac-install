@@ -125,9 +125,25 @@ vim.keymap.set('n', '<C-p>', function()
   })
 end, { desc = 'Find files (smart)' })
 vim.keymap.set('n', '<leader>rg', function() Snacks.picker.grep() end, { desc = 'Live grep' })
+
+-- Git
 vim.keymap.set('n', '<leader>gc', function() Snacks.picker.git_log() end, { desc = 'Git commits' })
-vim.keymap.set('n', '<leader>gs', function() Snacks.picker.git_status() end, { desc = 'Git status' })
-vim.keymap.set('n', '<leader>gb', function() Snacks.picker.git_branches() end, { desc = 'Git branches' })
+vim.keymap.set('n', '<leader>gs', function() Snacks.picker.git_status({ show_empty = true }) end, { desc = 'Git status' })
+vim.keymap.set('n', '<leader>gb', function()
+  Snacks.picker.git_branches({
+    all = true,
+    cmd_args = { "--sort=-committerdate" },
+    sort = { fields = { "score:desc", "idx" } },
+    matcher = { sort_empty = false, fuzzy = true, smartcase = true },
+  })
+end, { desc = 'Git branches' })
+vim.keymap.set('n', '<leader>gS', function()
+  local bcache = require('gitsigns.cache').cache[vim.api.nvim_get_current_buf()]
+  if not bcache then return end
+  local gs = require('gitsigns')
+  if vim.tbl_isempty(bcache.staged_diffs) then gs.stage_buffer() else gs.reset_buffer_index() end
+end, { desc = '(Un)stage buffer' })
+vim.keymap.set('n', '<leader>N',  '<cmd>Neogit<CR>', { desc = 'Neogit' })
 vim.keymap.set('n', '//', function() Snacks.picker.grep_word() end, { desc = 'Search word under cursor' })
 vim.keymap.set('v', '//', function() Snacks.picker.grep_word() end, { desc = 'Search visual selection' })
 vim.keymap.set('n', '<leader>km', function() Snacks.picker.keymaps() end, { desc = 'Keymaps' })
