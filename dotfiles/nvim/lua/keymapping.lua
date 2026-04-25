@@ -121,6 +121,7 @@ vim.keymap.set('n', '<C-p>', function()
   Snacks.picker.smart({
     hidden = true,
     ignored = true,
+    exclude = { "node_modules", ".git", "dist", "build", ".next" },
     filter = { cwd = true },
   })
 end, { desc = 'Find files (smart)' })
@@ -144,6 +145,8 @@ vim.keymap.set('n', '<leader>gS', function()
   if vim.tbl_isempty(bcache.staged_diffs) then gs.stage_buffer() else gs.reset_buffer_index() end
 end, { desc = '(Un)stage buffer' })
 vim.keymap.set('n', '<leader>N',  '<cmd>Neogit<CR>', { desc = 'Neogit' })
+
+-- Search
 vim.keymap.set('n', '//', function() Snacks.picker.grep_word() end, { desc = 'Search word under cursor' })
 vim.keymap.set('v', '//', function() Snacks.picker.grep_word() end, { desc = 'Search visual selection' })
 vim.keymap.set('n', '<leader>km', function() Snacks.picker.keymaps() end, { desc = 'Keymaps' })
@@ -151,7 +154,7 @@ vim.keymap.set('n', '<leader>ghr', function() Snacks.gh.pr() end, { desc = 'GitH
 
 -- File explorer
 vim.keymap.set('n', '<C-s>', function() Snacks.explorer.open() end, { desc = 'Toggle file explorer' })
-vim.keymap.set('n', '<Leader>b', '<cmd>Neotree buffers float toggle<CR>', { desc = 'Toggle buffers' })
+vim.keymap.set('n', '<Leader>b', function() Snacks.picker.buffers() end, { desc = 'Open buffers' })
 
 -- Git Plugin Configurations
 vim.keymap.set('n', '<leader>gp', function()
