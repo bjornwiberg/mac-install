@@ -85,33 +85,6 @@ return {
 
   -- Indent guides (via snacks.nvim)
 
-  -- Neo-tree file explorer
-  {
-    "nvim-neo-tree/neo-tree.nvim",
-    branch = "v3.x",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-      "MunifTanjim/nui.nvim",
-    },
-    config = function()
-      require('neo-tree').setup({
-        filesystem = {
-          filtered_items = {
-            visible = true, -- when true, they will just be displayed differently than normal items
-            never_show = { -- remains hidden even if visible is toggled to true
-              ".DS_Store",
-            },
-          },
-          use_libuv_file_watcher = true, -- does not need to be manually refreshed
-          follow_current_file = {
-            enabled = true, -- intelligently follow the current file
-          },
-        },
-      })
-    end,
-  },
-
   -- Snacks.nvim (explorer + utilities)
   {
     "folke/snacks.nvim",
@@ -141,6 +114,7 @@ return {
         },
       },
       picker = {
+        ui_select = true,
         previewers = {
           git = {
             args = { "-c", "diff.ignoreAllSpace=true" },
@@ -170,8 +144,10 @@ return {
               },
             },
             hidden = true,
+            ignored = true,
             auto_close = false,
             follow_file = true,
+            watch = true,
             win = {
               list = {
                 keys = {
