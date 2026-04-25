@@ -96,15 +96,10 @@ return {
       -- fall through to tmux-navigator. Avoids buffer-local keymap leakage
       -- onto real file buffers (snacks reuses them for previews).
       local function active_preview_picker()
+        if not vim.w.snacks_picker_preview then return nil end
         local pickers = require("snacks").picker.get()
-        if not pickers then return nil end
-        local cur_win = vim.api.nvim_get_current_win()
-        for _, p in ipairs(pickers) do
-          if p.preview and p.preview.win and p.preview.win.win == cur_win then
-            return p
-          end
-        end
-        return nil
+        if not pickers or #pickers == 0 then return nil end
+        return pickers[1]
       end
 
       vim.keymap.set("n", "<C-h>", function()
