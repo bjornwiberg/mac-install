@@ -220,8 +220,14 @@ return {
             follow_file = true,
             watch = true,
             win = {
+              input = {
+                keys = {
+                  ["<Esc>"] = { function() end, desc = "noop (don't close explorer)" },
+                },
+              },
               list = {
                 keys = {
+                  ["<Esc>"] = { function() end, desc = "noop (don't close explorer)" },
                   ["<leader>ghf"] = {
                     function()
                       local pickers = Snacks.picker.get({ source = "explorer" })

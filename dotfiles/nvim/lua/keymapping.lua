@@ -82,12 +82,16 @@ keymap('n', '<C-w>z', function() Snacks.zen() end, { desc = 'Toggle zen mode' })
 keymap('n', '<leader>h', ':split<CR>', { desc = 'Horizontal split' })
 keymap('n', '<leader>v', ':vsplit<CR>', { desc = 'Vertical split' })
 
--- Close floating windows with Escape
+-- Close floating windows with Escape (skip snacks pickers)
 keymap('n', '<Esc>', function()
   for _, win in ipairs(vim.api.nvim_list_wins()) do
     if vim.api.nvim_win_get_config(win).relative ~= '' then
-      vim.api.nvim_win_close(win, false)
-      return
+      local buf = vim.api.nvim_win_get_buf(win)
+      local ft = vim.bo[buf].filetype or ''
+      if not ft:match('^snacks_') and not vim.b[buf].snacks_previewed then
+        vim.api.nvim_win_close(win, false)
+        return
+      end
     end
   end
   -- If no floating windows, clear search highlighting
@@ -153,7 +157,14 @@ vim.keymap.set('n', '<leader>km', function() Snacks.picker.keymaps() end, { desc
 vim.keymap.set('n', '<leader>ghr', function() Snacks.gh.pr() end, { desc = 'GitHub PRs' })
 
 -- File explorer
-vim.keymap.set('n', '<C-s>', function() Snacks.explorer.open() end, { desc = 'Toggle file explorer' })
+vim.keymap.set('n', '<C-e>', function()
+  Snacks.explorer.reveal()
+  vim.schedule(function()
+    local explorer = Snacks.picker.get({ source = 'explorer' })[1]
+    if explorer then explorer:focus('list', { show = true }) end
+  end)
+end, { desc = 'Focus/open explorer & reveal current file' })
+vim.keymap.set('n', '<Leader>et', function() Snacks.explorer.open() end, { desc = 'Toggle file explorer' })
 vim.keymap.set('n', '<Leader>b', function() Snacks.picker.buffers() end, { desc = 'Open buffers' })
 
 -- Git Plugin Configurations
