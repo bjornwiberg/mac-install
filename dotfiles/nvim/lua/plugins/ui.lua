@@ -88,6 +88,18 @@ return {
   -- Snacks.nvim (explorer + utilities)
   {
     "folke/snacks.nvim",
+    config = function(_, opts)
+      require("snacks").setup(opts)
+      -- Re-apply preview window keymaps after each buffer swap.
+      -- Snacks only calls win:map() on the initial scratch buffer, so file
+      -- preview buffers lose our <C-h>/<C-l>/<CR> bindings without this.
+      local preview = require("snacks.picker.core.preview")
+      local orig_set_buf = preview.set_buf
+      preview.set_buf = function(self, buf)
+        orig_set_buf(self, buf)
+        self.win:map()
+      end
+    end,
     opts = {
       statuscolumn = { enabled = true },
       zen = {
@@ -120,16 +132,37 @@ return {
             args = { "-c", "diff.ignoreAllSpace=true" },
           },
         },
+        actions = {
+          jump_to_preview_line = function(picker)
+            local item = picker:current()
+            if not item then return end
+            -- Don't run confirm for commit items — it would git_checkout/detach.
+            if item.commit then return end
+            local pos = vim.api.nvim_win_get_cursor(0)
+            item.pos = { pos[1], pos[2] }
+            picker:action("confirm")
+          end,
+        },
         win = {
           input = {
             keys = {
-              ["<Esc>"] = { "close", mode = { "i", "n" } },
               ["<c-g>"] = { "preview_scroll_up", mode = { "i", "n" } },
+              ["<c-l>"] = { "focus_preview", mode = { "i", "n" } },
             },
           },
           list = {
             keys = {
               ["<c-g>"] = "preview_scroll_up",
+              ["<c-l>"] = "focus_preview",
+            },
+          },
+          preview = {
+            keys = {
+              ["<c-h>"] = "focus_input",
+              ["<c-l>"] = { function() end, desc = "noop (block tmux-navigator)" },
+              ["<c-j>"] = { function() end, desc = "noop (block tmux-navigator)" },
+              ["<c-k>"] = { function() end, desc = "noop (block tmux-navigator)" },
+              ["<CR>"] = "jump_to_preview_line",
             },
           },
         },
