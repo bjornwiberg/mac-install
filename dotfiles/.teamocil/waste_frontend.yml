@@ -14,7 +14,7 @@ windows:
         focus: true
       - commands:
       - commands:
-          -yarn db:view
+          - yarn db:view
       - commands:
           - yarn dev
       - commands:
