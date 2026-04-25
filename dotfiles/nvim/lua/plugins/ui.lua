@@ -88,6 +88,62 @@ return {
   -- Snacks.nvim (explorer + utilities)
   {
     "folke/snacks.nvim",
+    config = function(_, opts)
+      require("snacks").setup(opts)
+
+      -- Window-aware overrides for <C-h/j/k/l> and <CR>: if the current
+      -- window is a snacks picker preview, do picker actions; otherwise
+      -- fall through to tmux-navigator. Avoids buffer-local keymap leakage
+      -- onto real file buffers (snacks reuses them for previews).
+      local function active_preview_picker()
+        local pickers = require("snacks").picker.get()
+        if not pickers then return nil end
+        local cur_win = vim.api.nvim_get_current_win()
+        for _, p in ipairs(pickers) do
+          if p.preview and p.preview.win and p.preview.win.win == cur_win then
+            return p
+          end
+        end
+        return nil
+      end
+
+      vim.keymap.set("n", "<C-h>", function()
+        local p = active_preview_picker()
+        if p then
+          p:focus("input", { show = true })
+        else
+          vim.cmd("TmuxNavigateLeft")
+        end
+      end, { silent = true, desc = "Picker focus input / tmux left" })
+
+      vim.keymap.set("n", "<C-l>", function()
+        if active_preview_picker() then return end
+        vim.cmd("TmuxNavigateRight")
+      end, { silent = true, desc = "tmux right (no-op in preview)" })
+
+      vim.keymap.set("n", "<C-j>", function()
+        if active_preview_picker() then return end
+        vim.cmd("TmuxNavigateDown")
+      end, { silent = true, desc = "tmux down (no-op in preview)" })
+
+      vim.keymap.set("n", "<C-k>", function()
+        if active_preview_picker() then return end
+        vim.cmd("TmuxNavigateUp")
+      end, { silent = true, desc = "tmux up (no-op in preview)" })
+
+      vim.keymap.set("n", "<CR>", function()
+        local p = active_preview_picker()
+        if not p then
+          return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, false, true), "n", false)
+        end
+        local item = p:current()
+        if not item then return end
+        if item.commit then return end
+        local pos = vim.api.nvim_win_get_cursor(0)
+        item.pos = { pos[1], pos[2] }
+        p:action("confirm")
+      end, { silent = true, desc = "Picker jump to preview line / default <CR>" })
+    end,
     opts = {
       statuscolumn = { enabled = true },
       zen = {
@@ -120,17 +176,32 @@ return {
             args = { "-c", "diff.ignoreAllSpace=true" },
           },
         },
+        actions = {
+          jump_to_preview_line = function(picker)
+            local item = picker:current()
+            if not item then return end
+            -- Don't run confirm for commit items — it would git_checkout/detach.
+            if item.commit then return end
+            local pos = vim.api.nvim_win_get_cursor(0)
+            item.pos = { pos[1], pos[2] }
+            picker:action("confirm")
+          end,
+        },
         win = {
           input = {
             keys = {
-              ["<Esc>"] = { "close", mode = { "i", "n" } },
               ["<c-g>"] = { "preview_scroll_up", mode = { "i", "n" } },
+              ["<c-l>"] = { "focus_preview", mode = { "i", "n" } },
             },
           },
           list = {
             keys = {
               ["<c-g>"] = "preview_scroll_up",
+              ["<c-l>"] = "focus_preview",
             },
+          },
+          preview = {
+            keys = {},
           },
         },
         sources = {
