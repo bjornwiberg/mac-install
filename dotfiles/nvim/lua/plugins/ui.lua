@@ -90,54 +90,15 @@ return {
     "folke/snacks.nvim",
     config = function(_, opts)
       require("snacks").setup(opts)
-
-      -- Window-aware overrides for <C-h/j/k/l> and <CR>: if the current
-      -- window is a snacks picker preview, do picker actions; otherwise
-      -- fall through to tmux-navigator. Avoids buffer-local keymap leakage
-      -- onto real file buffers (snacks reuses them for previews).
-      local function active_preview_picker()
-        if not vim.w.snacks_picker_preview then return nil end
-        local pickers = require("snacks").picker.get()
-        if not pickers or #pickers == 0 then return nil end
-        return pickers[1]
+      -- Re-apply preview window keymaps after each buffer swap.
+      -- Snacks only calls win:map() on the initial scratch buffer, so file
+      -- preview buffers lose our <C-h>/<C-l>/<CR> bindings without this.
+      local preview = require("snacks.picker.core.preview")
+      local orig_set_buf = preview.set_buf
+      preview.set_buf = function(self, buf)
+        orig_set_buf(self, buf)
+        self.win:map()
       end
-
-      vim.keymap.set("n", "<C-h>", function()
-        local p = active_preview_picker()
-        if p then
-          p:focus("input", { show = true })
-        else
-          vim.cmd("TmuxNavigateLeft")
-        end
-      end, { silent = true, desc = "Picker focus input / tmux left" })
-
-      vim.keymap.set("n", "<C-l>", function()
-        if active_preview_picker() then return end
-        vim.cmd("TmuxNavigateRight")
-      end, { silent = true, desc = "tmux right (no-op in preview)" })
-
-      vim.keymap.set("n", "<C-j>", function()
-        if active_preview_picker() then return end
-        vim.cmd("TmuxNavigateDown")
-      end, { silent = true, desc = "tmux down (no-op in preview)" })
-
-      vim.keymap.set("n", "<C-k>", function()
-        if active_preview_picker() then return end
-        vim.cmd("TmuxNavigateUp")
-      end, { silent = true, desc = "tmux up (no-op in preview)" })
-
-      vim.keymap.set("n", "<CR>", function()
-        local p = active_preview_picker()
-        if not p then
-          return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, false, true), "n", false)
-        end
-        local item = p:current()
-        if not item then return end
-        if item.commit then return end
-        local pos = vim.api.nvim_win_get_cursor(0)
-        item.pos = { pos[1], pos[2] }
-        p:action("confirm")
-      end, { silent = true, desc = "Picker jump to preview line / default <CR>" })
     end,
     opts = {
       statuscolumn = { enabled = true },
