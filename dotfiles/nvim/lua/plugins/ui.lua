@@ -17,13 +17,12 @@ return {
     end,
   },
 
-  -- Color schemes
+  -- Color scheme
   {
     'folke/tokyonight.nvim',
-    --
     priority = 1000,
     config = function()
-      vim.cmd("colorscheme tokyonight-night")
+      vim.cmd('colorscheme tokyonight-night')
     end,
   },
 
@@ -65,21 +64,188 @@ return {
     dependencies = { 'nvim-tree/nvim-web-devicons' },
   },
 
-  -- Status line
+  -- Status line — sindrets-style: monochrome dim palette, NerdFont icons,
+  -- single global statusline. Order mirrors his feline layout.
   {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
-      require('lualine').setup {
-        sections = {
-          lualine_a = {'mode'},
-          lualine_b = {'branch', 'diff', 'diagnostics'},
-          lualine_c = {'filename'},
-          lualine_x = {'encoding', 'fileformat', 'filetype'},
-          lualine_y = {'progress'},
-          lualine_z = {'location'}
+      -- Pull palette directly from tokyonight so the statusline stays in sync
+      -- with the colorscheme. Add a falsey fallback if tokyonight isn't loaded yet.
+      local ok, tn = pcall(function()
+        return require('tokyonight.colors').setup({ style = 'night' })
+      end)
+      tn = ok and tn or {}
+      local colors = {
+        bg       = tn.bg_dark   or '#16161e',
+        fg       = tn.fg        or '#c0caf5',
+        fg_dim   = tn.fg_dark   or '#a9b1d6',
+        yellow   = tn.yellow    or '#e0af68',
+        cyan     = tn.cyan      or '#7dcfff',
+        green    = tn.green     or '#9ece6a',
+        orange   = tn.orange    or '#ff9e64',
+        violet   = tn.purple    or '#9d7cd8',
+        magenta  = tn.magenta   or '#bb9af7',
+        blue     = tn.blue      or '#7aa2f7',
+        red      = tn.red       or '#f7768e',
+      }
+      -- Statusline bg is NONE so it blends with the editor background.
+      local bg = 'NONE'
+      local mode_text = function(c) return { fg = c, bg = bg, gui = 'bold' } end
+      local flat = { fg = colors.fg_dim, bg = bg }
+      local theme = {
+        normal = {
+          a = mode_text(colors.blue),
+          b = flat, c = flat, x = flat, y = flat,
+          z = { fg = colors.fg, bg = bg },
+        },
+        insert   = { a = mode_text(colors.green) },
+        visual   = { a = mode_text(colors.magenta) },
+        replace  = { a = mode_text(colors.red) },
+        command  = { a = mode_text(colors.yellow) },
+        terminal = { a = mode_text(colors.cyan) },
+        inactive = {
+          a = { fg = colors.fg_dim, bg = bg },
+          b = { fg = colors.fg_dim, bg = bg },
+          c = { fg = colors.fg_dim, bg = bg },
         },
       }
+
+      require('lualine').setup({
+        options = {
+          theme = theme,
+          component_separators = '',
+          section_separators = '',
+          globalstatus = true,
+          disabled_filetypes = { statusline = { 'snacks_dashboard' } },
+        },
+        sections = {
+          lualine_a = {
+            { 'mode', padding = { left = 1, right = 1 } },
+          },
+          lualine_b = {
+            {
+              'filetype',
+              icon_only = true,
+              colored = true,
+              padding = { left = 1, right = 0 },
+            },
+            {
+              'filename',
+              path = 1,
+              padding = { left = 1, right = 1 },
+              symbols = { modified = ' ●', readonly = ' ', unnamed = '[No Name]' },
+              color = { fg = colors.fg },
+            },
+            {
+              'diff',
+              source = function()
+                local gs = vim.b.gitsigns_status_dict
+                if gs then
+                  return { added = gs.added, modified = gs.changed, removed = gs.removed }
+                end
+              end,
+              symbols = { added = ' ', modified = '󰝤 ', removed = ' ' },
+              diff_color = {
+                added    = { fg = colors.green },
+                modified = { fg = colors.orange },
+                removed  = { fg = colors.red },
+              },
+            },
+          },
+          lualine_c = {},
+          lualine_x = {
+            {
+              'diagnostics',
+              symbols = { error = '✗ ', warn = '▲ ', info = 'ℹ ', hint = ' ' },
+              colored = true,
+              diagnostics_color = {
+                error = { fg = colors.red },
+                warn  = { fg = colors.yellow },
+                info  = { fg = colors.blue },
+                hint  = { fg = colors.cyan },
+              },
+              padding = { left = 1, right = 1 },
+            },
+          },
+          lualine_y = {
+            { 'location', padding = { left = 1, right = 0 } },
+            { 'progress', padding = { left = 1, right = 0 } },
+            {
+              function() return ' ' .. vim.api.nvim_buf_line_count(0) end,
+              padding = { left = 1, right = 0 },
+            },
+            { 'filetype', icon_only = false, colored = true, padding = { left = 1, right = 0 } },
+            {
+              function()
+                local et = vim.bo.expandtab and 'SPACES' or 'TABS'
+                return string.format('☰ %s %d', et, vim.bo.shiftwidth)
+              end,
+              padding = { left = 1, right = 0 },
+            },
+            {
+              'encoding',
+              fmt = function(s) return '⌶ ' .. s:upper() end,
+              padding = { left = 1, right = 0 },
+            },
+          },
+          lualine_z = {
+            {
+              'branch',
+              icon = { '', align = 'left' },
+              padding = { left = 1, right = 1 },
+            },
+          },
+        },
+        inactive_sections = {
+          lualine_a = {},
+          lualine_b = {},
+          lualine_c = { { 'filename', path = 1 } },
+          lualine_x = { 'location' },
+          lualine_y = {},
+          lualine_z = {},
+        },
+      })
+    end,
+  },
+
+  -- Per-window filename label in the top-right corner.
+  -- Layout: [diagnostics] [git diff] [filetype icon] [filename] [window#]
+  -- Source: https://github.com/b0o/incline.nvim#diagnostics--git-diff--icon--filename
+  {
+    'b0o/incline.nvim',
+    event = 'VeryLazy',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      local devicons = require('nvim-web-devicons')
+      require('incline').setup({
+        window = {
+          margin = { vertical = 0, horizontal = 1 },
+          padding = { left = 1, right = 1 },
+          placement = { vertical = 'top', horizontal = 'right' },
+          options = { signcolumn = 'no', wrap = false },
+          winhighlight = {
+            active   = { Normal = 'NormalFloat' },
+            inactive = { Normal = 'NormalFloat' },
+          },
+        },
+        hide = { cursorline = false, focused_win = false, only_win = false },
+        render = function(props)
+          local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
+          if filename == '' then filename = '[No Name]' end
+          local ft_icon, ft_color = devicons.get_icon_color(filename)
+          local modified = vim.bo[props.buf].modified
+
+          return {
+            { (ft_icon or '') .. ' ', guifg = ft_color, guibg = 'none' },
+            {
+              filename,
+              guifg = ft_color or '#7dcfff',
+              gui = modified and 'bold,italic' or 'bold',
+            },
+          }
+        end,
+      })
     end,
   },
 
@@ -157,7 +323,10 @@ return {
             },
           },
           preview = {
-            keys = {},
+            keys = {
+              ["<c-h>"] = "focus_list",
+              ["<CR>"] = "jump_to_preview_line",
+            },
           },
         },
         sources = {
@@ -179,11 +348,35 @@ return {
               input = {
                 keys = {
                   ["<Esc>"] = { function() end, desc = "noop (don't close explorer)" },
+                  -- Skip nvim window navigation and go straight to the tmux
+                  -- pane on the right — TmuxNavigateRight gets confused inside
+                  -- floating-picker windows and falls back to the editor.
+                  ["<c-l>"] = {
+                    function()
+                      if vim.env.TMUX then
+                        vim.fn.system('tmux select-pane -R')
+                      else
+                        vim.cmd('TmuxNavigateRight')
+                      end
+                    end,
+                    mode = { "i", "n" },
+                    desc = "tmux pane right",
+                  },
                 },
               },
               list = {
                 keys = {
                   ["<Esc>"] = { function() end, desc = "noop (don't close explorer)" },
+                  ["<c-l>"] = {
+                    function()
+                      if vim.env.TMUX then
+                        vim.fn.system('tmux select-pane -R')
+                      else
+                        vim.cmd('TmuxNavigateRight')
+                      end
+                    end,
+                    desc = "tmux pane right",
+                  },
                   ["<leader>ghf"] = {
                     function()
                       local pickers = Snacks.picker.get({ source = "explorer" })
@@ -299,9 +492,10 @@ return {
   {
     'rcarriga/nvim-notify',
     config = function()
-      local c = require('tokyonight.colors').setup({ style = 'night' })
+      local hl = vim.api.nvim_get_hl(0, { name = 'Normal', link = false })
+      local bg = hl and hl.bg and string.format('#%06x', hl.bg) or '#000000'
       require('notify').setup({
-        background_colour = c.bg_dark,
+        background_colour = bg,
         render = 'wrapped-compact',
         stages = 'fade',
         timeout = 3000,
