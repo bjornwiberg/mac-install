@@ -84,6 +84,29 @@ return {
         mode = { "n", "x" },
         desc = "Sidekick Select Prompt",
       },
+      {
+        "<leader>ao",
+        function()
+          local models = vim.fn.systemlist("ollama list 2>/dev/null | tail -n +2 | awk '{print $1}'")
+          if vim.v.shell_error ~= 0 or #models == 0 then
+            vim.notify("No Ollama models found. Try `ollama pull <model>`.", vim.log.levels.WARN)
+            return
+          end
+          vim.ui.select(models, { prompt = "ollama launch claude --model:" }, function(choice)
+            if not choice then return end
+            -- tmux session names can't contain ':' (it's `session:window` syntax),
+            -- so sanitize for the sidekick tool/session name. Model arg keeps `:`.
+            local name = "ollama-" .. choice:gsub("[:/]", "-")
+            local Config = require("sidekick.config")
+            Config.cli.tools = Config.cli.tools or {}
+            Config.cli.tools[name] = {
+              cmd = { "ollama", "launch", "claude", "--model", choice, "--yes" },
+            }
+            require("sidekick.cli").toggle({ name = name, focus = true })
+          end)
+        end,
+        desc = "Sidekick: ollama launch claude (model picker)",
+      },
     },
   },
 }
