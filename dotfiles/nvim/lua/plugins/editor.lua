@@ -115,7 +115,7 @@ return {
     ---@type AutoSession.Config
     config = function()
       -- Only save buffers visible in windows, not all hidden/background buffers
-      vim.o.sessionoptions = "blank,curdir,folds,help,tabpages,winsize,terminal"
+      vim.o.sessionoptions = "curdir,folds,help,tabpages,winsize,terminal"
 
       local function close_junk_buffers()
         local visible = {}
