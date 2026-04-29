@@ -70,6 +70,17 @@ vim.api.nvim_create_autocmd("TermOpen", {
 })
 --]]
 
+vim.api.nvim_create_autocmd("TermOpen", {
+  callback = function(ev)
+    if vim.bo[ev.buf].filetype == "fzf" then return end
+    local buf_opts = { noremap = true, silent = true, buffer = ev.buf }
+    vim.keymap.set("t", "<C-h>", "<Cmd>TmuxNavigateLeft<CR>",  buf_opts)
+    vim.keymap.set("t", "<C-j>", "<Cmd>TmuxNavigateDown<CR>",  buf_opts)
+    vim.keymap.set("t", "<C-k>", "<Cmd>TmuxNavigateUp<CR>",    buf_opts)
+    vim.keymap.set("t", "<C-l>", "<Cmd>TmuxNavigateRight<CR>", buf_opts)
+  end,
+})
+
 -- LSP Key mappings
 
 keymap('n', 'grr', '<cmd>FzfLua lsp_references<CR>', { noremap = true, silent = true })

@@ -22,6 +22,12 @@ return {
       cli = {
         win = {
           layout = "left",
+          keys = {
+            nav_left  = false,
+            nav_down  = false,
+            nav_up    = false,
+            nav_right = false,
+          },
         },
         mux = {
           backend = "tmux",
