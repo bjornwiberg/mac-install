@@ -20,4 +20,4 @@ windows:
       - commands:                                                       
           - BACKEND_PORT=3031 DATABASE_URL="postgres://postgres:postgres@localhost:6544/hantera_enhet" CORS_ALLOWED_PORTS=3001 yarn dev:be                                    
       - commands:                                                       
-          - RM=1 TAG=waste_db:alt PGPORT=6544 yarn start:db
+          - TAG=waste_db:alt PGPORT=6544 yarn start:db
