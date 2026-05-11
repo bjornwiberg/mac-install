@@ -215,6 +215,66 @@ vim.keymap.set('n', '<leader>gP', function()
     end,
   })
 end, { desc = 'Git pull' })
+vim.keymap.set('n', '<leader>gz', function()
+  vim.notify('Stashing...', vim.log.levels.INFO)
+  vim.fn.jobstart({ 'git', 'stash', 'push', '--include-untracked' }, {
+    stdout_buffered = true,
+    stderr_buffered = true,
+    on_stdout = function(_, data)
+      if data and #data > 0 and data[1] ~= '' then
+        vim.schedule(function() vim.notify(table.concat(data, '\n'), vim.log.levels.INFO) end)
+      end
+    end,
+    on_exit = function(_, code)
+      vim.schedule(function()
+        if code == 0 then
+          vim.cmd('checktime')
+        else
+          vim.notify('Stash failed (exit ' .. code .. ')', vim.log.levels.ERROR)
+        end
+      end)
+    end,
+  })
+end, { desc = 'Git stash (incl. untracked)' })
+vim.keymap.set('n', '<leader>gZ', function()
+  vim.notify('Popping stash...', vim.log.levels.INFO)
+  vim.fn.jobstart({ 'git', 'stash', 'pop' }, {
+    stdout_buffered = true,
+    stderr_buffered = true,
+    on_stderr = function(_, data)
+      if data and #data > 0 and data[1] ~= '' then
+        vim.schedule(function() vim.notify(table.concat(data, '\n'), vim.log.levels.WARN) end)
+      end
+    end,
+    on_exit = function(_, code)
+      vim.schedule(function()
+        if code == 0 then
+          vim.notify('Stash popped', vim.log.levels.INFO)
+          vim.cmd('checktime')
+        else
+          vim.notify('Stash pop failed (exit ' .. code .. ')', vim.log.levels.ERROR)
+        end
+      end)
+    end,
+  })
+end, { desc = 'Git stash pop' })
+vim.keymap.set('n', '<leader>g-', function()
+  vim.fn.jobstart({ 'git', 'checkout', '-' }, {
+    stdout_buffered = true,
+    stderr_buffered = true,
+    on_exit = function(_, code, _)
+      vim.schedule(function()
+        if code == 0 then
+          local branch = vim.trim(vim.fn.system('git branch --show-current'))
+          vim.notify('Switched to ' .. branch, vim.log.levels.INFO)
+          vim.cmd('checktime')
+        else
+          vim.notify('Checkout - failed (exit ' .. code .. ')', vim.log.levels.ERROR)
+        end
+      end)
+    end,
+  })
+end, { desc = 'Git checkout - (previous branch)' })
 
 -- Gitgutter mappings
 -- Use ]g and [g for navigating git hunks (defined above in diagnostics)
