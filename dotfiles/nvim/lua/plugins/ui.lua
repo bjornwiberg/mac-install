@@ -293,6 +293,9 @@ return {
       },
       picker = {
         ui_select = true,
+        matcher = {
+          frecency = true,
+        },
         previewers = {
           git = {
             args = { "-c", "diff.ignoreAllSpace=true" },
