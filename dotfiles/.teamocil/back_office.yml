@@ -1,0 +1,16 @@
+windows:
+  - name: back_office
+    root: ~/Sites/back_office
+    layout: main-vertical
+    panes:
+      - commands:
+          - tmux set-option -p -t :.0 @name nvim
+          - tmux set-option -p -t :.1 @name frontend
+          - tmux set-option -p -t :.2 @name database
+          - tmux resize-pane -t :.0 -x 160
+          - nvim
+        focus: true
+      - commands:
+          - PORT=3300 pnpm run dev
+      - commands:
+          - docker compose up -d db keycloak

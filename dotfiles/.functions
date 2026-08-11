@@ -119,7 +119,10 @@ ydl-avc() {
         cat << 'EOF'
 Usage: ydl-avc VIDEO_ID [VIDEO_ID2 ...]
 
-Downloads best H.264 MP4 video + audio (merged to MP4)
+Downloads best-quality video + audio and outputs an H.264/AAC MP4.
+Prefers YouTube's native H.264 when it reaches the top resolution;
+otherwise takes VP9/AV1 and re-encodes to H.264 (slower) so the file
+always plays everywhere, including QuickTime.
 EOF
         return 1
     fi
@@ -138,8 +141,9 @@ EOF
         printf "└───────────────────────────────────────\n"
 
         yt-dlp \
-            -f "bv*[vcodec^=avc]+ba[ext=m4a]/bv*+ba/best" \
-            --merge-output-format mp4 \
+            -f "bv*+ba/best" \
+            -S "res,fps,vcodec:h264,vcodec:vp9,acodec:aac" \
+            --recode-video mp4 \
             --no-playlist \
             "${url_base}${id}"
 

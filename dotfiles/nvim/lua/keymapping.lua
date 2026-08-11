@@ -147,6 +147,42 @@ vim.keymap.set('n', '<leader>rg', function() Snacks.picker.grep() end, { desc = 
 -- Git
 vim.keymap.set('n', '<leader>gc', function() Snacks.picker.git_log() end, { desc = 'Git commits' })
 vim.keymap.set('n', '<leader>gs', function() Snacks.picker.git_status({ show_empty = true }) end, { desc = 'Git status' })
+-- Bottom git-changes panel: toggle with <leader>gd, descend into it with
+-- <C-j>, pop back to the editor with <C-k> (panel stays open).
+vim.keymap.set('n', '<leader>gd', function()
+  local open = Snacks.picker.get({ source = 'git_status' })
+  if #open > 0 then
+    for _, p in ipairs(open) do p:close() end
+    return
+  end
+  local from = vim.api.nvim_get_current_win()
+  local to_editor = function()
+    if vim.api.nvim_win_is_valid(from) then vim.api.nvim_set_current_win(from) end
+  end
+  Snacks.picker.git_status({
+    show_empty = true,
+    layout = 'git_panel',
+    auto_close = false,
+    -- Toggle only: never steal focus on open. Bounce focus back to the
+    -- editor once the picker has shown (and grabbed focus). <C-j> is the
+    -- explicit, opt-in way down into the panel.
+    on_show = function() vim.schedule(to_editor) end,
+    win = {
+      input = { keys = { ['<c-k>'] = { to_editor, mode = { 'i', 'n' }, desc = 'Focus editor' } } },
+      list  = { keys = { ['<c-k>'] = { to_editor, desc = 'Focus editor' } } },
+    },
+  })
+end, { desc = 'Toggle git changes panel' })
+
+-- <C-j>: descend into the git panel if open, otherwise normal tmux/split nav.
+vim.keymap.set('n', '<C-j>', function()
+  local open = Snacks.picker.get({ source = 'git_status' })
+  if #open > 0 then
+    open[1]:focus('list', { show = true })
+  else
+    vim.cmd('TmuxNavigateDown')
+  end
+end, { desc = 'Focus git panel / nav down' })
 vim.keymap.set('n', '<leader>gb', function()
   Snacks.picker.git_branches({
     all = true,
@@ -297,7 +333,7 @@ local function node_detect_pm()
   return nil
 end
 
-vim.keymap.set('n', '<leader>ni', function()
+local function node_install(on_success)
   local pm = node_detect_pm()
   if not pm then
     vim.notify('No lockfile found', vim.log.levels.WARN)
@@ -317,13 +353,16 @@ vim.keymap.set('n', '<leader>ni', function()
         local elapsed = string.format('%.1fs', (vim.loop.hrtime() - start) / 1e9)
         if code == 0 then
           vim.notify('✓ ' .. cmd .. ' completed in ' .. elapsed, vim.log.levels.INFO, { title = 'Node', timeout = 5000 })
+          if on_success then on_success() end
         else
           vim.notify('✗ ' .. cmd .. ' failed:\n' .. table.concat(output, '\n'), vim.log.levels.ERROR, { title = 'Node' })
         end
       end)
     end,
   })
-end, { desc = 'Node install (auto-detect)' })
+end
+
+vim.keymap.set('n', '<leader>ni', node_install, { desc = 'Node install (auto-detect)' })
 
 vim.keymap.set('n', '<leader>na', function()
   local pm = node_detect_pm()
@@ -367,7 +406,7 @@ vim.keymap.set('n', '<leader>mdp', '<cmd>RenderMarkdown toggle<CR>', { desc = 'T
 vim.keymap.set('n', '<leader>mdb', '<cmd>MarkdownPreviewToggle<CR>', { desc = 'Markdown preview (browser)' })
 
 -- Restart tmux pane (send C-c, then re-run last command)
-vim.keymap.set('n', '<leader>rp', function()
+local function tmux_other_panes()
   local current_pane = vim.fn.system('tmux display-message -p "#{pane_index}"'):gsub("%s+$", "")
   local output = vim.fn.system('tmux list-panes -F "#{pane_index}|#{@name}|#{pane_current_command}"')
 
@@ -379,6 +418,19 @@ vim.keymap.set('n', '<leader>rp', function()
       table.insert(panes, { target = ":." .. idx, label = label })
     end
   end
+  return panes
+end
+
+local function tmux_restart_pane(pane)
+  vim.fn.system("tmux send-keys -t " .. pane.target .. " C-c")
+  vim.defer_fn(function()
+    vim.fn.system("tmux send-keys -t " .. pane.target .. " Up Enter")
+    vim.notify("Restarted: " .. pane.label, vim.log.levels.INFO)
+  end, 200)
+end
+
+vim.keymap.set('n', '<leader>rp', function()
+  local panes = tmux_other_panes()
 
   if #panes == 0 then
     vim.notify("No other panes in this window", vim.log.levels.WARN)
@@ -420,11 +472,7 @@ vim.keymap.set('n', '<leader>rp', function()
   for i, p in ipairs(panes) do
     vim.keymap.set("n", tostring(i), function()
       close()
-      vim.fn.system("tmux send-keys -t " .. p.target .. " C-c")
-      vim.defer_fn(function()
-        vim.fn.system("tmux send-keys -t " .. p.target .. " Up Enter")
-        vim.notify("Restarted: " .. p.label, vim.log.levels.INFO)
-      end, 200)
+      tmux_restart_pane(p)
     end, { buffer = buf, nowait = true })
   end
 
@@ -432,6 +480,20 @@ vim.keymap.set('n', '<leader>rp', function()
     vim.keymap.set("n", key, close, { buffer = buf, nowait = true })
   end
 end, { desc = 'Restart tmux pane' })
+
+-- Restart all: node install, then restart panes 3-5 (same numbering as <leader>rp)
+vim.keymap.set('n', '<leader>ra', function()
+  node_install(function()
+    local panes = tmux_other_panes()
+    for _, i in ipairs({ 3, 4, 5 }) do
+      if panes[i] then
+        tmux_restart_pane(panes[i])
+      else
+        vim.notify('No pane ' .. i .. ' to restart', vim.log.levels.WARN)
+      end
+    end
+  end)
+end, { desc = 'Node install + restart panes 3-5' })
 
 -- Run current file (detects filetype and finds appropriate runner)
 vim.keymap.set('n', '<leader>rf', function()

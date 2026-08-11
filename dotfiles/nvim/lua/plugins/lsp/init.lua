@@ -12,6 +12,8 @@ return {
       require('plugins.lsp.biome')
       require('plugins.lsp.pyright')
       require('plugins.lsp.jsonls')
+      require('plugins.lsp.lua')
+      require('plugins.lsp.clangd')
     end,
   },
 

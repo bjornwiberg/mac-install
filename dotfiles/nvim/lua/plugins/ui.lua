@@ -332,6 +332,29 @@ return {
             },
           },
         },
+        -- Docked git-changes panel: list of changed files on top, live diff
+        -- preview of the selected file below. Opt in per-call via
+        -- `git_status({ layout = "git_panel" })` so the default `<leader>gs`
+        -- float stays untouched.
+        layouts = {
+          -- Bottom pane listing changed files, no diff preview. Like the
+          -- git_status picker but docked along the bottom edge, list only.
+          git_panel = {
+            preview = false,
+            layout = {
+              box = "vertical",
+              backdrop = false,
+              width = 0,
+              height = 0.3,
+              position = "bottom",
+              border = "top",
+              title = " Git changes ",
+              title_pos = "left",
+              { win = "input", height = 1, border = "bottom" },
+              { win = "list", border = "none" },
+            },
+          },
+        },
         sources = {
           explorer = {
             layout = {

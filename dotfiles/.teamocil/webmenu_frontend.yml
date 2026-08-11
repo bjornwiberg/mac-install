@@ -13,6 +13,6 @@ windows:
       - commands:
           - echo
       - commands:
-          - PORT=3030 npm run dev
+          - PORT=3330 npm run dev
       - commands:
           - echo

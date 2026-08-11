@@ -8,9 +8,17 @@ local CLI_NUM_PATTERN = "^" .. CLI_TOOL .. "_(%d+)$"
 local CLI_DISPLAY = CLI_TOOL:sub(1, 1):upper() .. CLI_TOOL:sub(2)
 local CLI_SK_FILE = "sk/cli/" .. CLI_TOOL .. ".lua"
 
+-- Extra Ollama hosts whose models are appended to the <leader>ao picker.
+-- Launching one of these sets OLLAMA_HOST for the sidekick session.
+local OLLAMA_REMOTE_HOSTS = { "http://100.104.199.46:11434" }
+
 -- Module-level state for dynamic session management
 local _tool_base = nil
 local _active_session = nil -- name of the currently visible session
+
+-- Forward declaration so toggle_session (defined earlier) can call into the
+-- winbar applier (defined later).
+local apply_sidekick_winbar
 
 local function get_tool_base()
     if _tool_base then
@@ -64,9 +72,14 @@ local function next_available_slot()
     return i
 end
 
+-- Match slotted sessions only. The bare CLI_TOOL is intentionally excluded
+-- so it never appears in the picker / kill list / tabs — sidekick's State.get
+-- generates a placeholder entry for every tool in Config.cli.tools, and our
+-- `Config.cli.tools[CLI_TOOL] = make_tool()` registration (needed only to
+-- override the default `is_proc` scan) would otherwise surface as a pickable
+-- "claude" entry that spawns a real tmux session on accidental selection.
 local function is_cli_name(name)
-    return name == CLI_TOOL
-        or name:match(CLI_PATTERN) ~= nil
+    return name:match(CLI_PATTERN) ~= nil
         or name:match("^ollama%-") ~= nil
 end
 
@@ -308,20 +321,40 @@ local function _jsonl_for_mux(mux_session)
 end
 
 -- Cache to avoid repeated shell-outs while a picker is open.
--- Key = mux_session, value = { title, expires_at }
+-- Key = mux_session, value = { info, expires_at }. `info` is
+-- { id, title, preview, mtime } (matching the resume picker's per-row data)
+-- or nil when no transcript could be resolved for the session.
 local _title_cache = {}
 local TITLE_TTL = 5
 
-local function get_claude_session_title(mux_session)
+local function get_claude_session_info(mux_session)
     if not mux_session or mux_session == "" then return nil end
     local cached = _title_cache[mux_session]
     if cached and cached.expires_at > os.time() then
-        return cached.title
+        return cached.info
     end
     local file = _jsonl_for_mux(mux_session)
-    local title = file and _read_custom_title(file) or nil
-    _title_cache[mux_session] = { title = title, expires_at = os.time() + TITLE_TTL }
-    return title
+    local info
+    if file then
+        local stat = vim.uv.fs_stat(file)
+        info = {
+            id = vim.fn.fnamemodify(file, ":t:r"),
+            title = _read_custom_title(file),
+            preview = _read_first_user_message(file),
+            mtime = stat and stat.mtime and stat.mtime.sec or 0,
+        }
+    end
+    _title_cache[mux_session] = { info = info, expires_at = os.time() + TITLE_TTL }
+    return info
+end
+
+-- Human-friendly relative time, shared by the session pickers.
+local function time_ago(t)
+    local d = os.time() - t
+    if d < 60 then return "just now" end
+    if d < 3600 then return math.floor(d / 60) .. "m ago" end
+    if d < 86400 then return math.floor(d / 3600) .. "h ago" end
+    return math.floor(d / 86400) .. "d ago"
 end
 
 -- Returns { [claude_session_id] = sidekick_tool_name } for tmux sessions
@@ -346,11 +379,6 @@ local function _active_claude_sessions()
         end
     end
     return map
-end
-
-local function make_cli_name(name)
-    local n = tonumber(name:match(CLI_NUM_PATTERN)) or 1
-    return n
 end
 
 -- ========================================================================
@@ -389,6 +417,8 @@ local function toggle_session(name)
         _active_session = name
         require("sidekick.cli").toggle({ name = name, focus = true })
     end
+    -- Defer so the window exists by the time we try to decorate it.
+    vim.defer_fn(apply_sidekick_winbar, 50)
 end
 
 -- Toggle all sessions: hide all if any visible, show last active if none
@@ -434,6 +464,81 @@ local function get_active_session_name()
     end
     return nil
 end
+
+-- Unified ordered slot list for the tab strip and Option-N switching:
+-- claude_N slots numerically first, then ollama-* sessions alphabetically.
+local function slot_list()
+    local tools = require("sidekick.config").cli.tools or {}
+    local nums, ollama = {}, {}
+    for name, _ in pairs(tools) do
+        local n = tonumber(name:match(CLI_NUM_PATTERN))
+        if n then
+            nums[#nums + 1] = n
+        elseif name:match("^ollama%-") then
+            ollama[#ollama + 1] = name
+        end
+    end
+    table.sort(nums)
+    table.sort(ollama)
+    local list = {}
+    for _, n in ipairs(nums) do list[#list + 1] = CLI_PREFIX .. n end
+    for _, name in ipairs(ollama) do list[#list + 1] = name end
+    return list
+end
+
+-- Winbar for the sidekick CLI window: a tab strip of all sessions in
+-- slot_list() order, with the visible one highlighted. The displayed number
+-- is the position in that list — the same number Option-N / <leader>aN
+-- switches to. Ollama sessions show a shortened model label after the number.
+function _G.__sidekick_agent_tabs()
+    local list = slot_list()
+    local parts = {}
+    if #list == 0 then
+        -- Always return non-empty so nvim allocates winbar height; otherwise
+        -- the strip won't appear when slots show up later.
+        parts[#parts + 1] = "%#TabLineFill# (no sessions) "
+    else
+        for i, name in ipairs(list) do
+            local hl = (name == _active_session) and "%#TabLineSel#" or "%#TabLine#"
+            local label = tostring(i)
+            local model = name:match("^ollama%-(.+)$")
+            if model then
+                if #model > 16 then model = model:sub(1, 15) .. "…" end
+                label = i .. ":" .. model
+            end
+            parts[#parts + 1] = hl .. "  " .. label .. "  %*"
+        end
+    end
+    return table.concat(parts, "") .. "%#TabLineFill#%="
+end
+
+local WINBAR_EXPR = "%{%v:lua.__sidekick_agent_tabs()%}"
+
+-- Apply the slot tab strip to every window currently showing a sidekick
+-- terminal. Called directly from toggle_session and from the autocmd below
+-- so we don't depend on a single event firing at the right time.
+apply_sidekick_winbar = function()
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        if vim.api.nvim_win_is_valid(win) then
+            local buf = vim.api.nvim_win_get_buf(win)
+            if vim.bo[buf].filetype == "sidekick_terminal" then
+                vim.wo[win].winbar = WINBAR_EXPR
+            end
+        end
+    end
+end
+
+-- Registered at module top level (not inside the lazy `config`) so a
+-- `:source` of this file or a `:Lazy reload sidekick.nvim` picks it up
+-- without needing a full nvim restart. clear=true ensures duplicate-free
+-- re-registration.
+local _tabs_group = vim.api.nvim_create_augroup("SidekickAgentTabs", { clear = true })
+vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType", "WinNew" }, {
+    group = _tabs_group,
+    callback = function() vim.schedule(apply_sidekick_winbar) end,
+})
+-- Catch already-open sidekick windows at the moment this file is sourced.
+vim.schedule(apply_sidekick_winbar)
 
 local keys = {
     {
@@ -482,6 +587,10 @@ local keys = {
                 local w = vim.fn.strdisplaywidth(s.tool.name)
                 if w > name_w then name_w = w end
             end
+            -- Same label width budget as the resume picker, so the "▸ <desc>"
+            -- text gets truncated consistently rather than overflowing the
+            -- vim.ui.select window.
+            local LABEL_MAX = 50
             vim.ui.select(items, {
                 prompt = CLI_DISPLAY .. " Sessions",
                 format_item = function(s)
@@ -490,8 +599,23 @@ local keys = {
                         or ""
                     local pad = string.rep(" ", name_w - vim.fn.strdisplaywidth(s.tool.name))
                     local name = s.tool.name .. pad
-                    local title = get_claude_session_title(mux_name_for(s))
-                    local label = title and (name .. "  ▸ " .. title) or name
+                    local label = name
+                    -- Prefer the user-set /rename title; fall back to the first
+                    -- user message (same precedence as <leader>ar) so sessions
+                    -- are distinguishable even without a custom title.
+                    local info = get_claude_session_info(mux_name_for(s))
+                    if info then
+                        local desc = info.title or info.preview
+                        if desc then
+                            if vim.fn.strdisplaywidth(desc) > LABEL_MAX then
+                                desc = vim.fn.strcharpart(desc, 0, LABEL_MAX - 1) .. "…"
+                            end
+                            label = name .. "  ▸ " .. desc
+                        end
+                        if info.mtime and info.mtime > 0 then
+                            label = label .. "  (" .. time_ago(info.mtime) .. ")"
+                        end
+                    end
                     return label .. status
                 end,
             }, function(choice)
@@ -569,15 +693,6 @@ local keys = {
             end
             table.sort(sessions, function(a, b) return a.mtime > b.mtime end)
 
-            local now = os.time()
-            local function ago(t)
-                local d = now - t
-                if d < 60 then return "just now" end
-                if d < 3600 then return math.floor(d / 60) .. "m ago" end
-                if d < 86400 then return math.floor(d / 3600) .. "h ago" end
-                return math.floor(d / 86400) .. "d ago"
-            end
-
             -- Pre-compute the leading "[id] label  (ago)" text per row so we
             -- can pad to a consistent width and right-align the active marker
             -- as its own column.
@@ -589,7 +704,7 @@ local keys = {
                 if vim.fn.strdisplaywidth(label) > LABEL_MAX then
                     label = vim.fn.strcharpart(label, 0, LABEL_MAX - 1) .. "…"
                 end
-                local lead = string.format("[%s] %s  (%s)", s.id:sub(1, 8), label, ago(s.mtime))
+                local lead = string.format("[%s] %s  (%s)", s.id:sub(1, 8), label, time_ago(s.mtime))
                 leads[s] = lead
                 local w = vim.fn.strdisplaywidth(lead)
                 if w > max_lead_w then max_lead_w = w end
@@ -904,18 +1019,51 @@ local keys = {
     {
         "<leader>ao",
         function()
-            local models = vim.fn.systemlist("ollama list 2>/dev/null | tail -n +2 | awk '{print $1}'")
-            if vim.v.shell_error ~= 0 or #models == 0 then
+            local items = {}
+            local local_models = vim.fn.systemlist("ollama list 2>/dev/null | tail -n +2 | awk '{print $1}'")
+            if vim.v.shell_error == 0 then
+                for _, m in ipairs(local_models) do
+                    table.insert(items, { model = m })
+                end
+            end
+            for _, host in ipairs(OLLAMA_REMOTE_HOSTS) do
+                local out = vim.fn.system({
+                    "curl", "-sf", "--connect-timeout", "1", "--max-time", "3",
+                    host .. "/api/tags",
+                })
+                local ok, data = false, nil
+                if vim.v.shell_error == 0 then
+                    ok, data = pcall(vim.json.decode, out)
+                end
+                if ok and type(data) == "table" and data.models then
+                    for _, m in ipairs(data.models) do
+                        table.insert(items, { model = m.name, host = host })
+                    end
+                else
+                    vim.notify("Ollama host unreachable: " .. host, vim.log.levels.WARN)
+                end
+            end
+            if #items == 0 then
                 vim.notify("No Ollama models found. Try `ollama pull <model>`.", vim.log.levels.WARN)
                 return
             end
-            vim.ui.select(models, { prompt = "ollama launch claude --model:" }, function(choice)
+            vim.ui.select(items, {
+                prompt = "ollama launch claude --model:",
+                format_item = function(item)
+                    if not item.host then return item.model end
+                    return item.model .. "  (" .. item.host:gsub("^https?://", ""):gsub(":%d+$", "") .. ")"
+                end,
+            }, function(choice)
                 if not choice then return end
-                local name = "ollama-" .. choice:gsub("[:/]", "-")
+                local name = "ollama-" .. choice.model:gsub("[:/]", "-")
+                if choice.host then
+                    name = name .. "-" .. choice.host:gsub("^https?://", ""):gsub(":%d+$", ""):gsub("%W", "-")
+                end
                 local Config = require("sidekick.config")
                 Config.cli.tools = Config.cli.tools or {}
                 Config.cli.tools[name] = {
-                    cmd = { "ollama", "launch", "claude", "--model", choice, "--yes" },
+                    cmd = { "ollama", "launch", "claude", "--model", choice.model, "--yes" },
+                    env = choice.host and { OLLAMA_HOST = choice.host } or nil,
                 }
                 toggle_session(name)
             end)
@@ -934,14 +1082,44 @@ local keys = {
     },
 }
 
-for i = 1, 5 do
+-- Switch to an existing slot only (position N in slot_list(), matching the
+-- winbar tab strip — claude slots first, then ollama sessions). Creating
+-- slots is reserved for <leader>an / <leader>ar / <leader>ao — these direct
+-- keys should be cheap to mis-press without accidentally spawning empty
+-- sessions.
+local function switch_to_slot(i)
+    local name = slot_list()[i]
+    if not name then
+        vim.notify(
+            CLI_DISPLAY .. " Session " .. i .. " doesn't exist — use <leader>an / <leader>ar / <leader>ao to create",
+            vim.log.levels.INFO
+        )
+        return
+    end
+    toggle_session(name)
+end
+
+for i = 1, 9 do
     keys[#keys + 1] = {
         "<leader>a" .. i,
-        function()
-            local name = ensure_slot(i)
-            toggle_session(name)
-        end,
+        function() switch_to_slot(i) end,
         desc = CLI_DISPLAY .. " Session " .. i,
+    }
+end
+
+-- Option-N for direct session switching. Warp doesn't translate Option to
+-- Alt/Meta — it sends the macOS Option-keyboard glyphs (Opt-1 = ¡, Opt-2 =
+-- ™, etc.) — so we bind those literal characters instead of <M-N>. Bound in
+-- normal/insert/terminal so it works while typing in the agent chat or
+-- while editing code. Covers 1-9 (US layout glyphs); note Opt-8 (•) is now
+-- bound, so it no longer types that glyph in these modes.
+local option_glyphs = { "¡", "™", "£", "¢", "∞", "§", "¶", "•", "ª" }
+for i, glyph in ipairs(option_glyphs) do
+    keys[#keys + 1] = {
+        glyph,
+        function() switch_to_slot(i) end,
+        mode = { "n", "i", "t" },
+        desc = CLI_DISPLAY .. " Session " .. i .. " (Option-" .. i .. ")",
     }
 end
 
@@ -976,6 +1154,14 @@ return {
                         nav_up = false,
                         nav_right = false,
                     },
+                    -- Sidekick re-applies its default wo table on every
+                    -- fix_cursorline() call (cursor move, focus change),
+                    -- which would otherwise reset winbar to "" every tick.
+                    -- Routing our value through cli.win.wo makes sidekick's
+                    -- own merge() keep it across those resets.
+                    wo = {
+                        winbar = "%{%v:lua.__sidekick_agent_tabs()%}",
+                    },
                 },
                 mux = {
                     backend = "tmux",
@@ -999,6 +1185,10 @@ return {
             Config.cli.tools = Config.cli.tools or {}
             Config.cli.tools[CLI_TOOL] = make_tool()
             vim.schedule(reconnect_sessions)
+            -- Winbar/autocmd registration lives at module top level; here we
+            -- just ensure any sidekick windows that opened before this
+            -- config ran get decorated too.
+            vim.schedule(apply_sidekick_winbar)
         end,
     },
 }
