@@ -138,8 +138,16 @@ vim.keymap.set('n', '<C-p>', function()
   Snacks.picker.smart({
     hidden = true,
     ignored = true,
-    exclude = { "node_modules", ".git", "dist", "build", ".next" },
-    filter = { cwd = true },
+    exclude = { "node_modules", ".git", "dist", "build", ".next", ".claude/worktrees" },
+    filter = {
+      cwd = true,
+      -- `exclude` only reaches the fd-backed files source; buffers/recent
+      -- need this too so worktree copies never surface.
+      filter = function(item)
+        local f = item.file or ""
+        return not f:find("/%.claude/worktrees/") and not f:find("^%.claude/worktrees/")
+      end,
+    },
   })
 end, { desc = 'Find files (smart)' })
 vim.keymap.set('n', '<leader>rg', function() Snacks.picker.grep() end, { desc = 'Live grep' })
