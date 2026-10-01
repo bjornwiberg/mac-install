@@ -116,7 +116,8 @@ keymap('v', 'yc', function()
   -- Use a simpler approach: yank to unnamed register then get it
   vim.cmd('normal! y')
   local text = vim.fn.getreg('"')
-  vim.fn.system('pbcopy', text)
+  -- '+' uses Neovim's clipboard provider (pbcopy on macOS, wl-copy/xclip or OSC 52 on Linux)
+  vim.fn.setreg('+', text)
   print('Selection copied to clipboard')
 end, { desc = 'Copy selection to clipboard' })
 

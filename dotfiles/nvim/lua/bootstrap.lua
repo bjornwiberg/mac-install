@@ -20,9 +20,10 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- Create Python 3 venv and install pynvim if it is not already installed.
-if vim.fn.empty(vim.fn.glob(vim.fn.stdpath('data') .. '/venv')) == 1 then
+-- Checks for pip so a half-created venv (e.g. python3-venv missing on Debian) gets rebuilt.
+if vim.fn.executable(vim.fn.stdpath('data') .. '/venv/bin/pip') == 0 then
     vim.fn.system({
-        'python3', '-m', 'venv',
+        'python3', '-m', 'venv', '--clear',
         vim.fn.stdpath('data') .. '/venv'
     })
     vim.fn.system({
@@ -40,9 +41,9 @@ vim.o.undodir = vim.fn.stdpath('data') .. '/undo'
 vim.o.directory = vim.fn.stdpath('data') .. '/swap'
 
 -- Create the directories if they do not exist
-if not vim.fn.isdirectory(vim.o.undodir) then
+if vim.fn.isdirectory(vim.o.undodir) == 0 then
   vim.fn.mkdir(vim.o.undodir, 'p')
 end
-if not vim.fn.isdirectory(vim.o.directory) then
+if vim.fn.isdirectory(vim.o.directory) == 0 then
   vim.fn.mkdir(vim.o.directory, 'p')
 end
